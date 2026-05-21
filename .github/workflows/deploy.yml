@@ -1,0 +1,28 @@
+name: Deploy Portfolio to AWS
+
+on:
+  push:
+    branches:
+      - main # Kịch bản sẽ tự kích hoạt mỗi khi bạn 'git push' lên nhánh main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Checkout code
+        uses: actions/checkout@v3
+
+      - name: 2. Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-2 # Vùng S3 Sydney của bạn
+
+      - name: 3. Sync files to S3
+        run: |
+          aws s3 sync . s3://dodangkhoicloudresume2026 --delete --exclude ".git/*" --exclude ".github/*"
+
+      - name: 4. Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
