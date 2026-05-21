@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do Dang Khoi's Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <img src="profile.jpg" alt="Do Dang Khoi" class="profile-img">
+            <h1>Do Dang Khoi</h1>
+            <div class="contact-info">
+                <span data-i18n="location">Vietnam</span> <img src="https://flagcdn.com/w20/vn.png" 
+                             srcset="https://flagcdn.com/w40/vn.png 2x" 
+                             width="20" alt="Vietnam Flag" style="vertical-align: middle; margin-left: 5px; margin-bottom: 3px;"> <br>
+                <a class="links" href="https://github.com/KhoiDangDo" target="_blank">github</a> | 
+                <a class="links" href="https://www.linkedin.com/in/khoi-dang-do-48ab3140b" target="_blank">linkedin</a>
+            </div>
+
+            <input type="text" id="search-bar" placeholder="🔍 Search portfolio..." class="search-input" data-i18n-placeholder="search_placeholder">
+
+            <div class="sidebar-actions">
+                <a href="/Khoi_CV.pdf" download class="theme-btn action-btn"><i class="fa-solid fa-file-pdf"></i> <span data-i18n="btn_cv">Get CV</span></a>
+                <button id="lang-toggle" class="theme-btn action-btn">🇻🇳 VN</button>
+            </div>
+
+            <nav class="nav-menu" style="margin-top: 25px;">
+                <button class="nav-btn active" data-target="home" data-i18n="nav_home">Home</button>
+                <button class="nav-btn" data-target="about" data-i18n="nav_about">About me</button>
+                <button class="nav-btn" data-target="projects" data-i18n="nav_projects">Projects</button>
+                <button class="nav-btn" data-target="statistics" data-i18n="nav_stats">Visitor statistics</button>
+                <button class="nav-btn" data-target="contact" data-i18n="nav_contact">Contact</button>
+            </nav>
+
+            <button id="theme-toggle" class="theme-btn">
+                <span id="theme-icon">🌙</span> <span id="theme-text" data-i18n="btn_theme">Dark mode</span>
+            </button>
+        </aside>
+
+        <main class="main-content">
+            
+            <section id="home" class="tab-content active">
+                
+                <div class="gif-container">
+                    <img src="robot1.gif" alt="Robot 1" class="floating-gif">
+                    <img src="robot2.gif" alt="Robot 2" class="floating-gif">
+                    <img src="robot3.gif" alt="Robot 3" class="floating-gif">
+                </div>
+
+                <h2 data-i18n="title_intro">Introduction</h2>
+                <div class="intro-box">
+                    <p data-i18n="intro_p1">Hello! I am Do Dang Khoi, a passionate engineering student at the Faculty of Electronics and Telecommunications (FETEL), Ho Chi Minh City University of Science (HCMUS).</p>
+                    <p data-i18n="intro_p2">My core expertise lies at the intersection of Cloud Computing, Applied Artificial Intelligence, and Embedded Systems. I enjoy architecting scalable serverless solutions on AWS, training machine learning models, and bringing hardware designs to life on SoC FPGAs. Welcome to my cloud-hosted portfolio!</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 15px; margin-bottom: 10px;">
+                    <img src="welcome.gif" alt="Welcome" style="max-width: 250px; height: auto; border-radius: 8px;">
+                </div>
+            </section>
+
+            <section id="about" class="tab-content">
+                <h2 data-i18n="title_edu">Education</h2>
+                <div class="project">
+                    <div class="project-title" data-i18n="edu_uni">Ho Chi Minh City University of Science (HCMUS)</div>
+                    <div class="duration" data-i18n="edu_faculty">Faculty of Electronics and Telecommunications (FETEL)</div>
+                    <ul class="project-details">
+                        <li data-i18n="edu_major">Major: Embedded Systems, Applied AI, and Cloud Computing.</li>
+                    </ul>
+                </div>
+
+                <h2 data-i18n="title_skills">Technical Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <div class="skill-category-title" data-i18n="skill_ai">AI & Machine Learning</div>
+                        <ul class="project-details">
+                            <li data-i18n="skill_ai_1">Models: Linear/Logistic Regression, CNN, RNN (LSTM, GRU).</li>
+                            <li data-i18n="skill_ai_2">Frameworks: Python, AI Model Simulation.</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <div class="skill-category-title" data-i18n="skill_embedded">Embedded Systems</div>
+                        <ul class="project-details">
+                            <li data-i18n="skill_embedded_1">Platform: Intel SoC FPGA Board.</li>
+                            <li data-i18n="skill_embedded_2">Techniques: RTL Design (Verilog/VHDL), Linux Kernel Modules.</li>
+                        </ul>
+                    </div>
+                    <div class="skill-category">
+                        <div class="skill-category-title" data-i18n="skill_cloud">Cloud Computing</div>
+                        <ul class="project-details">
+                            <li data-i18n="skill_cloud_1">AWS: S3, API Gateway, Lambda, DynamoDB.</li>
+                            <li data-i18n="skill_cloud_2">Tools: Terraform, GitHub Actions.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="projects" class="tab-content">
+                <h2 data-i18n="title_projects">Projects</h2>
+                <div class="projects-grid">
+                    <div class="project">
+                        <div class="project-title">AWS FinOps Dashboard (CLI)
+                            <a href="https://github.com/ravikiranvm/aws-finops-dashboard" target="_blank"><i class="fa-brands fa-github"></i></a>
+                        </div>
+                        <ul class="project-details">
+                            <li data-i18n="proj1_desc1">A terminal-based AWS cost and resource dashboard built with Python and the Rich library.</li>
+                            <li data-i18n="proj1_desc2">5000+ downloads on PyPI.</li>
+                            <li data-i18n="proj1_desc3">600+ stars on GitHub, and 180+ forks.</li>
+                        </ul>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-title">AWS FinOps MCP Server
+                            <a href="https://github.com/ravikiranvm/aws-finops-mcp-server" target="_blank"><i class="fa-brands fa-github"></i></a>
+                        </div>
+                        <ul class="project-details">
+                            <li data-i18n="proj2_desc1">An MCP server that brings powerful AWS FinOps capabilities directly into your AI assistant.</li>
+                        </ul>
+                    </div>
+
+                    <div class="project">
+                        <div class="project-title">The Cloud Squad
+                            <a href="https://thecloudsquad.com" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                            <a href="https://github.com/ravikiranvm/the-cloud-squad-be" target="_blank"><i class="fa-brands fa-github"></i></a>
+                        </div>
+                        <ul class="project-details">
+                            <li data-i18n="proj3_desc1">A web application that helps users assess their AWS certification exam readiness.</li>
+                            <li data-i18n="proj3_desc2">700+ tests taken.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="statistics" class="tab-content">
+                <h2 data-i18n="title_stats">Analytics Dashboard</h2>
+                <div class="projects-grid" style="margin-bottom: 20px;">
+                    <div class="project" style="align-items: center;">
+                        <div class="project-title" style="width: 100%; text-align: center;" data-i18n="stat_os">Operating System</div>
+                        <div style="position: relative; height: 250px; width: 100%;">
+                            <canvas id="osChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="project" style="align-items: center;">
+                        <div class="project-title" style="width: 100%; text-align: center;" data-i18n="stat_browser">Browser</div>
+                        <div style="position: relative; height: 250px; width: 100%;">
+                            <canvas id="browserChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="project" style="align-items: center;">
+                        <div class="project-title" style="width: 100%; text-align: center;" data-i18n="stat_location">Locations</div>
+                        <div style="position: relative; height: 250px; width: 100%;">
+                            <canvas id="countryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <p id="footer" style="text-align: center; font-weight: 600;"></p>
+            </section>
+
+            <section id="contact" class="tab-content">
+                <h2 data-i18n="title_contact">Contact Me</h2>
+                <div class="project" style="background-color: transparent; border: none; box-shadow: none; margin-bottom: 10px;">
+                    <form id="contact-form" class="contact-form">
+                        <input type="text" id="sender-name" placeholder="Your Name" data-i18n-placeholder="contact_name" required>
+                        <input type="email" id="sender-email" placeholder="Your Email" data-i18n-placeholder="contact_email" required>
+                        <textarea id="sender-message" placeholder="Your Message" data-i18n-placeholder="contact_message" rows="5" required></textarea>
+                        <button type="submit" id="submit-btn" data-i18n="contact_btn">Send Message 🚀</button>
+                    </form>
+                    <p id="form-status" style="margin-top: 15px; font-weight: bold;"></p>
+                </div>
+
+                <div style="text-align: center; margin-top: 10px;">
+                    <img src="TS_calling.gif" alt="Waiting for your call" style="width: 400px; max-width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <div class="chat-widget">
+        <div class="chat-header" id="chat-toggle">
+            🤖 Chat with Khoi's AI
+        </div>
+        <div class="chat-box" id="chat-box">
+            <div class="chat-messages" id="chat-messages">
+                <div class="message ai-message">Hi! I'm Khoi's virtual assistant. Ask me anything about his skills or projects!</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type a message...">
+                <button id="chat-send">Send</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
