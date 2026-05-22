@@ -19,158 +19,110 @@
             <h1>Do Dang Khoi</h1>
             <div class="contact-info">
                 <span data-i18n="location">Vietnam</span> <img src="https://flagcdn.com/w20/vn.png" 
-                             srcset="https://flagcdn.com/w40/vn.png 2x" 
-                             width="20" alt="Vietnam Flag" style="vertical-align: middle; margin-left: 5px; margin-bottom: 3px;"> <br>
-                <a class="links" href="https://github.com/KhoiDangDo" target="_blank">github</a> | 
-                <a class="links" href="https://www.linkedin.com/in/khoi-dang-do-48ab3140b" target="_blank">linkedin</a>
+                             srcset="https://flagcdn.com/w40/vn.png 2x\" 
+                             width="20" alt="Vietnam Flag" style="vertical-align: middle; margin-left: 5px;">
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="search-bar" class="search-input" placeholder="Search skills, projects..." data-i18n-placeholder="search_placeholder">
             </div>
 
-            <input type="text" id="search-bar" placeholder="🔍 Search portfolio..." class="search-input" data-i18n-placeholder="search_placeholder">
-
-            <div class="sidebar-actions">
-                <a href="/Khoi_CV.pdf" download class="theme-btn action-btn"><i class="fa-solid fa-file-pdf"></i> <span data-i18n="btn_cv">Get CV</span></a>
-                <button id="lang-toggle" class="theme-btn action-btn">🇻🇳 VN</button>
-            </div>
-
-            <nav class="nav-menu" style="margin-top: 25px;">
-                <button class="nav-btn active" data-target="home" data-i18n="nav_home">Home</button>
-                <button class="nav-btn" data-target="about" data-i18n="nav_about">About me</button>
-                <button class="nav-btn" data-target="projects" data-i18n="nav_projects">Projects</button>
-                <button class="nav-btn" data-target="statistics" data-i18n="nav_stats">Visitor statistics</button>
-                <button class="nav-btn" data-target="contact" data-i18n="nav_contact">Contact</button>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-tab="about"><i class="fas fa-user"></i> <span data-i18n="nav_about">About Me</span></button>
+                <button class="nav-btn" data-tab="skills"><i class="fas fa-code"></i> <span data-i18n="nav_skills">Skills</span></button>
+                <button class="nav-btn" data-tab="projects"><i class="fas fa-tasks"></i> <span data-i18n="nav_projects">Projects</span></button>
+                <button class="nav-btn" data-tab="contact"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact</span></button>
             </nav>
 
-            <button id="theme-toggle" class="theme-btn">
-                <span id="theme-icon">🌙</span> <span id="theme-text" data-i18n="btn_theme">Dark mode</span>
-            </button>
+            <div class="theme-toggle-container">
+                <button id="theme-toggle" class="theme-btn">
+                    <i class="fas fa-moon"></i> Light Mode
+                </button>
+                <div class="lang-switch">
+                    <button id="lang-en" class="lang-btn active">EN</button>
+                    <button id="lang-vi" class="lang-btn">VI</button>
+                </div>
+            </div>
         </aside>
 
-        <main class="main-content">
+        <main class="content-area">
             
-            <section id="home" class="tab-content active">
-                
-                <div class="gif-container">
-                    <img src="robot1.gif" alt="Robot 1" class="floating-gif">
-                    <img src="robot2.gif" alt="Robot 2" class="floating-gif">
-                    <img src="robot3.gif" alt="Robot 3" class="floating-gif">
+            <section id="about" class="tab-content active">
+                <div class="card intro-card">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 280px;">
+                            <h2 data-i18n="about_title">Welcome to My Cloud Portfolio! 🚀</h2>
+                            <p data-i18n="about_desc1">Hi, I'm Do Dang Khoi, an Electronics and Telecommunications student specializing in Cloud Computing, Artificial Intelligence, and Embedded Systems.</p>
+                            <p data-i18n="about_desc2">This website serves as my CloudResume graduation project, built entirely with a serverless architecture on AWS (S3, CloudFront, Route53, API Gateway, Lambda, DynamoDB) and deployed automatically via CI/CD pipelines.</p>
+                        </div>
+                        <div style="text-align: center; margin-left: 15px;">
+                            <img src="welcome.gif" alt="Welcome Animation" style="width: 180px; max-width: 100%; border-radius: 10px;">
+                        </div>
+                    </div>
                 </div>
 
-                <h2 data-i18n="title_intro">Introduction</h2>
-                <div class="intro-box">
-                    <p data-i18n="intro_p1">Hello! I am Do Dang Khoi, a passionate engineering student at the Faculty of Electronics and Telecommunications (FETEL), Ho Chi Minh City University of Science (HCMUS).</p>
-                    <p data-i18n="intro_p2">My core expertise lies at the intersection of Cloud Computing, Applied Artificial Intelligence, and Embedded Systems. I enjoy architecting scalable serverless solutions on AWS, training machine learning models, and bringing hardware designs to life on SoC FPGAs. Welcome to my cloud-hosted portfolio!</p>
+                <div class="card experience-card">
+                    <h2><i class="fas fa-briefcase"></i> Work Experience</h2>
+                    <div class="exp-item">
+                        <div class="exp-header">
+                            <span class="exp-role">Artificial Intelligence & Computer Vision Intern</span>
+                            <span class="exp-date">02/2026 - 04/2026</span>
+                        </div>
+                        <div class="exp-company">Viettel Telecom</div>
+                        <ul class="exp-bullet-points">
+                            <li>Researched and implemented advanced Deep Learning architectures and Machine Learning algorithms for computer vision tasks.</li>
+                            <li>Optimized object detection, image classification, and tracking models to improve inference speed and accuracy.</li>
+                            <li>Collaborated with team members to simulate and deploy AI pipelines on cloud infrastructure.</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div style="text-align: center; margin-top: 15px; margin-bottom: 10px;">
-                    <img src="welcome.gif" alt="Welcome" style="max-width: 250px; height: auto; border-radius: 8px;">
+                <div class="visitor-counter">
+                    <i class="fas fa-eye"></i> Visitor Count: <span id="counter-value">Loading...</span>
                 </div>
             </section>
 
-            <section id="about" class="tab-content">
-                <h2 data-i18n="title_edu">Education</h2>
-                <div class="project">
-                    <div class="project-title" data-i18n="edu_uni">Ho Chi Minh City University of Science (HCMUS)</div>
-                    <div class="duration" data-i18n="edu_faculty">Faculty of Electronics and Telecommunications (FETEL)</div>
-                    <ul class="project-details">
-                        <li data-i18n="edu_major">Major: Embedded Systems, Applied AI, and Cloud Computing.</li>
-                    </ul>
-                </div>
-
-                <h2 data-i18n="title_skills">Technical Skills</h2>
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <div class="skill-category-title" data-i18n="skill_ai">AI & Machine Learning</div>
-                        <ul class="project-details">
-                            <li data-i18n="skill_ai_1">Models: Linear/Logistic Regression, CNN, RNN (LSTM, GRU).</li>
-                            <li data-i18n="skill_ai_2">Frameworks: Python, AI Model Simulation.</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <div class="skill-category-title" data-i18n="skill_embedded">Embedded Systems</div>
-                        <ul class="project-details">
-                            <li data-i18n="skill_embedded_1">Platform: Intel SoC FPGA Board.</li>
-                            <li data-i18n="skill_embedded_2">Techniques: RTL Design (Verilog/VHDL), Linux Kernel Modules.</li>
-                        </ul>
-                    </div>
-                    <div class="skill-category">
-                        <div class="skill-category-title" data-i18n="skill_cloud">Cloud Computing</div>
-                        <ul class="project-details">
-                            <li data-i18n="skill_cloud_1">AWS: S3, API Gateway, Lambda, DynamoDB.</li>
-                            <li data-i18n="skill_cloud_2">Tools: Terraform, GitHub Actions.</li>
-                        </ul>
+            <section id="skills" class="tab-content">
+                <div class="card">
+                    <h2 data-i18n="skills_title">Technical Expertise</h2>
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
                     </div>
                 </div>
             </section>
 
             <section id="projects" class="tab-content">
-                <h2 data-i18n="title_projects">Projects</h2>
-                <div class="projects-grid">
-                    <div class="project">
-                        <div class="project-title">AWS FinOps Dashboard (CLI)
-                            <a href="https://github.com/ravikiranvm/aws-finops-dashboard" target="_blank"><i class="fa-brands fa-github"></i></a>
-                        </div>
-                        <ul class="project-details">
-                            <li data-i18n="proj1_desc1">A terminal-based AWS cost and resource dashboard built with Python and the Rich library.</li>
-                            <li data-i18n="proj1_desc2">5000+ downloads on PyPI.</li>
-                            <li data-i18n="proj1_desc3">600+ stars on GitHub, and 180+ forks.</li>
-                        </ul>
-                    </div>
-
-                    <div class="project">
-                        <div class="project-title">AWS FinOps MCP Server
-                            <a href="https://github.com/ravikiranvm/aws-finops-mcp-server" target="_blank"><i class="fa-brands fa-github"></i></a>
-                        </div>
-                        <ul class="project-details">
-                            <li data-i18n="proj2_desc1">An MCP server that brings powerful AWS FinOps capabilities directly into your AI assistant.</li>
-                        </ul>
-                    </div>
-
-                    <div class="project">
-                        <div class="project-title">The Cloud Squad
-                            <a href="https://thecloudsquad.com" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
-                            <a href="https://github.com/ravikiranvm/the-cloud-squad-be" target="_blank"><i class="fa-brands fa-github"></i></a>
-                        </div>
-                        <ul class="project-details">
-                            <li data-i18n="proj3_desc1">A web application that helps users assess their AWS certification exam readiness.</li>
-                            <li data-i18n="proj3_desc2">700+ tests taken.</li>
-                        </ul>
+                <div class="card">
+                    <h2>CloudResume Challenge</h2>
+                    <p>A serverless cloud resume website with visitor tracking. Uses AWS S3 for hosting, CloudFront for global CDN distribution, Lambda and DynamoDB for backend visitor counting.</p>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <img src="robot1.gif" alt="Cloud Project" style="width: 150px; border-radius: 8px;">
                     </div>
                 </div>
-            </section>
-
-            <section id="statistics" class="tab-content">
-                <h2 data-i18n="title_stats">Analytics Dashboard</h2>
-                <div class="projects-grid" style="margin-bottom: 20px;">
-                    <div class="project" style="align-items: center;">
-                        <div class="project-title" style="width: 100%; text-align: center;" data-i18n="stat_os">Operating System</div>
-                        <div style="position: relative; height: 250px; width: 100%;">
-                            <canvas id="osChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="project" style="align-items: center;">
-                        <div class="project-title" style="width: 100%; text-align: center;" data-i18n="stat_browser">Browser</div>
-                        <div style="position: relative; height: 250px; width: 100%;">
-                            <canvas id="browserChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="project" style="align-items: center;">
-                        <div class="project-title" style="width: 100%; text-align: center;" data-i18n="stat_location">Locations</div>
-                        <div style="position: relative; height: 250px; width: 100%;">
-                            <canvas id="countryChart"></canvas>
-                        </div>
+                <div class="card">
+                    <h2>SoC-CRC Hardware Accelerator</h2>
+                    <p>Designed a high-throughput cyclic redundancy check (CRC) accelerator integrated into a System-on-Chip architecture using FPGA.</p>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <img src="robot2.gif" alt="Hardware Project" style="width: 150px; border-radius: 8px;">
                     </div>
                 </div>
-                <p id="footer" style="text-align: center; font-weight: 600;"></p>
+                <div class="card">
+                    <h2>Liquid Neural Network (LNN) Simulation</h2>
+                    <p>Built a python-based simulation exploring time-continuous neural network models for real-time time-series prediction.</p>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <img src="robot3.gif" alt="AI Project" style="width: 150px; border-radius: 8px;">
+                    </div>
+                </div>
             </section>
 
             <section id="contact" class="tab-content">
-                <h2 data-i18n="title_contact">Contact Me</h2>
-                <div class="project" style="background-color: transparent; border: none; box-shadow: none; margin-bottom: 10px;">
-                    <form id="contact-form" class="contact-form">
+                <div class="card">
+                    <h2 data-i18n="contact_title">Get In Touch 📬</h2>
+                    <form id="contact-form">
                         <input type="text" id="sender-name" placeholder="Your Name" data-i18n-placeholder="contact_name" required>
                         <input type="email" id="sender-email" placeholder="Your Email" data-i18n-placeholder="contact_email" required>
                         <textarea id="sender-message" placeholder="Your Message" data-i18n-placeholder="contact_message" rows="5" required></textarea>
-                        <button type="submit" id="submit-btn" data-i18n="contact_btn">Send Message 🚀</button>
+                        <button type="submit" id="submit-btn" data-i18n="contact_btn">Send Message 📨</button>
                     </form>
                     <p id="form-status" style="margin-top: 15px; font-weight: bold;"></p>
                 </div>
@@ -184,8 +136,8 @@
     </div>
 
     <div class="chat-widget">
-        <div class="chat-header" id="chat-toggle">
-            🤖 Chat with Khoi's AI
+        <div class="chat-header" id=\"chat-toggle\">
+            💬 Chat with Khoi's AI
         </div>
         <div class="chat-box" id="chat-box">
             <div class="chat-messages" id="chat-messages">
