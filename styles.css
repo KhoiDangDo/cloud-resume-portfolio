@@ -45,7 +45,7 @@ body {
     overflow-y: auto; /* Cuộn nếu màn hình nhỏ */
 }
 
-/* Avatar bo tròn viền xanh trơn */
+/* Avatar bo tròn viền xanh trơn kèm hiệu ứng phát sáng */
 .profile-img {
     width: 120px;
     height: 120px;
@@ -53,6 +53,7 @@ body {
     object-fit: cover;
     margin-bottom: 15px;
     border: 2px solid var(--main-blue);
+    box-shadow: 0 0 15px 3px rgba(31, 199, 230, 0.5); /* Glowing effect restored */
 }
 
 .sidebar h1 { font-size: 22px; font-weight: 600; margin-bottom: 5px; text-align: center; }

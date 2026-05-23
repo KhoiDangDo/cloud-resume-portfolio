@@ -175,7 +175,10 @@ document.addEventListener('DOMContentLoaded', function(){
     const langToggleBtn = document.getElementById('lang-toggle');
 
     function updateLanguage() {
-        langToggleBtn.innerHTML = window.currentLang === 'en' ? '🇻🇳 VN' : '🇬🇧 EN';
+        // Cập nhật nút ngôn ngữ dùng hình ảnh cờ thay vì text tĩnh
+        langToggleBtn.innerHTML = window.currentLang === 'en' 
+            ? '<img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN Flag" style="vertical-align: middle; border-radius: 2px;"> VN' 
+            : '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="UK Flag" style="vertical-align: middle; border-radius: 2px;"> EN';
 
         // 1. Cập nhật văn bản thường
         document.querySelectorAll('[data-i18n]').forEach(el => {
