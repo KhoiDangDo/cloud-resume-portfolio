@@ -28,18 +28,17 @@
             <input type="text" id="search-bar" placeholder="🔍 Search portfolio..." class="search-input" data-i18n-placeholder="search_placeholder">
 
             <div class="sidebar-actions">
-                <a href="/Khoi_CV.pdf" download class="action-btn"><i class="fa-solid fa-file-pdf"></i> <span data-i18n="btn_cv">Get CV</span></a>
-                <button id="lang-toggle" class="action-btn">
-                    <img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN Flag" style="vertical-align: middle; border-radius: 2px;"> VN
-                </button>
+                <a href="/Khoi_CV.pdf" download class="theme-btn action-btn"><i class="fa-solid fa-file-pdf"></i> <span data-i18n="btn_cv">Get CV</span></a>
+                <button id="lang-toggle" class="theme-btn action-btn">🇻🇳 VN</button>
             </div>
 
-            <nav class="nav-menu">
-                <button class="nav-btn active" data-target="home"><i class="fas fa-home"></i> <span data-i18n="nav_home">Home</span></button>
-                <button class="nav-btn" data-target="about"><i class="fas fa-user"></i> <span data-i18n="nav_about">About me</span></button>
-                <button class="nav-btn" data-target="projects"><i class="fas fa-list"></i> <span data-i18n="nav_projects">Projects</span></button>
-                <button class="nav-btn" data-target="statistics"><i class="fas fa-chart-bar"></i> <span data-i18n="nav_stats">Visitor statistics</span></button>
-                <button class="nav-btn" data-target="contact"><i class="fas fa-envelope"></i> <span data-i18n="nav_contact">Contact</span></button>
+            <nav class="nav-menu" style="margin-top: 25px;">
+                <button class="nav-btn active" data-target="home" data-i18n="nav_home">Home</button>
+                <button class="nav-btn" data-target="about" data-i18n="nav_about">About me</button>
+                <button class="nav-btn" data-target="projects" data-i18n="nav_projects">Projects</button>
+                <button class="nav-btn" data-target="academic" data-i18n="nav_academic"><i class="fas fa-graduation-cap" style="margin-right: 5px;"></i> Academic Profile</button>
+                <button class="nav-btn" data-target="statistics" data-i18n="nav_stats">Visitor statistics</button>
+                <button class="nav-btn" data-target="contact" data-i18n="nav_contact">Contact</button>
             </nav>
 
             <button id="theme-toggle" class="theme-btn">
@@ -50,19 +49,16 @@
         <main class="main-content">
             
             <section id="home" class="tab-content active">
-                
                 <div class="gif-container">
                     <img src="robot1.gif" alt="Robot 1" class="floating-gif">
                     <img src="robot2.gif" alt="Robot 2" class="floating-gif">
                     <img src="robot3.gif" alt="Robot 3" class="floating-gif">
                 </div>
-
                 <h2 data-i18n="title_intro">Introduction</h2>
                 <div class="intro-box">
                     <p data-i18n="intro_p1">Hello! I am Do Dang Khoi, a passionate engineering student at the Faculty of Electronics and Telecommunications (FETEL), Ho Chi Minh City University of Science (HCMUS).</p>
                     <p data-i18n="intro_p2">My core expertise lies at the intersection of Cloud Computing, Applied Artificial Intelligence, and Embedded Systems. I enjoy architecting scalable serverless solutions on AWS, training machine learning models, and bringing hardware designs to life on SoC FPGAs. Welcome to my cloud-hosted portfolio!</p>
                 </div>
-
                 <div style="text-align: center; margin-top: 15px; margin-bottom: 10px;">
                     <img src="welcome.gif" alt="Welcome" style="max-width: 250px; height: auto; border-radius: 8px;">
                 </div>
@@ -78,14 +74,14 @@
                     </ul>
                 </div>
 
-                <h2 data-i18n="title_exp">Work Experience</h2>
+                <h2>Work Experience</h2>
                 <div class="project">
-                    <div class="project-title" data-i18n="exp_role">Artificial Intelligence & Computer Vision Intern</div>
-                    <div class="duration" data-i18n="exp_company">Viettel Telecom (02/2026 - 04/2026)</div>
+                    <div class="project-title">Artificial Intelligence & Computer Vision Intern</div>
+                    <div class="duration">Viettel Telecom (02/2026 - 04/2026)</div>
                     <ul class="project-details">
-                        <li data-i18n="exp_desc1">Researched and implemented advanced Deep Learning architectures and Machine Learning algorithms for computer vision tasks.</li>
-                        <li data-i18n="exp_desc2">Optimized object detection, image classification, and tracking models to improve inference speed and accuracy.</li>
-                        <li data-i18n="exp_desc3">Collaborated with team members to simulate and deploy AI pipelines on cloud infrastructure.</li>
+                        <li>Researched and implemented advanced Deep Learning architectures and Machine Learning algorithms for computer vision tasks.</li>
+                        <li>Optimized object detection, image classification, and tracking models to improve inference speed and accuracy.</li>
+                        <li>Collaborated with team members to simulate and deploy AI pipelines on cloud infrastructure.</li>
                     </ul>
                 </div>
 
@@ -116,7 +112,7 @@
             </section>
 
             <section id="projects" class="tab-content">
-                <h2 data-i18n="title_projects">Projects</h2>
+                <h2 data-i18n="title_projects">Personal Projects</h2>
                 <div class="projects-grid">
                     <div class="project">
                         <div class="project-title">AWS FinOps Dashboard (CLI)
@@ -128,7 +124,6 @@
                             <li data-i18n="proj1_desc3">600+ stars on GitHub, and 180+ forks.</li>
                         </ul>
                     </div>
-
                     <div class="project">
                         <div class="project-title">AWS FinOps MCP Server
                             <a href="https://github.com/ravikiranvm/aws-finops-mcp-server" target="_blank"><i class="fa-brands fa-github"></i></a>
@@ -137,7 +132,6 @@
                             <li data-i18n="proj2_desc1">An MCP server that brings powerful AWS FinOps capabilities directly into your AI assistant.</li>
                         </ul>
                     </div>
-
                     <div class="project">
                         <div class="project-title">The Cloud Squad
                             <a href="https://thecloudsquad.com" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
@@ -148,6 +142,123 @@
                             <li data-i18n="proj3_desc2">700+ tests taken.</li>
                         </ul>
                     </div>
+                </div>
+
+                <h2 data-i18n="title_research_proj" style="margin-top: 40px;">National and International Research Projects</h2>
+                <div class="project">
+                    <div class="project-title">Coordination of Funded Projects</div>
+                    <ul class="project-details">
+                        <li>General PI of “A taxonomy Biomolecular, Biosources and Bioactivities to unleash the potential of Biodiversity through a Web-based platform (B4Web)‘’. Grant received: 800k euros.</li>
+                        <li>local PI of “Forgetfulness, between rights, duties and technological possibilities” project, PRIN. Grant received: 51.8k euros.</li>
+                        <li>Co-PI of “Network analysis for anomaly detection” project. Grant received: 80k euros.</li>
+                        <li>PI of “Analysis and Monitoring of Artificial Intelligence Systems” project. Grant received: 30.5k euros.</li>
+                        <li>PI of “Innovation in Advanced Analytics: analyisis of banking transactions networks” project. Grant received: 150k euros.</li>
+                        <li>PI of the Computer Science Department research unit of “Big Data and Internet of Things, financial and insurance fields”. Grant received: 35k euros.</li>
+                    </ul>
+                    <div class="project-title" style="margin-top: 20px;">Participation to Research Projects</div>
+                    <ul class="project-details">
+                        <li>“AI Aware” project, co-financed by University of Turin.</li>
+                        <li>“Be Positive: Understanding and tackling online hate speech in Italy” project, financed by Google.org.</li>
+                        <li>“M.EMO.RAI”, financed by RAI - Radiotelevisione Italiana. Grant received: 40k euros.</li>
+                        <li>“Hate Speech & Social Media”, financed by Fondazione CRT. Grant received: 30k euros.</li>
+                        <li>“IhatePrejudice: Immigrants, Hate and Prejudice in Social Media”, financed by Compagnia di San Paolo. Grant received: 77k euro.</li>
+                        <li>“Gestione sicura ed affidabile del livello applicativo per la distribuzione peer-topeer di contenuti”, Co-financed by MIUR.</li>
+                    </ul>
+                </div>
+
+                <h2 data-i18n="title_patents" style="margin-top: 20px;">Patents</h2>
+                <div class="project">
+                    <ul class="project-details">
+                        <li>Learning and reasoning from web projections with Eric Horvitz and Susan Dumais.</li>
+                        <li>Resource browser sessions search with Ralph Sommerer, Robert Tucker, and Natasa Milic-Frayling. No. 7225407.</li>
+                        <li>Navigating a resource browser session Patents with Ralph Sommerer, Robert Tucker, and Natasa Milic-Frayling.</li>
+                        <li>“System and Method for Prediction of Self-Similar Signal,” United States Provisional Patent Application (File No: 61/592,352).</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="academic" class="tab-content">
+                <h2 data-i18n="title_research_exp">Research Experience</h2>
+                <div class="project">
+                    <ul class="project-details">
+                        <li><strong>Yahoo Research, Santa Clara, CA:</strong> Worked with Ravi Kumar, Andrew Tomkins on evolution and modeling of social networks. And with Michael Mahoney and Kevin Land on community structure in large networks.</li>
+                        <li><strong>Microsoft Research, Redmond, WA:</strong> Worked with Eric Horvitz and Susan Dumais on web search query modeling, and the dynamics of a instant messenger network of 240 million people.</li>
+                        <li><strong>Hewlett Packard Laboratories:</strong> Worked with Bernardo Huberman and Lada Adamic on the dynamics of person-to-person product recommendations in a large social network.</li>
+                        <li><strong>Carnegie Mellon Univeristy:</strong> Worked with Christos Faloutsos on problems posed by large graphs.</li>
+                        <li><strong>Royal Holloway University of London:</strong> With John ShaweTaylor on text classification on uneven training datasets.</li>
+                        <li><strong>Jozef Stefan Institute, Slovenia:</strong> With Marko Grobelnik and Dunja Mladenic. Projects on machine learning, mining documents and graphs, document summarization, text to speech synthesis.</li>
+                    </ul>
+                </div>
+
+                <h2 data-i18n="title_sci_community">Scientific Community Activities</h2>
+                <div class="project">
+                    <div class="project-title">Talks and Tutorials</div>
+                    <ul class="project-details">
+                        <li>Invited talk at Joint Statistical Meeting on Analysis of Online Communities</li>
+                        <li>Accepted full day tutorial to WWW (International conference on World Wide Web)</li>
+                        <li>Invited talk at High Performance Computing on Large Graphs, SIAM Conference</li>
+                        <li>Tutorial on Mining and Modeling Large Networks at ECML/PKDD</li>
+                        <li>Tutorial on Diffusion and Cascading Behavior in Social Networks, NATO</li>
+                    </ul>
+                    <div class="project-title" style="margin-top: 20px;">Program Committee Member & Reviewer</div>
+                    <ul class="project-details">
+                        <li><strong>Committees:</strong> ICML, KDD, WWW, WSDM, ICWSM, PKDD/ECML, NESCAI.</li>
+                        <li><strong>Reviewer for:</strong> JACM, JEA, ACM TKDD, MLJ, IEEE TKDE, Data Mining and Knowledge Discovery, NIPS.</li>
+                        <li><strong>External Reviewer:</strong> CIKM, AAAI, SIGIR, ECIR, ICDE, ECAI, IJCAI, SIAM DM.</li>
+                    </ul>
+                </div>
+
+                <h2 data-i18n="title_editorial">Program Committees and Editorial Activities</h2>
+                <div class="project">
+                    <ul class="project-details">
+                        <li>Associate Editor of “EPJ Data Science” journal.</li>
+                        <li>Lightining Co-Chair “COMPLEX NETWORKS - The 11th International Conference on Complex Networks and their Applications”.</li>
+                        <li>Editor: “Special Issue on Network analysis and computational social science", Future Internet, MDPI.</li>
+                        <li>General Co-Chair of ACM Conference on Hypertext and Hypermedia.</li>
+                    </ul>
+                </div>
+
+                <h2 data-i18n="title_services">Services & Academic Roles</h2>
+                <div class="project">
+                    <ul class="project-details">
+                        <li>Associate Editor: Enterprise Information System, International Journal of Industrial Engineering.</li>
+                        <li>Conference Co-chair of Korea-Canada Conference (Vancouver, Niagara Falls, Kanaskis).</li>
+                        <li>Associate Chair of Undergraduate & Graduate Studies, Department of Mechanical and Industrial Engineering, University of Toronto.</li>
+                    </ul>
+                </div>
+
+                <h2 data-i18n="title_advisor">Scientific Advisor & Industrial Collaboration</h2>
+                <div class="project">
+                    <div class="project-title">Public and Private Institutions</div>
+                    <ul class="project-details">
+                        <li>Member of the Advisory Board of CINI’s “National Big Data laboratory”.</li>
+                        <li>Scientific Advisor of the “Innovation in advanced analytics", on behalf of Intesa Sanpaolo Innovation Center.</li>
+                        <li>Vice Head of “SIPLab - Social Information Processing” laboratory, on behalf of CSP Scarl.</li>
+                    </ul>
+                    <div class="project-title" style="margin-top: 20px;">Industrial Consulting</div>
+                    <ul class="project-details">
+                        <li>Facebook, LinkedIn, Amazon, Sprint, AOL.</li>
+                        <li>Birmingham Midshires bank, UK.</li>
+                        <li>Microsoft Live Labs, Yahoo Research, HP Labs.</li>
+                    </ul>
+                </div>
+
+                <h2 data-i18n="title_honors">Academic Honors, Awards & Funding</h2>
+                <div class="project">
+                    <div class="project-title">Awards</div>
+                    <ul class="project-details">
+                        <li>Best student paper award at 13th ACM SIGKDD International Conference.</li>
+                        <li>Microsoft Graduate Research Fellowship.</li>
+                        <li>Winner of the KDD Cup on estimating the download rate of scientific articles on Arxiv.</li>
+                        <li>Govorec, a Slovenia text to speech system, awarded as best innovation for disabled of the year.</li>
+                        <li>Canadian Foundation for Innovation Researcher.</li>
+                    </ul>
+                    <div class="project-title" style="margin-top: 20px;">Funding Obtained</div>
+                    <ul class="project-details">
+                        <li>$4,000 donation from Yahoo Research to record and publish CMU Machine Learning Lunch seminar talks.</li>
+                        <li>$75,000 Yahoo Research Alliance gift titled "ShatterPlots: A New Tool for Graph Mining".</li>
+                        <li>$337,000 for NSF project "Finding Patterns and Anomalies in Large Time-Evolving Graphs".</li>
+                    </ul>
                 </div>
             </section>
 
@@ -187,7 +298,6 @@
                     </form>
                     <p id="form-status" style="margin-top: 15px; font-weight: bold;"></p>
                 </div>
-
                 <div style="text-align: center; margin-top: 10px;">
                     <img src="TS_calling.gif" alt="Waiting for your call" style="width: 400px; max-width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
                 </div>

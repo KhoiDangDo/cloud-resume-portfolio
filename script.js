@@ -43,28 +43,20 @@ document.addEventListener('DOMContentLoaded', function(){
             "nav_home": "Home",
             "nav_about": "About me",
             "nav_projects": "Projects",
+            "nav_academic": "Academic Profile",
             "nav_stats": "Visitor statistics",
             "nav_contact": "Contact",
             "btn_theme": "Dark mode",
             "btn_theme_light": "Light mode",
 
-            // Home
+            // Home & About
             "title_intro": "Introduction",
             "intro_p1": "Hello! I am Do Dang Khoi, a passionate engineering student at the Faculty of Electronics and Telecommunications (FETEL), Ho Chi Minh City University of Science (HCMUS).",
             "intro_p2": "My core expertise lies at the intersection of Cloud Computing, Applied Artificial Intelligence, and Embedded Systems. I enjoy architecting scalable serverless solutions on AWS, training machine learning models, and bringing hardware designs to life on SoC FPGAs. Welcome to my cloud-hosted portfolio!",
-            "title_photos": "My photos",
-
-            // About
             "title_edu": "Education",
             "edu_uni": "Ho Chi Minh City University of Science (HCMUS)",
             "edu_faculty": "Faculty of Electronics and Telecommunications (FETEL)",
             "edu_major": "Major: Embedded Systems, Applied AI, and Cloud Computing.",
-            "title_exp": "Work Experience",
-            "exp_role": "Artificial Intelligence & Computer Vision Intern",
-            "exp_company": "Viettel Telecom (02/2026 - 04/2026)",
-            "exp_desc1": "Researched and implemented advanced Deep Learning architectures and Machine Learning algorithms for computer vision tasks.",
-            "exp_desc2": "Optimized object detection, image classification, and tracking models to improve inference speed and accuracy.",
-            "exp_desc3": "Collaborated with team members to simulate and deploy AI pipelines on cloud infrastructure.",
             "title_skills": "Technical Skills",
             "skill_ai": "AI & Machine Learning",
             "skill_ai_1": "Models: Linear/Logistic Regression, CNN, RNN (LSTM, GRU).",
@@ -77,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function(){
             "skill_cloud_2": "Tools: Terraform, GitHub Actions.",
 
             // Projects
-            "title_projects": "Projects",
+            "title_projects": "Personal Projects",
             "proj1_desc1": "A terminal-based AWS cost and resource dashboard built with Python and the Rich library.",
             "proj1_desc2": "5000+ downloads on PyPI.",
             "proj1_desc3": "600+ stars on GitHub, and 180+ forks.",
@@ -85,14 +77,22 @@ document.addEventListener('DOMContentLoaded', function(){
             "proj3_desc1": "A web application that helps users assess their AWS certification exam readiness.",
             "proj3_desc2": "700+ tests taken.",
 
-            // Statistics
+            // New Word Document Titles (English)
+            "title_research_proj": "National and International Research Projects",
+            "title_patents": "Patents",
+            "title_research_exp": "Research Experience",
+            "title_sci_community": "Scientific Community Activities",
+            "title_editorial": "Program Committees and Editorial Activities",
+            "title_services": "Services & Academic Roles",
+            "title_advisor": "Scientific Advisor & Industrial Collaboration",
+            "title_honors": "Academic Honors, Awards & Funding",
+
+            // Statistics & Contact
             "title_stats": "Analytics Dashboard",
             "stat_os": "Operating System",
             "stat_browser": "Browser",
             "stat_location": "Locations",
             "footer_stats": "This resume caught the eye of {count} curious minds!",
-
-            // Contact Form
             "title_contact": "Contact Me",
             "contact_name": "Your Name",
             "contact_email": "Your Email",
@@ -110,28 +110,20 @@ document.addEventListener('DOMContentLoaded', function(){
             "nav_home": "Trang chủ",
             "nav_about": "Về mình",
             "nav_projects": "Dự án",
+            "nav_academic": "Hồ sơ Học thuật",
             "nav_stats": "Thống kê",
             "nav_contact": "Liên hệ",
             "btn_theme": "Giao diện tối",
             "btn_theme_light": "Giao diện sáng",
 
-            // Home
+            // Home & About
             "title_intro": "Giới thiệu",
             "intro_p1": "Xin chào! Mình là Đỗ Đăng Khôi, một sinh viên kỹ thuật đầy nhiệt huyết tại Khoa Điện tử Viễn thông (FETEL), Trường Đại học Khoa học Tự nhiên TP.HCM (HCMUS).",
             "intro_p2": "Chuyên môn cốt lõi của mình là sự giao thoa giữa Điện toán Đám mây, Trí tuệ Nhân tạo Ứng dụng và Hệ thống Nhúng. Mình đam mê thiết kế các giải pháp serverless mở rộng trên AWS, huấn luyện các mô hình học máy và hiện thực hóa các thiết kế phần cứng trên SoC FPGA. Chào mừng bạn đến với trang web của mình!",
-            "title_photos": "Hình ảnh của mình",
-
-            // About
             "title_edu": "Học vấn",
             "edu_uni": "Trường Đại học Khoa học Tự nhiên TP.HCM (HCMUS)",
             "edu_faculty": "Khoa Điện tử Viễn thông (FETEL)",
             "edu_major": "Chuyên ngành: Hệ thống Nhúng, AI Ứng dụng và Điện toán Đám mây.",
-            "title_exp": "Kinh nghiệm làm việc",
-            "exp_role": "Thực tập sinh Trí tuệ Nhân tạo & Thị giác Máy tính",
-            "exp_company": "Viettel Telecom (02/2026 - 04/2026)",
-            "exp_desc1": "Nghiên cứu và triển khai các kiến trúc Học sâu nâng cao và thuật toán Học máy cho các bài toán thị giác máy tính.",
-            "exp_desc2": "Tối ưu hóa các mô hình phát hiện đối tượng, phân loại hình ảnh và theo dõi để cải thiện tốc độ suy luận cũng như độ chính xác.",
-            "exp_desc3": "Phối hợp với các thành viên trong đội ngũ để mô phỏng và triển khai các luồng xử lý AI trên hạ tầng điện toán đám mây.",
             "title_skills": "Kỹ năng Công nghệ",
             "skill_ai": "AI & Học máy",
             "skill_ai_1": "Mô hình: Hồi quy Tuyến tính/Logistic, CNN, RNN (LSTM, GRU).",
@@ -144,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function(){
             "skill_cloud_2": "Công cụ: Terraform, GitHub Actions.",
 
             // Projects
-            "title_projects": "Dự án",
+            "title_projects": "Dự án Cá nhân",
             "proj1_desc1": "Bảng điều khiển tài nguyên AWS trên Terminal, viết bằng Python và thư viện Rich.",
             "proj1_desc2": "Hơn 5000 lượt tải xuống trên PyPI.",
             "proj1_desc3": "Hơn 600 stars trên GitHub và 180+ forks.",
@@ -152,14 +144,22 @@ document.addEventListener('DOMContentLoaded', function(){
             "proj3_desc1": "Ứng dụng web giúp người dùng đánh giá mức độ sẵn sàng cho kỳ thi chứng chỉ AWS.",
             "proj3_desc2": "Hơn 700 bài kiểm tra đã được thực hiện.",
 
-            // Statistics
+            // New Word Document Titles (Vietnamese)
+            "title_research_proj": "Dự án Nghiên cứu Trong nước và Quốc tế",
+            "title_patents": "Bằng Sáng chế",
+            "title_research_exp": "Kinh nghiệm Nghiên cứu",
+            "title_sci_community": "Hoạt động Cộng đồng Khoa học",
+            "title_editorial": "Hội đồng Chuyên môn và Biên tập",
+            "title_services": "Vai trò và Dịch vụ Học thuật",
+            "title_advisor": "Cố vấn Khoa học và Hợp tác Doanh nghiệp",
+            "title_honors": "Giải thưởng, Vinh danh và Quỹ Tài trợ",
+
+            // Statistics & Contact
             "title_stats": "Bảng thống kê truy cập",
             "stat_os": "Hệ điều hành",
             "stat_browser": "Trình duyệt",
             "stat_location": "Vị trí",
             "footer_stats": "Trang web này đã thu hút sự chú ý của {count} người!",
-
-            // Contact Form
             "title_contact": "Liên hệ với mình",
             "contact_name": "Tên của bạn",
             "contact_email": "Email của bạn",
@@ -175,20 +175,17 @@ document.addEventListener('DOMContentLoaded', function(){
     const langToggleBtn = document.getElementById('lang-toggle');
 
     function updateLanguage() {
-        // Cập nhật nút ngôn ngữ dùng hình ảnh cờ thay vì text tĩnh
-        langToggleBtn.innerHTML = window.currentLang === 'en' 
-            ? '<img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN Flag" style="vertical-align: middle; border-radius: 2px;"> VN' 
-            : '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="UK Flag" style="vertical-align: middle; border-radius: 2px;"> EN';
+        langToggleBtn.innerHTML = window.currentLang === 'en' ? '🇻🇳 VN' : '🇬🇧 EN';
 
-        // 1. Cập nhật văn bản thường
+        // Cập nhật văn bản thường
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if(translations[window.currentLang][key]) {
-                el.innerText = translations[window.currentLang][key];
+                el.innerHTML = translations[window.currentLang][key];
             }
         });
 
-        // 2. Cập nhật Placeholder cho form và search
+        // Cập nhật Placeholder cho form và search
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
             const key = el.getAttribute('data-i18n-placeholder');
             if(translations[window.currentLang][key]) {
@@ -196,13 +193,13 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         });
 
-        // 3. Cập nhật dòng chữ thống kê ở dưới cùng
+        // Cập nhật dòng chữ thống kê ở dưới cùng
         if (window.totalVisitorCount !== undefined) {
             let footerText = translations[window.currentLang]["footer_stats"].replace("{count}", window.totalVisitorCount);
             document.querySelector('#footer').innerHTML = footerText;
         }
 
-        // 4. Cập nhật nút Dark Mode/Light Mode
+        // Cập nhật nút Dark Mode/Light Mode
         const themeText = document.getElementById('theme-text');
         if (themeText) {
              const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
@@ -237,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function(){
             localStorage.setItem('theme', 'dark');
             document.getElementById('theme-icon').innerText = '☀️';
         }
-        updateLanguage(); // Cập nhật chữ nút bấm ngay lập tức
+        updateLanguage(); 
     });
 
     // ==========================================
@@ -302,9 +299,8 @@ document.addEventListener('DOMContentLoaded', function(){
         const countryData = data.country_data || {}; 
         
         window.totalVisitorCount = data.total_count || 0;
-        updateLanguage(); // Gọi updateLanguage để điền dữ liệu người xem vào footer
+        updateLanguage();
 
-        // --- 1. VẼ BIỂU ĐỒ OS ---
         const osCanvas = document.getElementById('osChart');
         if (osCanvas && Object.keys(osData).length > 0) {
             new Chart(osCanvas.getContext('2d'), {
@@ -321,7 +317,6 @@ document.addEventListener('DOMContentLoaded', function(){
             });
         }
 
-        // --- 2. VẼ BIỂU ĐỒ BROWSER ---
         const browserCanvas = document.getElementById('browserChart');
         if (browserCanvas && Object.keys(browserData).length > 0) {
             new Chart(browserCanvas.getContext('2d'), {
@@ -344,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function(){
             });
         }
 
-        // --- 3. VẼ BIỂU ĐỒ LOCATIONS (QUỐC GIA) - Thanh ngang ---
         const countryCanvas = document.getElementById('countryChart');
         if (countryCanvas && Object.keys(countryData).length > 0) {
             new Chart(countryCanvas.getContext('2d'), {
@@ -428,6 +422,5 @@ document.addEventListener('DOMContentLoaded', function(){
         if (e.key === 'Enter') sendMessage();
     });
 
-    // Khởi tạo ngôn ngữ mặc định lúc mở trang
     updateLanguage();
 });
