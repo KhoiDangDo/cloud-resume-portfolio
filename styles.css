@@ -203,31 +203,38 @@ body {
 .tab-content.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ---- CẤU TRÚC GIAO DIỆN HOME MỚI: TÍCH HỢP HÌNH & VĂN BẢN ---- */
+/* ---- CẤU TRÚC Introduction MỚI THẨM MỸ: FLEXBOX HAI CỘT ---- */
 .introduction-merged-box {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    flex-direction: row; /* Desktop: Nằm ngang (hai cột) */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 40px; /* Khoảng cách lớn giữa hình và chữ cho thoáng */
+    padding: 40px; /* Thêm padding bên trong cho đẹp */
 }
 
+/* Cột trái chứa GIF */
 .intro-visuals {
     display: flex;
+    flex-direction: column; /* Xếp 2 GIF theo chiều dọc */
     justify-content: center;
     align-items: center;
-    gap: 30px;
-    width: 100%;
+    gap: 20px; /* Khoảng cách giữa 2 GIF */
+    width: 220px; /* Chiều rộng cột GIF cố định */
+    flex-shrink: 0; /* Không cho cột GIF bị thu nhỏ */
 }
 
+/* GIF được bo góc nhẹ và căn chỉnh */
 .intro-gif {
     max-width: 200px;
     height: auto;
     border-radius: 8px;
     object-fit: contain;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Thêm bóng đổ nhẹ cho thẩm mỹ */
 }
 
+/* Cột phải chứa văn bản */
 .intro-text {
-    width: 100%;
+    flex-grow: 1; /* Chiếm diện tích còn lại */
     text-align: left;
 }
 
@@ -236,6 +243,26 @@ body {
     margin-bottom: 15px;
     font-weight: 400;
     color: var(--content-text);
+}
+
+/* Responsive cho điện thoại (Chuyển về một cột xếp chồng) */
+@media (max-width: 768px) {
+    .introduction-merged-box {
+        flex-direction: column; /* Xếp chồng theo chiều dọc */
+        padding: 25px;
+        gap: 25px;
+    }
+    .intro-visuals {
+        width: 100%; /* GIF chiếm hết chiều rộng */
+        flex-direction: row; /* Điện thoại: Xếp GIF nằm ngang */
+        justify-content: center;
+    }
+    .intro-gif {
+        max-width: 45%; /* Giảm kích thước GIF trên điện thoại */
+    }
+    .intro-text {
+        text-align: center; /* Căn giữa văn bản */
+    }
 }
 
 .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 20px; }
@@ -286,7 +313,7 @@ body {
 .chat-input-area input { flex-grow: 1; padding: 15px; border: none; outline: none; background: transparent; color: var(--side-text); font-size: 15px; }
 .chat-input-area button { padding: 0 20px; background: #000; color: #fff; border: none; cursor: pointer; font-weight: bold; font-size: 15px; }
 
-/* Responsive */
+/* Responsive General */
 @media (max-width: 768px) {
     .app-container { flex-direction: column; }
     .sidebar { width: 100%; height: auto; position: relative; padding: 30px 20px; border-right: none; border-bottom: 1px solid var(--side-border); }
