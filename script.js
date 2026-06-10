@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function(){
     const searchBar = document.getElementById('search-bar');
     searchBar.addEventListener('input', function(e) {
         const term = e.target.value.toLowerCase();
-        // Tìm trong tất cả các thẻ dự án và kỹ năng
         const searchableItems = document.querySelectorAll('.project, .skill-category');
         
         searchableItems.forEach(item => {
@@ -48,9 +47,11 @@ document.addEventListener('DOMContentLoaded', function(){
             "btn_theme": "Dark mode",
             "btn_theme_light": "Light mode",
 
+            // ĐOẠN GIỚI THIỆU HỌC THUẬT TIẾNG ANH MỚI
             "title_intro": "Introduction",
-            "intro_p1": "Hello! I am Do Dang Khoi, a passionate engineering student at the Faculty of Electronics and Telecommunications (FETEL), Ho Chi Minh City University of Science (HCMUS).",
-            "intro_p2": "My core expertise lies at the intersection of Cloud Computing, Applied Artificial Intelligence, and Embedded Systems. I enjoy architecting scalable serverless solutions on AWS, training machine learning models, and bringing hardware designs to life on SoC FPGAs. Welcome to my cloud-hosted portfolio!",
+            "intro_p1": "Welcome to my professional cloud-hosted portfolio. I am Do Dang Khoi, an undergraduate engineering student enrolled in the Faculty of Electronics and Telecommunications (FETEL) at the Ho Chi Minh City University of Science (HCMUS). My academic foundation is built upon a rigorous curriculum dedicated to advancing modern technological infrastructures.",
+            "intro_p2": "My primary research and technical expertise lie at the specialized intersection of Serverless Cloud Computing, Applied Artificial Intelligence architectures, and Advanced Embedded Systems. I am deeply engaged in designing high-throughput hardware accelerators on SoC FPGAs, training robust deep learning models, and engineering scalable cloud solutions on Amazon Web Services (AWS) using S3, Lambda, DynamoDB, and API Gateway.",
+            "intro_p3": "Driven by academic curiosity and engineering discipline, this platform serves as a comprehensive demonstration of my graduation project, utilizing automated CI/CD deployment pipelines. My objective is to bridge the gap between low-level hardware design and modern serverless paradigms to solve complex, real-world computational challenges.",
             
             "title_edu": "Education",
             "edu_uni": "Ho Chi Minh City University of Science (HCMUS)",
@@ -83,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function(){
             "proj3_desc1": "A web application that helps users assess their AWS certification exam readiness.",
             "proj3_desc2": "700+ tests taken.",
 
-            // Research Projects
             "title_research_proj": "National and International Research Projects",
             "coord_title": "Coordination of Funded Projects",
             "coord_1": "General PI of “A taxonomy Biomolecular, Biosources and Bioactivities to unleash the potential of Biodiversity through a Web-based platform (B4Web)‘’. Grant received: 800k euros.",
@@ -100,24 +100,20 @@ document.addEventListener('DOMContentLoaded', function(){
             "part_5": "“IhatePrejudice: Immigrants, Hate and Prejudice in Social Media”, financed by Compagnia di San Paolo. Grant received: 77k euro.",
             "part_6": "“Gestione sicura ed affidabile del livello applicativo per la distribuzione peer-topeer di contenuti”, Co-financed by MIUR.",
 
-            // Patents
             "title_patents": "Patents",
             "patent_1": "Learning and reasoning from web projections with Eric Horvitz and Susan Dumais.",
             "patent_2": "Resource browser sessions search with Ralph Sommerer, Robert Tucker, and Natasa Milic-Frayling. No. 7225407.",
             "patent_3": "Navigating a resource browser session Patents with Ralph Sommerer, Robert Tucker, and Natasa Milic-Frayling.",
             "patent_4": "“System and Method for Prediction of Self-Similar Signal,” United States Provisional Patent Application (File No: 61/592,352).",
 
-            // Research Experience
             "title_research_exp": "Research Experience",
             "exp_1": "<strong>Yahoo Research, Santa Clara, CA:</strong> Worked with Ravi Kumar, Andrew Tomkins on evolution and modeling of social networks. And with Michael Mahoney and Kevin Land on community structure in large networks.",
             "exp_2": "<strong>Microsoft Research, Redmond, WA:</strong> Worked with Eric Horvitz and Susan Dumais on web search query modeling, and the dynamics of a instant messenger network of 240 million people.",
             "exp_3": "<strong>Hewlett Packard Laboratories:</strong> Worked with Bernardo Huberman and Lada Adamic on the dynamics of person-to-person product recommendations in a large social network.",
-            "exp_4": "<strong>Carnegie Mellon Univeristy:</strong> Worked with Christos Faloutsos on problems posed by large graphs.",
+            "exp_4": "<strong>Carnegie Mellon University:</strong> Worked with Christos Faloutsos on problems posed by large graphs.",
             "exp_5": "<strong>Royal Holloway University of London:</strong> With John ShaweTaylor on text classification on uneven training datasets.",
             "exp_6": "<strong>Jozef Stefan Institute, Slovenia:</strong> With Marko Grobelnik and Dunja Mladenic. Projects on machine learning, mining documents and graphs, document summarization, text to speech synthesis.",
 
-            // Scientific Community
-            "title_sci_community": "Scientific Community Activities",
             "talk_title": "Talks and Tutorials",
             "talk_1": "Invited talk at Joint Statistical Meeting on Analysis of Online Communities",
             "talk_2": "Accepted full day tutorial to WWW (International conference on World Wide Web)",
@@ -129,20 +125,17 @@ document.addEventListener('DOMContentLoaded', function(){
             "comm_2": "<strong>Reviewer for:</strong> JACM, JEA, ACM TKDD, MLJ, IEEE TKDE, Data Mining and Knowledge Discovery, NIPS.",
             "comm_3": "<strong>External Reviewer:</strong> CIKM, AAAI, SIGIR, ECIR, ICDE, ECAI, IJCAI, SIAM DM.",
 
-            // Editorial
             "title_editorial": "Program Committees and Editorial Activities",
             "edit_1": "Associate Editor of “EPJ Data Science” journal.",
-            "edit_2": "Lightining Co-Chair “COMPLEX NETWORKS - The 11th International Conference on Complex Networks and their Applications”.",
+            "edit_2": "Lightning Co-Chair “COMPLEX NETWORKS - The 11th International Conference on Complex Networks and their Applications”.",
             "edit_3": "Editor: “Special Issue on Network analysis and computational social science\", Future Internet, MDPI.",
             "edit_4": "General Co-Chair of ACM Conference on Hypertext and Hypermedia.",
 
-            // Services
             "title_services": "Services & Academic Roles",
             "serv_1": "Associate Editor: Enterprise Information System, International Journal of Industrial Engineering.",
             "serv_2": "Conference Co-chair of Korea-Canada Conference (Vancouver, Niagara Falls, Kanaskis).",
             "serv_3": "Associate Chair of Undergraduate & Graduate Studies, Department of Mechanical and Industrial Engineering, University of Toronto.",
 
-            // Advisor
             "title_advisor": "Scientific Advisor & Industrial Collaboration",
             "adv_title": "Public and Private Institutions",
             "adv_1": "Member of the Advisory Board of CINI’s “National Big Data laboratory”.",
@@ -153,7 +146,6 @@ document.addEventListener('DOMContentLoaded', function(){
             "ind_2": "Birmingham Midshires bank, UK.",
             "ind_3": "Microsoft Live Labs, Yahoo Research, HP Labs.",
 
-            // Honors
             "title_honors": "Academic Honors, Awards & Funding",
             "aw_title": "Awards",
             "aw_1": "Best student paper award at 13th ACM SIGKDD International Conference.",
@@ -166,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function(){
             "fund_2": "$75,000 Yahoo Research Alliance gift titled \"ShatterPlots: A New Tool for Graph Mining\".",
             "fund_3": "$337,000 for NSF project \"Finding Patterns and Anomalies in Large Time-Evolving Graphs\".",
 
-            // Footer & Contact
             "title_stats": "Analytics Dashboard",
             "stat_os": "Operating System",
             "stat_browser": "Browser",
@@ -194,9 +185,11 @@ document.addEventListener('DOMContentLoaded', function(){
             "btn_theme": "Giao diện tối",
             "btn_theme_light": "Giao diện sáng",
 
+            // ĐOẠN GIỚI THIỆU TIẾNG VIỆT HỌC THUẬT MỚI
             "title_intro": "Giới thiệu",
-            "intro_p1": "Xin chào! Mình là Đỗ Đăng Khôi, một sinh viên kỹ thuật đầy nhiệt huyết tại Khoa Điện tử Viễn thông (FETEL), Trường Đại học Khoa học Tự nhiên TP.HCM (HCMUS).",
-            "intro_p2": "Chuyên môn cốt lõi của mình là sự giao thoa giữa Điện toán Đám mây, Trí tuệ Nhân tạo Ứng dụng và Hệ thống Nhúng. Mình đam mê thiết kế các giải pháp serverless mở rộng trên AWS, huấn luyện các mô hình học máy và hiện thực hóa các thiết kế phần cứng trên SoC FPGA. Chào mừng bạn đến với trang web của mình!",
+            "intro_p1": "Chào mừng bạn đến với hồ sơ năng lực chuyên nghiệp được lưu trữ trên nền tảng đám mây của tôi. Tôi là Đỗ Đăng Khôi, sinh viên kỹ thuật thuộc Khoa Điện tử Viễn thông (FETEL), Trường Đại học Khoa học Tự nhiên - ĐHQG TP.HCM (HCMUS). Nền tảng học thuật của tôi được xây dựng trên một chương trình đào tạo nghiêm ngặt nhằm phát triển các cơ sở hạ tầng công nghệ hiện đại.",
+            "intro_p2": "Chuyên môn kỹ thuật và định hướng nghiên cứu chính của tôi nằm ở sự giao thoa chuyên sâu giữa Điện toán đám mây Serverless, các kiến trúc Trí tuệ nhân tạo ứng dụng và Hệ thống nhúng nâng cao. Tôi đặc biệt tập trung vào việc thiết kế các bộ tăng tốc phần cứng hiệu năng cao trên SoC FPGA, huấn luyện các mô hình học sâu mạnh mẽ và kiến trúc các giải pháp đám mây có khả năng mở rộng linh hoạt trên Amazon Web Services (AWS) sử dụng S3, Lambda, DynamoDB và API Gateway.",
+            "intro_p3": "Được thúc đẩy bởi niềm đam mê khoa học và kỷ luật kỹ thuật, nền tảng này đóng vai trò là một minh chứng toàn diện cho dự án tốt nghiệp của tôi, áp dụng các luồng triển khai tự động CI/CD. Mục tiêu của tôi là thu hẹp khoảng cách giữa thiết kế phần cứng cấp thấp và các mô hình serverless hiện đại nhằm giải quyết các thách thức tính toán phức tạp trong thực tế.",
             
             "title_edu": "Học vấn",
             "edu_uni": "Trường Đại học Khoa học Tự nhiên TP.HCM (HCMUS)",
@@ -229,7 +222,6 @@ document.addEventListener('DOMContentLoaded', function(){
             "proj3_desc1": "Ứng dụng web giúp người dùng đánh giá mức độ sẵn sàng cho kỳ thi chứng chỉ AWS.",
             "proj3_desc2": "Hơn 700 bài kiểm tra đã được thực hiện.",
 
-            // Research Projects
             "title_research_proj": "Dự án Nghiên cứu Trong nước và Quốc tế",
             "coord_title": "Điều phối các Dự án được Tài trợ",
             "coord_1": "Chủ nhiệm Tổng quát (PI) dự án “Phân loại Sinh học phân tử, Nguồn sinh học và Hoạt tính sinh học nhằm khai thác tiềm năng Đa dạng sinh học thông qua nền tảng Web (B4Web)‘’. Nhận tài trợ: 800.000 euro.",
@@ -246,24 +238,20 @@ document.addEventListener('DOMContentLoaded', function(){
             "part_5": "“IhatePrejudice: Nhập cư, Thù ghét và Định kiến trên Mạng xã hội”, tài trợ bởi Compagnia di San Paolo. Nhận tài trợ: 77.000 euro.",
             "part_6": "Dự án “Quản lý an toàn và tin cậy tầng ứng dụng để phân phối nội dung peer-to-peer”, đồng tài trợ bởi MIUR.",
 
-            // Patents
             "title_patents": "Bằng Sáng chế (Patents)",
             "patent_1": "Học máy và suy luận từ dữ liệu phân chiếu web (cùng Eric Horvitz và Susan Dumais).",
             "patent_2": "Tìm kiếm phiên trình duyệt tài nguyên (cùng Ralph Sommerer, Robert Tucker, và Natasa Milic-Frayling). Số hiệu: 7225407.",
             "patent_3": "Bằng sáng chế: Điều hướng phiên trình duyệt tài nguyên (cùng Ralph Sommerer, Robert Tucker, và Natasa Milic-Frayling).",
             "patent_4": "“Hệ thống và Phương pháp Dự đoán Tín hiệu Tự tương đồng,” Đơn xin Cấp bằng Sáng chế Tạm thời Hoa Kỳ (Số hồ sơ: 61/592,352).",
 
-            // Research Experience
             "title_research_exp": "Kinh nghiệm Nghiên cứu",
             "exp_1": "<strong>Yahoo Research, Santa Clara, CA:</strong> Làm việc cùng Ravi Kumar, Andrew Tomkins về mô hình hóa và sự tiến hóa của mạng xã hội. Hợp tác với Michael Mahoney và Kevin Land về cấu trúc cộng đồng trong mạng lưới quy mô lớn.",
-            "exp_2": "<strong>Microsoft Research, Redmond, WA:</strong> Làm việc cùng Eric Horvitz và Susan Dumais về mô hình hóa truy vấn tìm kiếm web, và động lực học mạng lưới tin nhắn tức thời với 240 triệu người dùng.",
+            "exp_2": "<strong>Microsoft Research, Redmond, WA:</strong> Làm việc cùng Eric Horvitz và Susan Dumais về mô hình hóa truy vấn tìm kiếm web, và động lực học mạng lưới tin nhắn tức thời với 240 million người dùng.",
             "exp_3": "<strong>Hewlett Packard Laboratories:</strong> Hợp tác với Bernardo Huberman và Lada Adamic nghiên cứu động lực học của hệ thống gợi ý sản phẩm giữa người với người trong một mạng xã hội lớn.",
-            "exp_4": "<strong>Carnegie Mellon Univeristy:</strong> Làm việc cùng Christos Faloutsos giải quyết các vấn đề đặt ra bởi đồ thị quy mô lớn.",
+            "exp_4": "<strong>Carnegie Mellon University:</strong> Làm việc cùng Christos Faloutsos giải quyết các vấn đề đặt ra bởi đồ thị quy mô lớn.",
             "exp_5": "<strong>Royal Holloway University of London:</strong> Cùng John ShaweTaylor phân loại văn bản trên tập dữ liệu huấn luyện không đồng đều.",
             "exp_6": "<strong>Jozef Stefan Institute, Slovenia:</strong> Làm việc cùng Marko Grobelnik và Dunja Mladenic trong các dự án học máy, khai phá tài liệu và đồ thị, tóm tắt văn bản, và tổng hợp giọng nói từ văn bản.",
 
-            // Scientific Community
-            "title_sci_community": "Hoạt động Cộng đồng Khoa học",
             "talk_title": "Báo cáo và Hướng dẫn (Talks and Tutorials)",
             "talk_1": "Báo cáo khách mời tại Joint Statistical Meeting về Phân tích Cộng đồng Trực tuyến.",
             "talk_2": "Hướng dẫn chuyên đề cả ngày tại Hội nghị WWW (World Wide Web).",
@@ -275,20 +263,17 @@ document.addEventListener('DOMContentLoaded', function(){
             "comm_2": "<strong>Phản biện cho:</strong> JACM, JEA, ACM TKDD, MLJ, IEEE TKDE, Data Mining and Knowledge Discovery, NIPS.",
             "comm_3": "<strong>Phản biện bên ngoài:</strong> CIKM, AAAI, SIGIR, ECIR, ICDE, ECAI, IJCAI, SIAM DM.",
 
-            // Editorial
             "title_editorial": "Hội đồng Chuyên môn và Biên tập",
             "edit_1": "Phó Biên tập viên tạp chí “EPJ Data Science”.",
             "edit_2": "Đồng Chủ tọa sự kiện “COMPLEX NETWORKS - Hội nghị Quốc tế lần thứ 11 về Mạng phức hợp”.",
             "edit_3": "Biên tập viên: “Số Đặc biệt về Phân tích mạng lưới và khoa học xã hội máy tính\", Future Internet, MDPI.",
             "edit_4": "Đồng Chủ tọa Tổng quát tại Hội nghị ACM về Hypertext và Hypermedia.",
 
-            // Services
             "title_services": "Vai trò và Dịch vụ Học thuật",
             "serv_1": "Phó Biên tập: Enterprise Information System, International Journal of Industrial Engineering.",
             "serv_2": "Đồng Chủ tọa Hội nghị Hàn Quốc-Canada (Vancouver, Niagara Falls, Kanaskis).",
             "serv_3": "Phó Trưởng khoa Đào tạo Đại học & Sau Đại học, Khoa Cơ khí và Kỹ thuật Công nghiệp, Đại học Toronto.",
 
-            // Advisor
             "title_advisor": "Cố vấn Khoa học và Hợp tác Doanh nghiệp",
             "adv_title": "Các Cơ quan Nhà nước và Tư nhân",
             "adv_1": "Thành viên Ban cố vấn của “Phòng thí nghiệm Dữ liệu Lớn Quốc gia” thuộc CINI.",
@@ -299,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function(){
             "ind_2": "Ngân hàng Birmingham Midshires, Vương quốc Anh.",
             "ind_3": "Microsoft Live Labs, Yahoo Research, HP Labs.",
 
-            // Honors
             "title_honors": "Giải thưởng, Vinh danh và Quỹ Tài trợ",
             "aw_title": "Giải thưởng (Awards)",
             "aw_1": "Giải thưởng bài báo sinh viên xuất sắc nhất tại Hội nghị Quốc tế ACM SIGKDD lần thứ 13.",
@@ -312,7 +296,6 @@ document.addEventListener('DOMContentLoaded', function(){
             "fund_2": "Nhận 75.000 USD từ Yahoo Research Alliance cho dự án \"ShatterPlots: Công cụ mới cho Khai phá Đồ thị\".",
             "fund_3": "Nhận 337.000 USD cho dự án NSF \"Tìm kiếm Cấu trúc và Bất thường trong Đồ thị Tiến hóa Thời gian Quy mô lớn\".",
 
-            // Footer & Contact
             "title_stats": "Bảng thống kê truy cập",
             "stat_os": "Hệ điều hành",
             "stat_browser": "Trình duyệt",
@@ -333,12 +316,10 @@ document.addEventListener('DOMContentLoaded', function(){
     const langToggleBtn = document.getElementById('lang-toggle');
 
     function updateLanguage() {
-        // Cập nhật nội dung nút bằng thẻ <img> chuẩn để không mất icon lá cờ
         langToggleBtn.innerHTML = window.currentLang === 'en' 
             ? '<img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN Flag" style="vertical-align: middle; border-radius: 2px;"> VN' 
             : '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="UK Flag" style="vertical-align: middle; border-radius: 2px;"> EN';
 
-        // Cập nhật văn bản thường
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if(translations[window.currentLang][key]) {
@@ -346,7 +327,6 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         });
 
-        // Cập nhật Placeholder cho form và search
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
             const key = el.getAttribute('data-i18n-placeholder');
             if(translations[window.currentLang][key]) {
@@ -354,13 +334,11 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         });
 
-        // Cập nhật dòng chữ thống kê ở dưới cùng
         if (window.totalVisitorCount !== undefined) {
             let footerText = translations[window.currentLang]["footer_stats"].replace("{count}", window.totalVisitorCount);
             document.querySelector('#footer').innerHTML = footerText;
         }
 
-        // Cập nhật nút Dark Mode/Light Mode
         const themeText = document.getElementById('theme-text');
         if (themeText) {
              const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
