@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function(){
             "btn_theme": "Dark mode",
             "btn_theme_light": "Light mode",
 
-            // ĐOẠN GIỚI THIỆU HỌC THUẬT TIẾNG ANH MỚI
             "title_intro": "Introduction",
             "intro_p1": "Welcome to my professional cloud-hosted portfolio. I am Do Dang Khoi, an undergraduate engineering student enrolled in the Faculty of Electronics and Telecommunications (FETEL) at the Ho Chi Minh City University of Science (HCMUS). My academic foundation is built upon a rigorous curriculum dedicated to advancing modern technological infrastructures.",
             "intro_p2": "My primary research and technical expertise lie at the specialized intersection of Serverless Cloud Computing, Applied Artificial Intelligence architectures, and Advanced Embedded Systems. I am deeply engaged in designing high-throughput hardware accelerators on SoC FPGAs, training robust deep learning models, and engineering scalable cloud solutions on Amazon Web Services (AWS) using S3, Lambda, DynamoDB, and API Gateway.",
@@ -114,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function(){
             "exp_5": "<strong>Royal Holloway University of London:</strong> With John ShaweTaylor on text classification on uneven training datasets.",
             "exp_6": "<strong>Jozef Stefan Institute, Slovenia:</strong> With Marko Grobelnik and Dunja Mladenic. Projects on machine learning, mining documents and graphs, document summarization, text to speech synthesis.",
 
+            "title_sci_community": "Scientific Community Activities",
             "talk_title": "Talks and Tutorials",
             "talk_1": "Invited talk at Joint Statistical Meeting on Analysis of Online Communities",
             "talk_2": "Accepted full day tutorial to WWW (International conference on World Wide Web)",
@@ -185,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function(){
             "btn_theme": "Giao diện tối",
             "btn_theme_light": "Giao diện sáng",
 
-            // ĐOẠN GIỚI THIỆU TIẾNG VIỆT HỌC THUẬT MỚI
             "title_intro": "Giới thiệu",
             "intro_p1": "Chào mừng bạn đến với hồ sơ năng lực chuyên nghiệp được lưu trữ trên nền tảng đám mây của tôi. Tôi là Đỗ Đăng Khôi, sinh viên kỹ thuật thuộc Khoa Điện tử Viễn thông (FETEL), Trường Đại học Khoa học Tự nhiên - ĐHQG TP.HCM (HCMUS). Nền tảng học thuật của tôi được xây dựng trên một chương trình đào tạo nghiêm ngặt nhằm phát triển các cơ sở hạ tầng công nghệ hiện đại.",
             "intro_p2": "Chuyên môn kỹ thuật và định hướng nghiên cứu chính của tôi nằm ở sự giao thoa chuyên sâu giữa Điện toán đám mây Serverless, các kiến trúc Trí tuệ nhân tạo ứng dụng và Hệ thống nhúng nâng cao. Tôi đặc biệt tập trung vào việc thiết kế các bộ tăng tốc phần cứng hiệu năng cao trên SoC FPGA, huấn luyện các mô hình học sâu mạnh mẽ và kiến trúc các giải pháp đám mây có khả năng mở rộng linh hoạt trên Amazon Web Services (AWS) sử dụng S3, Lambda, DynamoDB và API Gateway.",
@@ -252,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function(){
             "exp_5": "<strong>Royal Holloway University of London:</strong> Cùng John ShaweTaylor phân loại văn bản trên tập dữ liệu huấn luyện không đồng đều.",
             "exp_6": "<strong>Jozef Stefan Institute, Slovenia:</strong> Làm việc cùng Marko Grobelnik và Dunja Mladenic trong các dự án học máy, khai phá tài liệu và đồ thị, tóm tắt văn bản, và tổng hợp giọng nói từ văn bản.",
 
+            "title_sci_community": "Hoạt động Cộng đồng Khoa học",
             "talk_title": "Báo cáo và Hướng dẫn (Talks and Tutorials)",
             "talk_1": "Báo cáo khách mời tại Joint Statistical Meeting về Phân tích Cộng đồng Trực tuyến.",
             "talk_2": "Hướng dẫn chuyên đề cả ngày tại Hội nghị WWW (World Wide Web).",
@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     // ==========================================
-    // 4. CHỨC NĂNG DARK MODE (CHỈ ÁP DỤNG SIDEBAR)
+    // 4. CHỨC NĂNG DARK MODE TỔNG THỂ
     // ==========================================
     const themeToggle = document.getElementById('theme-toggle');
     const currentTheme = localStorage.getItem('theme');
