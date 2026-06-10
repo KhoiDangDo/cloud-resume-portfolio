@@ -17,17 +17,88 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     // ==========================================
-    // 2. TÍNH NĂNG TÌM KIẾM (SEARCH PORTFOLIO)
+    // 2. NÂNG CẤP HỆ THỐNG TÌM KIẾM THÔNG MINH TOÀN CỤC
     // ==========================================
     const searchBar = document.getElementById('search-bar');
     searchBar.addEventListener('input', function(e) {
-        const term = e.target.value.toLowerCase();
+        const term = e.target.value.toLowerCase().trim();
         const searchableItems = document.querySelectorAll('.project, .skill-category');
-        
+        const allHeadings = document.querySelectorAll('.tab-content h2');
+        const tabs = document.querySelectorAll('.tab-content');
+        const navButtons = document.querySelectorAll('.nav-btn');
+
+        if (!term) {
+            // Nếu thanh tìm kiếm trống, khôi phục lại trạng thái hiển thị mặc định
+            searchableItems.forEach(item => item.style.display = '');
+            allHeadings.forEach(h => h.style.display = '');
+            
+            // Quay về hiển thị theo tab đang được kích hoạt ở Sidebar
+            const activeBtn = document.querySelector('.nav-btn.active');
+            if (activeBtn) {
+                const targetId = activeBtn.getAttribute('data-target');
+                tabContents.forEach(t => t.classList.remove('active'));
+                document.getElementById(targetId).classList.add('active');
+            }
+            return;
+        }
+
+        let firstMatchedTabId = null;
+
+        // Bước 2.1: Lọc tất cả các ô nội dung (Project / Skill)
         searchableItems.forEach(item => {
             const text = item.innerText.toLowerCase();
-            item.style.display = text.includes(term) ? 'block' : 'none';
+            if (text.includes(term)) {
+                item.style.display = ''; // Xóa style inline để khôi phục định dạng CSS gốc (Sửa Bug 1)
+                
+                // Ghi nhận Tab đầu tiên chứa kết quả trùng khớp
+                const parentTab = item.closest('.tab-content');
+                if (parentTab && !firstMatchedTabId) {
+                    firstMatchedTabId = parentTab.id;
+                }
+            } else {
+                item.style.display = 'none'; // An nội dung nếu không khớp
+            }
         });
+
+        // Bước 2.2: Lọc và ẩn các tiêu đề h2 nếu toàn bộ nội dung bên dưới nó bị ẩn (Sửa Bug 2)
+        allHeadings.forEach(heading => {
+            let sibling = heading.nextElementSibling;
+            let hasVisibleContent = false;
+
+            // Vòng lặp kiểm tra các phần tử liền kề bên dưới cho đến khi gặp h2 tiếp theo hoặc hết tab
+            while (sibling && sibling.tagName !== 'H2') {
+                if (sibling.classList.contains('project') || sibling.classList.contains('skill-category')) {
+                    if (sibling.style.display !== 'none') hasVisibleContent = true;
+                }
+                // Hỗ trợ quét sâu vào trong các cấu trúc Grid (Dự án / Kỹ năng)
+                if (sibling.classList.contains('skills-grid') || sibling.classList.contains('projects-grid')) {
+                    const children = sibling.querySelectorAll('.project, .skill-category');
+                    children.forEach(child => {
+                        if (child.style.display !== 'none') hasVisibleContent = true;
+                    });
+                }
+                sibling = sibling.nextElementSibling;
+            }
+            // Nếu không có nội dung nào hiển thị, ẩn luôn tiêu đề h2 này đi
+            heading.style.display = hasVisibleContent ? '' : 'none';
+        });
+
+        // Bước 2.3: Tự động chuyển tab thông minh đến nơi có kết quả tìm thấy (Sửa Bug 2)
+        if (firstMatchedTabId) {
+            navButtons.forEach(btn => {
+                if (btn.getAttribute('data-target') === firstMatchedTabId) {
+                    navButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+            });
+            tabContents.forEach(tab => {
+                if (tab.id === firstMatchedTabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+        }
     });
 
     // ==========================================
@@ -221,6 +292,7 @@ document.addEventListener('DOMContentLoaded', function(){
             "proj3_desc1": "Ứng dụng web giúp người dùng đánh giá mức độ sẵn sàng cho kỳ thi chứng chỉ AWS.",
             "proj3_desc2": "Hơn 700 bài kiểm tra đã được thực hiện.",
 
+            // Research Projects
             "title_research_proj": "Dự án Nghiên cứu Trong nước và Quốc tế",
             "coord_title": "Điều phối các Dự án được Tài trợ",
             "coord_1": "Chủ nhiệm Tổng quát (PI) dự án “Phân loại Sinh học phân tử, Nguồn sinh học và Hoạt tính sinh học nhằm khai thác tiềm năng Đa dạng sinh học thông qua nền tảng Web (B4Web)‘’. Nhận tài trợ: 800.000 euro.",
@@ -237,12 +309,14 @@ document.addEventListener('DOMContentLoaded', function(){
             "part_5": "“IhatePrejudice: Nhập cư, Thù ghét và Định kiến trên Mạng xã hội”, tài trợ bởi Compagnia di San Paolo. Nhận tài trợ: 77.000 euro.",
             "part_6": "Dự án “Quản lý an toàn và tin cậy tầng ứng dụng để phân phối nội dung peer-to-peer”, đồng tài trợ bởi MIUR.",
 
+            // Patents
             "title_patents": "Bằng Sáng chế (Patents)",
             "patent_1": "Học máy và suy luận từ dữ liệu phân chiếu web (cùng Eric Horvitz và Susan Dumais).",
             "patent_2": "Tìm kiếm phiên trình duyệt tài nguyên (cùng Ralph Sommerer, Robert Tucker, và Natasa Milic-Frayling). Số hiệu: 7225407.",
             "patent_3": "Bằng sáng chế: Điều hướng phiên trình duyệt tài nguyên (cùng Ralph Sommerer, Robert Tucker, và Natasa Milic-Frayling).",
             "patent_4": "“Hệ thống và Phương pháp Dự đoán Tín hiệu Tự tương đồng,” Đơn xin Cấp bằng Sáng chế Tạm thời Hoa Kỳ (Số hồ sơ: 61/592,352).",
 
+            // Research Experience
             "title_research_exp": "Kinh nghiệm Nghiên cứu",
             "exp_1": "<strong>Yahoo Research, Santa Clara, CA:</strong> Làm việc cùng Ravi Kumar, Andrew Tomkins về mô hình hóa và sự tiến hóa của mạng xã hội. Hợp tác với Michael Mahoney và Kevin Land về cấu trúc cộng đồng trong mạng lưới quy mô lớn.",
             "exp_2": "<strong>Microsoft Research, Redmond, WA:</strong> Làm việc cùng Eric Horvitz và Susan Dumais về mô hình hóa truy vấn tìm kiếm web, và động lực học mạng lưới tin nhắn tức thời với 240 million người dùng.",
