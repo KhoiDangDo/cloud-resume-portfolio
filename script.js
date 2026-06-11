@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', function(){
     // ==========================================
     // 7. AI CHATBOT LOGIC (CÓ TÍNH NĂNG STREAMING TYPEWRITER)
     // ==========================================
-    const CHAT_API_URL = 'https://acbmvejaef.execute-api.ap-southeast-2.amazonaws.com/prod/chat';
+    const CHAT_API_URL = 'https://ry7mobyrrjxhi5khnjbyn2u3f40wbiut.lambda-url.ap-southeast-2.on.aws/';
     
     const chatToggle = document.getElementById('chat-toggle');
     const chatBox = document.getElementById('chat-box');
