@@ -246,7 +246,8 @@ document.addEventListener('DOMContentLoaded', function(){
             "contact_btn": "Send Message 🚀",
             "contact_sending": "Sending... ⏳",
             "contact_success": "✅ Message sent successfully! Thank you.",
-            "contact_error": "❌ An error occurred. Please try again later."
+            "contact_error": "❌ An error occurred. Please try again later.",
+            "chat_header": "🤖 Chat with Khoi's AI"
         },
         "vn": {
             "location": "Việt Nam",
@@ -387,7 +388,8 @@ document.addEventListener('DOMContentLoaded', function(){
             "contact_btn": "Gửi tin nhắn 🚀",
             "contact_sending": "Đang gửi... ⏳",
             "contact_success": "✅ Gửi tin nhắn thành công! Cảm ơn bạn.",
-            "contact_error": "❌ Có lỗi xảy ra. Vui lòng thử lại sau."
+            "contact_error": "❌ Có lỗi xảy ra. Vui lòng thử lại sau.",
+            "chat_header": "🤖 Chat với Trợ lý AI của Khôi"
         }
     };
 
