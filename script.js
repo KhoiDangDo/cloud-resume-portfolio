@@ -28,10 +28,9 @@ document.addEventListener('DOMContentLoaded', function(){
         const navButtons = document.querySelectorAll('.nav-btn');
 
         if (!term) {
-            // Khôi phục mọi thứ khi xóa ô tìm kiếm
             searchableItems.forEach(item => item.style.display = '');
             allHeadings.forEach(h => h.style.display = '');
-            navButtons.forEach(btn => btn.style.display = 'flex'); // Hiện lại toàn bộ menu
+            navButtons.forEach(btn => btn.style.display = 'flex'); 
             
             const activeBtn = document.querySelector('.nav-btn.active');
             if (activeBtn) {
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', function(){
         let matchedTabs = new Set();
         let firstMatchedTabId = null;
 
-        // Bước 2.1: Quét nội dung và ghi nhận các Tab chứa kết quả
         searchableItems.forEach(item => {
             const text = item.innerText.toLowerCase();
             if (text.includes(term)) {
@@ -53,9 +51,9 @@ document.addEventListener('DOMContentLoaded', function(){
                 
                 const parentTab = item.closest('.tab-content');
                 if (parentTab) {
-                    matchedTabs.add(parentTab.id); // Lưu lại ID của tab có kết quả
+                    matchedTabs.add(parentTab.id); 
                     if (!firstMatchedTabId) {
-                        firstMatchedTabId = parentTab.id; // Ghi nhớ tab đầu tiên
+                        firstMatchedTabId = parentTab.id; 
                     }
                 }
             } else {
@@ -63,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         });
 
-        // Bước 2.2: Ẩn các tiêu đề H2 nếu không có nội dung bên dưới
         allHeadings.forEach(heading => {
             let sibling = heading.nextElementSibling;
             let hasVisibleContent = false;
@@ -83,17 +80,15 @@ document.addEventListener('DOMContentLoaded', function(){
             heading.style.display = hasVisibleContent ? '' : 'none';
         });
 
-        // Bước 2.3: Lọc menu bên trái (Chỉ hiện các tab có kết quả)
         navButtons.forEach(btn => {
             const target = btn.getAttribute('data-target');
             if (matchedTabs.has(target)) {
-                btn.style.display = 'flex'; // Hiện nút tab này
+                btn.style.display = 'flex'; 
             } else {
-                btn.style.display = 'none'; // Ẩn nút tab nếu không có kết quả
+                btn.style.display = 'none'; 
             }
         });
 
-        // Bước 2.4: Tự động chuyển đến tab đầu tiên có kết quả
         if (firstMatchedTabId) {
             navButtons.forEach(btn => {
                 if (btn.getAttribute('data-target') === firstMatchedTabId) {
@@ -268,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
             "title_intro": "Giới thiệu",
             "intro_p1": "Chào mừng bạn đến với hồ sơ năng lực chuyên nghiệp được lưu trữ trên nền tảng đám mây của tôi. Tôi là Đỗ Đăng Khôi, sinh viên kỹ thuật thuộc Khoa Điện tử Viễn thông (FETEL), Trường Đại học Khoa học Tự nhiên - ĐHQG TP.HCM (HCMUS). Nền tảng học thuật của tôi được xây dựng trên một chương trình đào tạo nghiêm ngặt nhằm phát triển các cơ sở hạ tầng công nghệ hiện đại.",
-            "intro_p2": "Chuyên môn kỹ thuật và định hướng nghiên cứu chính của tôi nằm ở sự giao thoa chuyên sâu giữa Điện toán đám mây Serverless, các kiến trúc Trí tuệ nhân tạo ứng dụng và Hệ thống nhúng nâng cao. Tôi đặc biệt tập trung vào việc thiết kế các bộ tăng tốc phần cứng hiệu năng cao trên SoC FPGA, huấn luyện các mô hình học sâu mạnh mẽ và kiến trúc các giải pháp đám mây có khả năng mở rộng linh hoạt trên Amazon Web Services (AWS) sử dụng S3, Lambda, DynamoDB và API Gateway.",
+            "intro_p2": "Chuyên môn kỹ thuật và định hướng nghiên cứu chính của tôi nằm ở sự giao হোয়া chuyên sâu giữa Điện toán đám mây Serverless, các kiến trúc Trí tuệ nhân tạo ứng dụng và Hệ thống nhúng nâng cao. Tôi đặc biệt tập trung vào việc thiết kế các bộ tăng tốc phần cứng hiệu năng cao trên SoC FPGA, huấn luyện các mô hình học sâu mạnh mẽ và kiến trúc các giải pháp đám mây có khả năng mở rộng linh hoạt trên Amazon Web Services (AWS) sử dụng S3, Lambda, DynamoDB và API Gateway.",
             "intro_p3": "Được thúc đẩy bởi niềm đam mê khoa học và kỷ luật kỹ thuật, nền tảng này đóng vai trò là một minh chứng toàn diện cho dự án tốt nghiệp của tôi, áp dụng các luồng triển khai tự động CI/CD. Mục tiêu của tôi là thu hẹp khoảng cách giữa thiết kế phần cứng cấp thấp và các mô hình serverless hiện đại nhằm giải quyết các thách thức tính toán phức tạp trong thực tế.",
             
             "title_edu": "Học vấn",
@@ -302,6 +297,7 @@ document.addEventListener('DOMContentLoaded', function(){
             "proj3_desc1": "Ứng dụng web giúp người dùng đánh giá mức độ sẵn sàng cho kỳ thi chứng chỉ AWS.",
             "proj3_desc2": "Hơn 700 bài kiểm tra đã được thực hiện.",
 
+            // Research Projects
             "title_research_proj": "Dự án Nghiên cứu Trong nước và Quốc tế",
             "coord_title": "Điều phối các Dự án được Tài trợ",
             "coord_1": "Chủ nhiệm Tổng quát (PI) dự án “Phân loại Sinh học phân tử, Nguồn sinh học và Hoạt tính sinh học nhằm khai thác tiềm năng Đa dạng sinh học thông qua nền tảng Web (B4Web)‘’. Nhận tài trợ: 800.000 euro.",
@@ -318,12 +314,14 @@ document.addEventListener('DOMContentLoaded', function(){
             "part_5": "“IhatePrejudice: Nhập cư, Thù ghét và Định kiến trên Mạng xã hội”, tài trợ bởi Compagnia di San Paolo. Nhận tài trợ: 77.000 euro.",
             "part_6": "Dự án “Quản lý an toàn và tin cậy tầng ứng dụng để phân phối nội dung peer-to-peer”, đồng tài trợ bởi MIUR.",
 
+            // Patents
             "title_patents": "Bằng Sáng chế (Patents)",
             "patent_1": "Học máy và suy luận từ dữ liệu phân chiếu web (cùng Eric Horvitz và Susan Dumais).",
             "patent_2": "Tìm kiếm phiên trình duyệt tài nguyên (cùng Ralph Sommerer, Robert Tucker, và Natasa Milic-Frayling). Số hiệu: 7225407.",
             "patent_3": "Bằng sáng chế: Điều hướng phiên trình duyệt tài nguyên (cùng Ralph Sommerer, Robert Tucker, và Natasa Milic-Frayling).",
             "patent_4": "“Hệ thống và Phương pháp Dự đoán Tín hiệu Tự tương đồng,” Đơn xin Cấp bằng Sáng chế Tạm thời Hoa Kỳ (Số hồ sơ: 61/592,352).",
 
+            // Research Experience
             "title_research_exp": "Kinh nghiệm Nghiên cứu",
             "exp_1": "<strong>Yahoo Research, Santa Clara, CA:</strong> Làm việc cùng Ravi Kumar, Andrew Tomkins về mô hình hóa và sự tiến hóa của mạng xã hội. Hợp tác với Michael Mahoney và Kevin Land về cấu trúc cộng đồng trong mạng lưới quy mô lớn.",
             "exp_2": "<strong>Microsoft Research, Redmond, WA:</strong> Làm việc cùng Eric Horvitz và Susan Dumais về mô hình hóa truy vấn tìm kiếm web, và động lực học mạng lưới tin nhắn tức thời với 240 million người dùng.",
@@ -585,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function(){
     .catch(error => console.error("Statistics system error:", error));
 
     // ==========================================
-    // 7. AI CHATBOT LOGIC
+    // 7. AI CHATBOT LOGIC (CÓ TÍNH NĂNG STREAMING TYPEWRITER)
     // ==========================================
     const CHAT_API_URL = 'https://acbmvejaef.execute-api.ap-southeast-2.amazonaws.com/prod/chat';
     
@@ -599,12 +597,40 @@ document.addEventListener('DOMContentLoaded', function(){
         chatBox.classList.toggle('open');
     });
 
+    // Hàm thêm tin nhắn chung, thiết lập thuộc tính để giữ nguyên định dạng xuống dòng
     function addMessage(text, isUser = false) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
-        msgDiv.innerText = text;
+        msgDiv.style.whiteSpace = 'pre-wrap'; // Xử lý ngắt dòng chính xác như văn bản trả về
+        msgDiv.textContent = text;
         chatMessages.appendChild(msgDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight; 
+        return msgDiv;
+    }
+
+    // Hiệu ứng "Typewriter" xuất hiện từng chữ một
+    function typeWriterEffect(element, text, speed = 20) {
+        let i = 0;
+        element.textContent = ''; 
+        
+        // Vô hiệu hóa nút gửi trong lúc đang "gõ" để tránh lỗi
+        chatSend.disabled = true;
+        chatInput.disabled = true;
+
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Cuộn liên tục
+                setTimeout(type, speed);
+            } else {
+                // Mở khóa lại nút gửi khi gõ xong
+                chatSend.disabled = false;
+                chatInput.disabled = false;
+                chatInput.focus();
+            }
+        }
+        type();
     }
 
     function sendMessage() {
@@ -622,12 +648,13 @@ document.addEventListener('DOMContentLoaded', function(){
         })
         .then(res => res.json())
         .then(data => {
-            chatMessages.lastChild.remove(); 
+            chatMessages.lastChild.remove(); // Xóa trạng thái "Thinking..."
             if (data.error) {
                 addMessage("🚨 ERROR: " + data.error);
                 console.error("Error details:", data.error);
             } else {
-                addMessage(data.reply || "No response from the server.");
+                const msgDiv = addMessage("", false); // Tạo một khung chat rỗng
+                typeWriterEffect(msgDiv, data.reply || "No response from the server.", 15); // Kích hoạt Streaming với tốc độ 15ms
             }
         })
         .catch(err => {
