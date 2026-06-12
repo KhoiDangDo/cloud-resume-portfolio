@@ -569,13 +569,22 @@ document.addEventListener('DOMContentLoaded', function(){
                 plugins: { legend: { display: type === 'doughnut', position: 'bottom' } }
             };
 
-            // Ép Chart.js phải hiển thị 100% nhãn dán (autoSkip: false) khi phóng to
+            // Ép Chart.js hiển thị 100% nhãn chữ, nhưng để trục số tự động giãn cách
             if (type === 'bar') {
                 options.indexAxis = indexAxis;
-                options.scales = {
-                    x: { beginAtZero: true, ticks: { stepSize: 1, autoSkip: false } },
-                    y: { beginAtZero: true, ticks: { autoSkip: false } }
-                };
+                if (indexAxis === 'y') {
+                    // Biểu đồ ngang (Locations): Trục Y là tên quốc gia, trục X là số
+                    options.scales = {
+                        x: { beginAtZero: true }, 
+                        y: { ticks: { autoSkip: false } } 
+                    };
+                } else {
+                    // Biểu đồ dọc (Browser): Trục X là tên trình duyệt, trục Y là số
+                    options.scales = {
+                        x: { ticks: { autoSkip: false } },
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    };
+                }
             }
 
             modalChartInstance = new Chart(ctx, {
