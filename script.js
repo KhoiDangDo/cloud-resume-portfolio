@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
             "title_intro": "Giới thiệu",
             "intro_p1": "Chào mừng bạn đến với hồ sơ năng lực chuyên nghiệp được lưu trữ trên nền tảng đám mây của tôi. Tôi là Đỗ Đăng Khôi, sinh viên kỹ thuật thuộc Khoa Điện tử Viễn thông (FETEL), Trường Đại học Khoa học Tự nhiên - ĐHQG TP.HCM (HCMUS). Nền tảng học thuật của tôi được xây dựng trên một chương trình đào tạo nghiêm ngặt nhằm phát triển các cơ sở hạ tầng công nghệ hiện đại.",
-            "intro_p2": "Chuyên môn kỹ thuật và định hướng nghiên cứu chính của tôi nằm ở sự giao হোয়া chuyên sâu giữa Điện toán đám mây Serverless, các kiến trúc Trí tuệ nhân tạo ứng dụng và Hệ thống nhúng nâng cao. Tôi đặc biệt tập trung vào việc thiết kế các bộ tăng tốc phần cứng hiệu năng cao trên SoC FPGA, huấn luyện các mô hình học sâu mạnh mẽ và kiến trúc các giải pháp đám mây có khả năng mở rộng linh hoạt trên Amazon Web Services (AWS) sử dụng S3, Lambda, DynamoDB và API Gateway.",
+            "intro_p2": "Chuyên môn kỹ thuật và định hướng nghiên cứu chính của tôi nằm ở sự giao thoa chuyên sâu giữa Điện toán đám mây Serverless, các kiến trúc Trí tuệ nhân tạo ứng dụng và Hệ thống nhúng nâng cao. Tôi đặc biệt tập trung vào việc thiết kế các bộ tăng tốc phần cứng hiệu năng cao trên SoC FPGA, huấn luyện các mô hình học sâu mạnh mẽ và kiến trúc các giải pháp đám mây có khả năng mở rộng linh hoạt trên Amazon Web Services (AWS) sử dụng S3, Lambda, DynamoDB và API Gateway.",
             "intro_p3": "Được thúc đẩy bởi niềm đam mê khoa học và kỷ luật kỹ thuật, nền tảng này đóng vai trò là một minh chứng toàn diện cho dự án tốt nghiệp của tôi, áp dụng các luồng triển khai tự động CI/CD. Mục tiêu của tôi là thu hẹp khoảng cách giữa thiết kế phần cứng cấp thấp và các mô hình serverless hiện đại nhằm giải quyết các thách thức tính toán phức tạp trong thực tế.",
             
             "title_edu": "Học vấn",
@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     // ==========================================
-    // 6. BIỂU ĐỒ THỐNG KÊ & TỔNG LƯỢT TRUY CẬP
+    // 6. BIỂU ĐỒ THỐNG KÊ & TỔNG LƯỢT TRUY CẬP (BỔ SUNG ZOOM)
     // ==========================================
     const LOG_API_URL = 'https://acbmvejaef.execute-api.ap-southeast-2.amazonaws.com/prod/log';
     const STATS_API_URL = 'https://acbmvejaef.execute-api.ap-southeast-2.amazonaws.com/prod/stats';
@@ -521,17 +521,14 @@ document.addEventListener('DOMContentLoaded', function(){
         window.totalVisitorCount = data.total_count || 0;
         updateLanguage();
 
+        // 1. Dựng các biểu đồ tĩnh (Kích thước nhỏ)
         const osCanvas = document.getElementById('osChart');
         if (osCanvas && Object.keys(osData).length > 0) {
             new Chart(osCanvas.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(osData), 
-                    datasets: [{
-                        data: Object.values(osData), 
-                        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'],
-                        borderWidth: 0
-                    }]
+                    datasets: [{ data: Object.values(osData), backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'], borderWidth: 0 }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
             });
@@ -541,21 +538,8 @@ document.addEventListener('DOMContentLoaded', function(){
         if (browserCanvas && Object.keys(browserData).length > 0) {
             new Chart(browserCanvas.getContext('2d'), {
                 type: 'bar',
-                data: {
-                    labels: Object.keys(browserData), 
-                    datasets: [{
-                        label: 'Visits', 
-                        data: Object.values(browserData), 
-                        backgroundColor: '#4e73df',
-                        borderRadius: 5
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, 
-                    plugins: { legend: { display: false } } 
-                }
+                data: { labels: Object.keys(browserData), datasets: [{ label: 'Visits', data: Object.values(browserData), backgroundColor: '#4e73df', borderRadius: 5 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } }
             });
         }
 
@@ -563,24 +547,67 @@ document.addEventListener('DOMContentLoaded', function(){
         if (countryCanvas && Object.keys(countryData).length > 0) {
             new Chart(countryCanvas.getContext('2d'), {
                 type: 'bar', 
-                data: {
-                    labels: Object.keys(countryData), 
-                    datasets: [{
-                        label: 'Visits', 
-                        data: Object.values(countryData), 
-                        backgroundColor: '#1cc88a',
-                        borderRadius: 5
-                    }]
-                },
-                options: { 
-                    indexAxis: 'y', 
-                    responsive: true, 
-                    maintainAspectRatio: false, 
-                    scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }, 
-                    plugins: { legend: { display: false } } 
-                }
+                data: { labels: Object.keys(countryData), datasets: [{ label: 'Visits', data: Object.values(countryData), backgroundColor: '#1cc88a', borderRadius: 5 }] },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } }
             });
         }
+
+        // 2. LOGIC MODAL ZOOM PHÓNG TO BIỂU ĐỒ
+        const chartModal = document.getElementById('chart-modal');
+        const closeModal = document.getElementById('close-modal');
+        let modalChartInstance = null;
+
+        function openModal(type, titleKey, dataObj, color, indexAxis = 'x') {
+            chartModal.style.display = 'flex';
+            document.getElementById('modal-title').innerText = translations[window.currentLang][titleKey];
+            
+            if (modalChartInstance) modalChartInstance.destroy();
+            const ctx = document.getElementById('modalChart').getContext('2d');
+            
+            let options = {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: type === 'doughnut', position: 'bottom' } }
+            };
+
+            // Ép Chart.js phải hiển thị 100% nhãn dán (autoSkip: false) khi phóng to
+            if (type === 'bar') {
+                options.indexAxis = indexAxis;
+                options.scales = {
+                    x: { beginAtZero: true, ticks: { stepSize: 1, autoSkip: false } },
+                    y: { beginAtZero: true, ticks: { autoSkip: false } }
+                };
+            }
+
+            modalChartInstance = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: Object.keys(dataObj),
+                    datasets: [{ data: Object.values(dataObj), backgroundColor: color, borderRadius: type === 'bar' ? 5 : 0 }]
+                },
+                options: options
+            });
+        }
+
+        // Gắn sự kiện Click cho toàn bộ thẻ chứa biểu đồ
+        if(osCanvas) {
+            const card = osCanvas.closest('.project');
+            card.classList.add('chart-clickable');
+            card.onclick = () => openModal('doughnut', 'stat_os', osData, ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796']);
+        }
+        if(browserCanvas) {
+            const card = browserCanvas.closest('.project');
+            card.classList.add('chart-clickable');
+            card.onclick = () => openModal('bar', 'stat_browser', browserData, '#4e73df', 'x');
+        }
+        if(countryCanvas) {
+            const card = countryCanvas.closest('.project');
+            card.classList.add('chart-clickable');
+            card.onclick = () => openModal('bar', 'stat_location', countryData, '#1cc88a', 'y');
+        }
+
+        // Đóng Modal khi bấm nút X hoặc bấm ra ngoài nền đen
+        closeModal.onclick = () => chartModal.style.display = 'none';
+        window.onclick = (e) => { if (e.target === chartModal) chartModal.style.display = 'none'; };
     })
     .catch(error => console.error("Statistics system error:", error));
 

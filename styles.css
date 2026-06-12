@@ -319,3 +319,50 @@ body {
     .main-content { width: 100%; margin-left: 0; padding: 20px; }
     .chat-widget { display: none; }
 }
+
+/* ==========================================
+   MODAL ZOOM CHART (BẢNG THỐNG KÊ PHÓNG TO)
+   ========================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 10000; /* Đảm bảo nằm trên cùng */
+}
+
+.modal-content {
+    background-color: var(--card-bg); /* Sửa lại cho chuẩn theme */
+    color: var(--content-text);
+    padding: 20px;
+    border-radius: 12px;
+    width: 90vw;
+    max-width: 800px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px; right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #e74a3b;
+    transition: 0.2s;
+}
+
+.close-modal:hover {
+    color: #c9302c;
+}
+
+/* Hiệu ứng báo hiệu có thể click cho thẻ chứa biểu đồ */
+.chart-clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.chart-clickable:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
