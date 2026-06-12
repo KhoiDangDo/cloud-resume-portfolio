@@ -366,3 +366,33 @@ body {
     transform: scale(1.02);
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
+
+/* ==========================================
+   TÙY CHỈNH THANH CUỘN (SCROLLBAR) KHUNG CHAT
+   ========================================== */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Thanh cuộn ở chế độ Light Mode */
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Thanh cuộn tự động tối lại ở chế độ Dark Mode */
+[data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
+[data-theme="dark"] .chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}

@@ -433,14 +433,20 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     // ==========================================
-    // 4. CHỨC NĂNG DARK MODE TỔNG THỂ
+    // 4. CHỨC NĂNG DARK MODE TỔNG THỂ VÀ ĐỒNG BỘ BIỂU ĐỒ
     // ==========================================
     const themeToggle = document.getElementById('theme-toggle');
     const currentTheme = localStorage.getItem('theme');
 
+    // Thiết lập màu chữ và lưới kẻ mặc định cho biểu đồ lúc tải trang
     if (currentTheme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
         document.getElementById('theme-icon').innerText = '☀️';
+        Chart.defaults.color = '#e2e8f0'; // Màu chữ sáng cho Dark Mode
+        Chart.defaults.borderColor = '#333333'; // Màu lưới kẻ mờ
+    } else {
+        Chart.defaults.color = '#111111'; // Màu chữ tối cho Light Mode
+        Chart.defaults.borderColor = '#e0e0e0';
     }
 
     themeToggle.addEventListener('click', () => {
@@ -449,11 +455,21 @@ document.addEventListener('DOMContentLoaded', function(){
             document.documentElement.setAttribute('data-theme', 'light');
             localStorage.setItem('theme', 'light');
             document.getElementById('theme-icon').innerText = '🌙';
+            Chart.defaults.color = '#111111';
+            Chart.defaults.borderColor = '#e0e0e0';
         } else {
             document.documentElement.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
             document.getElementById('theme-icon').innerText = '☀️';
+            Chart.defaults.color = '#e2e8f0';
+            Chart.defaults.borderColor = '#333333';
         }
+        
+        // Lặp qua tất cả các biểu đồ đang hiển thị (cả tĩnh và Modal) để ép vẽ lại với màu mới
+        for (let id in Chart.instances) {
+            Chart.instances[id].update();
+        }
+
         updateLanguage(); 
     });
 
