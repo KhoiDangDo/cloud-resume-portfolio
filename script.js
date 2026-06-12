@@ -449,27 +449,51 @@ document.addEventListener('DOMContentLoaded', function(){
         Chart.defaults.borderColor = '#e0e0e0';
     }
 
+    // Hàm "phẫu thuật" đi sâu vào từng biểu đồ để ép đổi màu chữ và lưới kẻ
+    function updateChartColors(textColor, borderColor) {
+        Chart.defaults.color = textColor;
+        Chart.defaults.borderColor = borderColor;
+        
+        for (let id in Chart.instances) {
+            let chart = Chart.instances[id];
+            
+            // Cập nhật màu chữ cho phần chú thích (Legend)
+            if (chart.options.plugins && chart.options.plugins.legend && chart.options.plugins.legend.labels) {
+                chart.options.plugins.legend.labels.color = textColor;
+            }
+            
+            // Tự động quét và cập nhật tất cả các trục (trục X, trục Y...)
+            if (chart.options.scales) {
+                for (let scaleName in chart.options.scales) {
+                    let scale = chart.options.scales[scaleName];
+                    if (!scale) continue;
+                    
+                    if (!scale.ticks) scale.ticks = {};
+                    scale.ticks.color = textColor; // Đổi màu chữ số
+                    
+                    if (!scale.grid) scale.grid = {};
+                    scale.grid.color = borderColor; // Đổi màu lưới kẻ
+                }
+            }
+            chart.update(); // Yêu cầu vẽ lại với cấu hình màu mới
+        }
+    }
+
     themeToggle.addEventListener('click', () => {
         let theme = document.documentElement.getAttribute('data-theme');
         if (theme === 'dark') {
+            // Chuyển sang Light Mode
             document.documentElement.setAttribute('data-theme', 'light');
             localStorage.setItem('theme', 'light');
             document.getElementById('theme-icon').innerText = '🌙';
-            Chart.defaults.color = '#111111';
-            Chart.defaults.borderColor = '#e0e0e0';
+            updateChartColors('#111111', '#e0e0e0'); // Ép toàn bộ biểu đồ thành màu Tối
         } else {
+            // Chuyển sang Dark Mode
             document.documentElement.setAttribute('data-theme', 'dark');
             localStorage.setItem('theme', 'dark');
             document.getElementById('theme-icon').innerText = '☀️';
-            Chart.defaults.color = '#e2e8f0';
-            Chart.defaults.borderColor = '#333333';
+            updateChartColors('#e2e8f0', '#333333'); // Ép toàn bộ biểu đồ thành màu Sáng
         }
-        
-        // Lặp qua tất cả các biểu đồ đang hiển thị (cả tĩnh và Modal) để ép vẽ lại với màu mới
-        for (let id in Chart.instances) {
-            Chart.instances[id].update();
-        }
-
         updateLanguage(); 
     });
 
