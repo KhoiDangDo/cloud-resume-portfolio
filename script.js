@@ -394,6 +394,63 @@ document.addEventListener('DOMContentLoaded', function(){
     };
 
     window.currentLang = 'en'; 
+
+    // ==========================================
+    // 3.5. KẾT NỐI API LẤY DỮ LIỆU CV ĐỘNG (MULTI-TENANT)
+    // ==========================================
+    // 1. Phân tích tham số ?user=... từ URL trình duyệt
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentUser = urlParams.get('user') || 'dangkhoi'; // Mặc định là dangkhoi nếu không có tham số
+    
+    // 2. Điền link API Gateway của bạn vào đây
+    const RESUME_API_URL = `https://acbmvejaef.execute-api.ap-southeast-2.amazonaws.com/prod/resume?user=${currentUser}`;
+
+    // Hiển thị trạng thái đang tải
+    const nameElement = document.querySelector('.sidebar h1');
+    if(nameElement) nameElement.innerText = "Loading CV...";
+
+    // 3. Gọi API để lấy dữ liệu từ DynamoDB
+    fetch(RESUME_API_URL)
+        .then(response => response.json())
+        .then(data => {
+            if(data.error) {
+                if(nameElement) nameElement.innerText = "User Not Found";
+                console.error("Không tìm thấy dữ liệu CV:", data.error);
+                return;
+            }
+
+            // A. Cập nhật Sidebar (Tên, Github, LinkedIn)
+            if(nameElement && data.profile && data.profile.fullName) {
+                nameElement.innerText = data.profile.fullName;
+            }
+            const links = document.querySelectorAll('.contact-info .links');
+            if(links.length >= 2 && data.profile) {
+                links[0].href = data.profile.github || "#";
+                links[1].href = data.profile.linkedin || "#";
+            }
+
+            // B. Ghi đè dữ liệu đoạn văn Giới thiệu (Introduction) vào hệ thống dịch thuật
+            if(data.introduction) {
+                // Ghi đè tiếng Anh
+                if(data.introduction.en && data.introduction.en.length > 0) {
+                    translations.en["intro_p1"] = data.introduction.en[0] || "";
+                    translations.en["intro_p2"] = data.introduction.en[1] || "";
+                }
+                // Ghi đè tiếng Việt
+                if(data.introduction.vn && data.introduction.vn.length > 0) {
+                    translations.vn["intro_p1"] = data.introduction.vn[0] || "";
+                    translations.vn["intro_p2"] = data.introduction.vn[1] || "";
+                }
+            }
+
+            // C. Yêu cầu giao diện render lại chữ mới ngay lập tức
+            updateLanguage();
+        })
+        .catch(error => {
+            console.error("Lỗi kết nối API Database:", error);
+            if(nameElement) nameElement.innerText = "Connection Error";
+        });
+
     const langToggleBtn = document.getElementById('lang-toggle');
 
     function updateLanguage() {
