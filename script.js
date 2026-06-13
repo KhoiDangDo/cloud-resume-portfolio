@@ -435,11 +435,13 @@ document.addEventListener('DOMContentLoaded', function(){
                 if(data.introduction.en && data.introduction.en.length > 0) {
                     translations.en["intro_p1"] = data.introduction.en[0] || "";
                     translations.en["intro_p2"] = data.introduction.en[1] || "";
+                    translations.en["intro_p3"] = data.introduction.en[2] || ""; 
                 }
                 // Ghi đè tiếng Việt
                 if(data.introduction.vn && data.introduction.vn.length > 0) {
                     translations.vn["intro_p1"] = data.introduction.vn[0] || "";
                     translations.vn["intro_p2"] = data.introduction.vn[1] || "";
+                    translations.vn["intro_p3"] = data.introduction.vn[2] || ""; 
                 }
             }
 
