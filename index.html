@@ -44,7 +44,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; position: relative; transition: background-color 0.3s ease; }
         
-        /* Cụm điều khiển ở góc phải */
         .top-controls { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 10; }
         .top-btn { 
             padding: 8px 15px; font-size: 14px; font-weight: 600; cursor: pointer;
@@ -62,7 +61,6 @@
 
         .auth-section { width: 420px; background: var(--form-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: background 0.3s; }
         
-        /* CSS Định dạng Form */
         .form-group { margin-bottom: 12px; }
         .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
         .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
@@ -79,7 +77,6 @@
         .helper-text { font-size: 12px; color: var(--text-muted); display: block; margin-top: 4px; margin-bottom: 12px; line-height: 1.4; }
         .warning-text { font-size: 12px; color: #e74a3b; display: block; margin-top: 4px; margin-bottom: 12px; font-weight: 600;}
 
-        /* Vùng bọc mật khẩu chứa icon con mắt */
         .pwd-wrapper { position: relative; width: 100%; }
         .pwd-wrapper input { padding-right: 40px; margin-bottom: 0; }
         .pwd-toggle { 
@@ -115,7 +112,7 @@
 <div class="top-controls">
     <button id="theme-toggle" class="top-btn" title="Chuyển chế độ Sáng/Tối">🌙</button>
     <button id="lang-toggle" class="top-btn">
-        <img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN
+        <img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"> EN
     </button>
 </div>
 
@@ -183,17 +180,19 @@
 
             <label data-i18n="lbl_phone">Số điện thoại</label>
             <div class="form-grid-phone">
-                <select id="reg-phone-code">
-                    <option value="+84">🇻🇳 +84</option>
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+81">🇯🇵 +81</option>
-                    <option value="+82">🇰🇷 +82</option>
-                    <option value="+65">🇸🇬 +65</option>
-                </select>
+                <input type="text" id="reg-phone-code" list="country-codes" value="+84" style="text-align: center;">
+                <datalist id="country-codes">
+                    <option value="+84">Việt Nam</option>
+                    <option value="+1">US/Canada</option>
+                    <option value="+44">UK</option>
+                    <option value="+81">Japan</option>
+                    <option value="+82">South Korea</option>
+                    <option value="+65">Singapore</option>
+                    <option value="+61">Australia</option>
+                </datalist>
                 <input type="text" id="reg-phone-num" data-i18n-placeholder="pl_phone" placeholder="Nhập đuôi số còn lại...">
             </div>
-            <small class="helper-text" data-i18n="phone_guide">VD: Số của bạn là 0912345678, hãy chọn +84 và nhập 912345678.</small>
+            <small class="helper-text" data-i18n="phone_guide">VD: Chọn hoặc tự gõ mã quốc gia vào ô đầu tiên, và nhập đuôi số điện thoại vào ô thứ hai.</small>
 
             <div class="form-group pwd-wrapper" style="margin-bottom: 8px;">
                 <input type="password" id="reg-password" data-i18n-placeholder="pl_pass_new" placeholder="Mật khẩu mới">
@@ -232,7 +231,7 @@
     for(let i=1; i<=12; i++) monthSelect.innerHTML += `<option value="${i<10?'0'+i:i}">Tháng ${i}</option>`;
     const currentYear = new Date().getFullYear();
     for(let i=currentYear; i>=1950; i--) yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
-    yearSelect.value = "2000"; // Mặc định sinh năm 2000 cho lẹ
+    yearSelect.value = "2000"; 
 
     // ==========================================
     // LOGIC ẨN/HIỆN MẬT KHẨU
@@ -277,7 +276,7 @@
     // ==========================================
     // LOGIC TỪ ĐIỂN SONG NGỮ (EN/VN)
     // ==========================================
-    let currentLang = 'vn';
+    let currentLang = 'vn'; // Mặc định mở trang là tiếng Việt
     const translations = {
         vn: {
             subtitle: "Kiến tạo và quản trị hồ sơ năng lực Serverless của riêng bạn trên nền tảng AWS.",
@@ -289,7 +288,7 @@
             gen_male: "Nam", gen_female: "Nữ", gen_other: "Khác",
             lbl_nationality: "Quốc tịch", nat_other: "Khác...",
             lbl_phone: "Số điện thoại",
-            phone_guide: "VD: Số của bạn là 0912345678, hãy chọn mã +84 và nhập đuôi 912345678.",
+            phone_guide: "VD: Chọn hoặc tự gõ mã quốc gia vào ô đầu tiên, và nhập đuôi số điện thoại vào ô thứ hai.",
             pwd_policy: "⚠️ Mật khẩu phải từ 8 ký tự, bao gồm: chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).",
             btn_reg_submit: "Đăng ký",
             link_back_login: "Bạn đã có tài khoản? Đăng nhập ngay",
@@ -324,7 +323,7 @@
             gen_male: "Male", gen_female: "Female", gen_other: "Other",
             lbl_nationality: "Nationality", nat_other: "Other...",
             lbl_phone: "Phone Number",
-            phone_guide: "Ex: If your number is 0912345678, select +84 and enter 912345678.",
+            phone_guide: "Ex: Select or type your country code in the first box, and enter the rest of your digits in the second.",
             pwd_policy: "⚠️ Password must be 8+ characters, including uppercase, lowercase, numbers, and symbols (@$!%*?&).",
             btn_reg_submit: "Sign Up",
             link_back_login: "Already have an account? Log in",
@@ -353,8 +352,8 @@
 
     function updateLanguage() {
         const langToggleBtn = document.getElementById('lang-toggle');
-        // Nút sẽ hiển thị ngôn ngữ ĐANG ĐƯỢC CHỌN (để khớp với ý muốn của bạn)
-        langToggleBtn.innerHTML = currentLang === 'en' 
+        // Logic mới: Nút sẽ hiển thị NGÔN NGỮ ĐÍCH (Ngôn ngữ sẽ chuyển sang nếu bấm vào)
+        langToggleBtn.innerHTML = currentLang === 'vn' 
             ? '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"> EN' 
             : '<img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN';
 
@@ -376,18 +375,18 @@
     }
 
     document.getElementById('lang-toggle').addEventListener('click', () => {
-        currentLang = currentLang === 'vn' ? 'en' : 'vn'; // Đảo ngược ngôn ngữ khi click
+        currentLang = currentLang === 'vn' ? 'en' : 'vn'; 
         updateLanguage();
     });
 
-    updateLanguage(); // Khởi chạy ngôn ngữ mặc định
+    updateLanguage(); 
 
     // ==========================================
     // LOGIC AWS COGNITO XÁC THỰC
     // ==========================================
     const poolData = {
-        UserPoolId: 'ap-southeast-2_O6dXPqxDv', // ID của Khôi
-        ClientId: 'n93k0v18jjsk56ei0su42mdq7'   // Client ID của Khôi
+        UserPoolId: 'ap-southeast-2_O6dXPqxDv', 
+        ClientId: 'n93k0v18jjsk56ei0su42mdq7'   
     };
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     let cognitoUser = null; 
@@ -435,31 +434,25 @@
     function registerUser() {
         const name = document.getElementById('reg-name').value;
         const email = document.getElementById('reg-email').value;
-        const phoneCode = document.getElementById('reg-phone-code').value;
+        const phoneCode = document.getElementById('reg-phone-code').value.trim();
         const phoneNumRaw = document.getElementById('reg-phone-num').value.trim();
         const password = document.getElementById('reg-password').value;
         const passwordConfirm = document.getElementById('reg-password-confirm').value;
 
-        // Xử lý dữ liệu thêm
         const dob = `${document.getElementById('reg-dob-year').value}-${document.getElementById('reg-dob-month').value}-${document.getElementById('reg-dob-day').value}`;
         const gender = document.getElementById('reg-gender').value;
         const nationality = document.getElementById('reg-nationality').value;
 
-        // 1. Validate rỗng
-        if(!name || !email || !phoneNumRaw || !password) return showError('err_empty_reg');
+        if(!name || !email || !phoneCode || !phoneNumRaw || !password) return showError('err_empty_reg');
         
-        // 2. Validate format số điện thoại (bỏ số 0 ở đầu nếu người dùng lỡ nhập)
         const cleanPhoneNum = phoneNumRaw.startsWith('0') ? phoneNumRaw.substring(1) : phoneNumRaw;
         const fullPhone = phoneCode + cleanPhoneNum;
 
-        // 3. Validate Mật khẩu Regex (Ít nhất 8 ký tự, 1 hoa, 1 thường, 1 số, 1 ký tự đặc biệt)
         const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!pwdRegex.test(password)) return showError('err_pwd_weak');
 
-        // 4. Validate Xác nhận mật khẩu
         if (password !== passwordConfirm) return showError('err_pwd_match');
 
-        // Đóng gói Attribute gửi lên AWS Cognito (Map Nationality vào locale để an toàn không lỗi)
         const attributeList = [
             new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'name', Value: name }),
             new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'phone_number', Value: fullPhone }),
@@ -493,7 +486,6 @@
         });
     }
 
-    // Tự động đẩy vào dashboard nếu đã đăng nhập từ trước
     if (localStorage.getItem('id_token')) {
         window.location.href = '/dashboard.html';
     }
