@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -111,14 +111,14 @@
 <div class="top-controls">
     <button id="theme-toggle" class="top-btn" title="Chuyển chế độ Sáng/Tối">🌙</button>
     <button id="lang-toggle" class="top-btn">
-        <img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"> EN
+        <img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN
     </button>
 </div>
 
 <div class="container">
     <div class="brand-section">
         <h1>CloudResume</h1>
-        <p data-i18n="subtitle">Kiến tạo và quản trị hồ sơ năng lực Serverless của riêng bạn trên nền tảng AWS.</p>
+        <p data-i18n="subtitle">Create and manage your own Serverless portfolio on the AWS platform.</p>
     </div>
 
     <div class="auth-section">
@@ -126,28 +126,28 @@
 
         <div id="login-form">
             <div class="form-group">
-                <input type="email" id="login-email" data-i18n-placeholder="pl_email" placeholder="Email của bạn">
+                <input type="email" id="login-email" data-i18n-placeholder="pl_email" placeholder="Your Email">
             </div>
             <div class="form-group pwd-wrapper">
-                <input type="password" id="login-password" data-i18n-placeholder="pl_pass" placeholder="Mật khẩu">
+                <input type="password" id="login-password" data-i18n-placeholder="pl_pass" placeholder="Password">
                 <i class="fa-regular fa-eye-slash pwd-toggle" onclick="togglePassword('login-password', this)"></i>
             </div>
-            <button class="btn btn-login" id="btn-login-submit" onclick="loginUser()" data-i18n="btn_login">Đăng nhập</button>
+            <button class="btn btn-login" id="btn-login-submit" onclick="loginUser()" data-i18n="btn_login">Log In</button>
             <div class="divider"></div>
-            <button class="btn btn-register" onclick="toggleForm('register')" data-i18n="btn_create_acc">Tạo tài khoản mới</button>
+            <button class="btn btn-register" onclick="toggleForm('register')" data-i18n="btn_create_acc">Create New Account</button>
         </div>
 
         <div id="register-form">
-            <h2 style="margin-bottom: 15px; text-align: center;" data-i18n="reg_title">Đăng ký</h2>
+            <h2 style="margin-bottom: 15px; text-align: center;" data-i18n="reg_title">Sign Up</h2>
             
             <div class="form-group">
-                <input type="text" id="reg-name" data-i18n-placeholder="pl_name" placeholder="Họ và tên">
+                <input type="text" id="reg-name" data-i18n-placeholder="pl_name" placeholder="Full Name">
             </div>
             <div class="form-group">
                 <input type="email" id="reg-email" data-i18n-placeholder="pl_email_short" placeholder="Email">
             </div>
 
-            <label data-i18n="lbl_dob">Ngày sinh</label>
+            <label data-i18n="lbl_dob">Date of Birth</label>
             <div class="form-grid-3">
                 <select id="reg-dob-day"></select>
                 <select id="reg-dob-month"></select>
@@ -155,42 +155,42 @@
             </div>
 
             <div class="form-group">
-                <label data-i18n="lbl_gender">Giới tính</label>
+                <label data-i18n="lbl_gender">Gender</label>
                 <select id="reg-gender">
-                    <option value="Male" data-i18n="gen_male">Nam</option>
-                    <option value="Female" data-i18n="gen_female">Nữ</option>
-                    <option value="Other" data-i18n="gen_other">Khác</option>
+                    <option value="Male" data-i18n="gen_male">Male</option>
+                    <option value="Female" data-i18n="gen_female">Female</option>
+                    <option value="Other" data-i18n="gen_other">Other</option>
                 </select>
             </div>
 
-            <label data-i18n="lbl_phone">Số điện thoại</label>
+            <label data-i18n="lbl_phone">Phone Number</label>
             <div class="form-grid-phone">
-                <input type="text" id="reg-phone-code" value="+84" style="text-align: center;">
-                <input type="text" id="reg-phone-num" data-i18n-placeholder="pl_phone" placeholder="Nhập đuôi số còn lại...">
+                <input type="text" id="reg-phone-code" value="" placeholder="+..." style="text-align: center;">
+                <input type="text" id="reg-phone-num" data-i18n-placeholder="pl_phone" placeholder="Enter the rest of the digits...">
             </div>
-            <small class="helper-text" data-i18n="phone_guide">VD: Nhập mã quốc gia (như +84) vào ô đầu, và phần số điện thoại vào ô sau.</small>
+            <small class="helper-text" data-i18n="phone_guide">Ex: Enter the country code (e.g., +84) in the first box, and your phone number in the second.</small>
 
             <div class="form-group pwd-wrapper" style="margin-bottom: 8px;">
-                <input type="password" id="reg-password" data-i18n-placeholder="pl_pass_new" placeholder="Mật khẩu mới">
+                <input type="password" id="reg-password" data-i18n-placeholder="pl_pass_new" placeholder="New Password">
                 <i class="fa-regular fa-eye-slash pwd-toggle" onclick="togglePassword('reg-password', this)"></i>
             </div>
             <div class="form-group pwd-wrapper">
-                <input type="password" id="reg-password-confirm" data-i18n-placeholder="pl_pass_confirm" placeholder="Xác nhận mật khẩu">
+                <input type="password" id="reg-password-confirm" data-i18n-placeholder="pl_pass_confirm" placeholder="Confirm Password">
                 <i class="fa-regular fa-eye-slash pwd-toggle" onclick="togglePassword('reg-password-confirm', this)"></i>
             </div>
-            <small class="warning-text" id="pwd-policy" data-i18n="pwd_policy">⚠️ Mật khẩu phải từ 8 ký tự, bao gồm: chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).</small>
+            <small class="warning-text" id="pwd-policy" data-i18n="pwd_policy">⚠️ Password must be 8+ characters, including uppercase, lowercase, numbers, and symbols (@$!%*?&).</small>
 
-            <button class="btn btn-register" style="width: 100%; margin-top: 10px;" onclick="registerUser()" data-i18n="btn_reg_submit">Đăng ký</button>
-            <a class="back-link" onclick="toggleForm('login')" data-i18n="link_back_login">Bạn đã có tài khoản? Đăng nhập</a>
+            <button class="btn btn-register" style="width: 100%; margin-top: 10px;" onclick="registerUser()" data-i18n="btn_reg_submit">Sign Up</button>
+            <a class="back-link" onclick="toggleForm('login')" data-i18n="link_back_login">Already have an account? Log in</a>
         </div>
 
         <div id="verify-form">
-            <h2 style="margin-bottom: 15px; text-align: center;" data-i18n="verify_title">Xác thực Email</h2>
-            <p style="font-size: 14px; text-align: center; margin-bottom: 15px; color: var(--text-muted);" data-i18n="verify_desc">Vui lòng kiểm tra email và nhập mã xác thực gồm 6 chữ số.</p>
+            <h2 style="margin-bottom: 15px; text-align: center;" data-i18n="verify_title">Email Verification</h2>
+            <p style="font-size: 14px; text-align: center; margin-bottom: 15px; color: var(--text-muted);" data-i18n="verify_desc">Please check your email and enter the 6-digit verification code.</p>
             <div class="form-group">
-                <input type="text" id="verify-code" data-i18n-placeholder="pl_code" placeholder="Mã xác thực">
+                <input type="text" id="verify-code" data-i18n-placeholder="pl_code" placeholder="Verification Code">
             </div>
-            <button class="btn btn-login" onclick="verifyUser()" data-i18n="btn_verify">Xác nhận</button>
+            <button class="btn btn-login" onclick="verifyUser()" data-i18n="btn_verify">Verify</button>
         </div>
     </div>
 </div>
@@ -215,11 +215,11 @@
     function togglePassword(inputId, iconElement) {
         const input = document.getElementById(inputId);
         if (input.type === "password") {
-            input.type = "text"; // Chuyển thành text để hiện mật khẩu
+            input.type = "text"; 
             iconElement.classList.remove("fa-eye-slash");
             iconElement.classList.add("fa-eye");
         } else {
-            input.type = "password"; // Chuyển lại thành password để ẩn
+            input.type = "password"; 
             iconElement.classList.remove("fa-eye");
             iconElement.classList.add("fa-eye-slash");
         }
@@ -252,7 +252,7 @@
     // ==========================================
     // LOGIC TỪ ĐIỂN SONG NGỮ (EN/VN)
     // ==========================================
-    let currentLang = 'vn'; 
+    let currentLang = 'en'; // ĐÃ ĐỔI: Mặc định khởi tạo trang là tiếng Anh
     const enMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const translations = {
@@ -328,11 +328,12 @@
 
     function updateLanguage() {
         const langToggleBtn = document.getElementById('lang-toggle');
+        // Luồng CTA đúng chuẩn: Giao diện tiếng Anh (currentLang == 'en') thì nút hiện chữ "VN" để mời bấm đổi
         langToggleBtn.innerHTML = currentLang === 'vn' 
             ? '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"> EN' 
             : '<img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN';
 
-        // Cập nhật các tháng trong select Box bằng mảng chuẩn
+        // Cập nhật các tháng trong select Box bằng mảng chuẩn theo ngôn ngữ hiện tại
         const monthSelect = document.getElementById('reg-dob-month');
         for(let i=0; i<12; i++) {
             monthSelect.options[i].text = currentLang === 'vn' ? `Tháng ${i+1}` : enMonths[i];
@@ -354,7 +355,7 @@
         updateLanguage();
     });
 
-    updateLanguage(); 
+    updateLanguage(); // Chạy hàm đồng bộ chữ nghĩa ngay khi tải trang
 
     // ==========================================
     // LOGIC AWS COGNITO XÁC THỰC
