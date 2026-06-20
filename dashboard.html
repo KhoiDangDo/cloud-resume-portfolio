@@ -133,7 +133,7 @@
                 <div id="success-result" style="display: none;">
                     <div style="font-size: 40px; color: #1cc88a; margin-bottom: 10px;"><i class="fa-solid fa-circle-check"></i></div>
                     <h3 style="margin-bottom: 10px;">Tuyệt vời! Website của bạn đã lên sóng.</h3>
-                    <a href="#" id="public-url-btn" target="_blank" class="result-link"><i class="fa-solid fa-globe"></i> Xem trang web ngay</a>
+                    <a href="#" id="public-url-btn" class="result-link"><i class="fa-solid fa-globe"></i> Xem trang web ngay</a>
                 </div>
             </div>
         </div>
@@ -264,8 +264,24 @@
                 document.getElementById('loading-indicator').style.display = 'none';
                 document.getElementById('success-result').style.display = 'block';
                 
-                // Nhận Public URL thực tế do Lambda trả về
-                document.getElementById('public-url-btn').href = aiData.public_url;
+                // --- XỬ LÝ CHUYỂN HƯỚNG MƯỢT MÀ CHUẨN UX ---
+                const resultBtn = document.getElementById('public-url-btn');
+                resultBtn.href = aiData.public_url;
+                resultBtn.removeAttribute('target'); // Xóa bỏ việc mở tab mới để tránh bị trình duyệt block
+
+                // Thêm hiệu ứng đếm ngược 3 giây và tự động chuyển hướng
+                let countdown = 3;
+                resultBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Đang chuyển hướng sau ${countdown}s...`;
+                
+                const interval = setInterval(() => {
+                    countdown--;
+                    if (countdown > 0) {
+                        resultBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Đang chuyển hướng sau ${countdown}s...`;
+                    } else {
+                        clearInterval(interval);
+                        window.location.href = aiData.public_url; // Chuyển hướng trực tiếp trên cùng một tab
+                    }
+                }, 1000);
                 
             } catch (error) {
                 console.error(error);
