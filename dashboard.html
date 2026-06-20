@@ -244,7 +244,7 @@
                 // 3. Gọi Hàm AI Lambda thông qua API Gateway
                 statusText.innerText = "Tải lên hoàn tất! Claude AI đang đọc CV, suy luận và lập trình Web (Sẽ mất khoảng 15-30 giây)...";
                 
-                const aiBuilderApiUrl = `https://qgczs1jilf.execute-api.ap-southeast-2.amazonaws.com/build-ai-website`;
+                const aiBuilderApiUrl = `https://pmy6chg3ujmcsruw7nepspuiaa0luolc.lambda-url.ap-southeast-2.on.aws/`;
 
                 const aiResponse = await fetch(aiBuilderApiUrl, {
                     method: 'POST',
