@@ -223,7 +223,7 @@
                 // 1. Gọi API lấy Vé thông hành (Presigned URL)
                 statusText.innerText = "Đang xin cấp phép upload từ server...";
                 
-                // Đã sửa lại lỗi thiếu endpoint /get-upload-url và thêm query username
+                // Cấu hình URL đúng
                 const apiGetUrl = `https://qgczs1jilf.execute-api.ap-southeast-2.amazonaws.com/get-upload-url?username=${username}`; 
                 
                 const resUrl = await fetch(apiGetUrl);
@@ -241,8 +241,8 @@
 
                 if (!uploadResponse.ok) throw new Error("Upload file PDF thất bại! (Kiểm tra lại cấu hình CORS của S3 Bucket)");
 
-                // 3. Gọi Hàm AI Lambda thông qua API Gateway
-                statusText.innerText = "Tải lên hoàn tất! Claude AI đang đọc CV, suy luận và lập trình Web (Sẽ mất khoảng 15-30 giây)...";
+                // 3. Gọi Hàm AI Lambda thông qua Function URL
+                statusText.innerText = "Tải lên hoàn tất! Claude AI đang đọc CV, suy luận và lập trình Web...";
                 
                 const aiBuilderApiUrl = `https://pmy6chg3ujmcsruw7nepspuiaa0luolc.lambda-url.ap-southeast-2.on.aws/`;
 
@@ -264,24 +264,11 @@
                 document.getElementById('loading-indicator').style.display = 'none';
                 document.getElementById('success-result').style.display = 'block';
                 
-                // --- XỬ LÝ CHUYỂN HƯỚNG MƯỢT MÀ CHUẨN UX ---
+                // --- XỬ LÝ NÚT CHUYỂN HƯỚNG CHUẨN UX ---
                 const resultBtn = document.getElementById('public-url-btn');
                 resultBtn.href = aiData.public_url;
-                resultBtn.removeAttribute('target'); // Xóa bỏ việc mở tab mới để tránh bị trình duyệt block
-
-                // Thêm hiệu ứng đếm ngược 3 giây và tự động chuyển hướng
-                let countdown = 3;
-                resultBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Đang chuyển hướng sau ${countdown}s...`;
-                
-                const interval = setInterval(() => {
-                    countdown--;
-                    if (countdown > 0) {
-                        resultBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Đang chuyển hướng sau ${countdown}s...`;
-                    } else {
-                        clearInterval(interval);
-                        window.location.href = aiData.public_url; // Chuyển hướng trực tiếp trên cùng một tab
-                    }
-                }, 1000);
+                resultBtn.removeAttribute('target'); // Xóa bỏ thuộc tính mở tab mới
+                resultBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Xem trang web ngay`;
                 
             } catch (error) {
                 console.error(error);
