@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudResume — AI Builder :: Neural Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>CloudResume — AI Builder Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         /* ============================================================
-           CYBERPUNK NEON DYSTOPIA — CloudResume Dashboard
+           CYBERPUNK NEON DYSTOPIA v2 — Dashboard
+           Neon Cyan & Hot Pink dominant · Exo 2 for readability
         ============================================================ */
         :root {
-            --void:          #07000f;
-            --panel-bg:      rgba(10, 0, 24, 0.94);
-            --header-bg:     rgba(6, 0, 16, 0.9);
-            --neon-cyan:     #00f5ff;
-            --neon-purple:   #b800ff;
-            --neon-pink:     #ff00c8;
-            --neon-green:    #39ff14;
-            --text-bright:   #cdc5ee;
-            --text-dim:      #4a3a6a;
-            --border-subtle: rgba(0, 245, 255, 0.18);
+            --void:        #07000f;
+            --panel-bg:    rgba(10, 0, 22, 0.96);
+            --header-bg:   rgba(6, 0, 16, 0.98);
+            --neon-cyan:   #00f5ff;
+            --neon-pink:   #ff2d9b;
+            --neon-green:  #39ff14;
+            --text-bright: #f0eaff;
+            --text-mid:    #b8aad8;
+            --text-dim:    #6e5e8e;
+            --border-cyan: rgba(0, 245, 255, 0.22);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 400;
             background: var(--void);
             color: var(--text-bright);
             min-height: 100vh;
@@ -49,20 +51,20 @@
             z-index: 0;
         }
 
-        /* Global scanlines */
+        /* CRT scanlines */
         .scanlines {
             position: fixed;
             inset: 0;
             background: repeating-linear-gradient(
                 0deg,
                 transparent 0px, transparent 3px,
-                rgba(0, 0, 0, 0.07) 3px, rgba(0, 0, 0, 0.07) 4px
+                rgba(0, 0, 0, 0.06) 3px, rgba(0, 0, 0, 0.06) 4px
             );
             pointer-events: none;
             z-index: 9999;
         }
 
-        /* Falling neon lines */
+        /* Falling neon lines — cyan & pink */
         .neon-lines {
             position: fixed;
             inset: 0;
@@ -78,61 +80,30 @@
             animation: neon-fall linear infinite;
         }
 
-        .neon-line:nth-child(1) { left: 8%;  background: linear-gradient(transparent, var(--neon-cyan), transparent);   animation-duration: 8s;  animation-delay: -2s; }
-        .neon-line:nth-child(2) { left: 25%; background: linear-gradient(transparent, var(--neon-purple), transparent); animation-duration: 12s; animation-delay: -5s; }
-        .neon-line:nth-child(3) { left: 72%; background: linear-gradient(transparent, var(--neon-pink), transparent);   animation-duration: 10s; animation-delay: -8s; }
-        .neon-line:nth-child(4) { left: 92%; background: linear-gradient(transparent, rgba(0, 245, 255, 0.5), transparent); animation-duration: 15s; animation-delay: -1s; }
+        .neon-line:nth-child(1) { left: 8%;  background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 8s;  animation-delay: -2s; }
+        .neon-line:nth-child(2) { left: 28%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 12s; animation-delay: -5s; }
+        .neon-line:nth-child(3) { left: 72%; background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 10s; animation-delay: -8s; }
+        .neon-line:nth-child(4) { left: 92%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 15s; animation-delay: -1s; }
 
         @keyframes neon-fall {
             from { top: -25%; }
             to   { top: 125%; }
         }
 
-        /* === TOP CONTROL BUTTON === */
-        .top-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .top-btn {
-            padding: 7px 14px;
-            font-size: 12px;
-            cursor: pointer;
-            background: rgba(0, 0, 15, 0.8);
-            color: var(--neon-cyan);
-            border: 1px solid var(--border-subtle);
-            border-radius: 2px;
-            font-family: 'Share Tech Mono', monospace;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-            backdrop-filter: blur(10px);
-            letter-spacing: 0.05em;
-        }
-
-        .top-btn:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 12px rgba(0, 245, 255, 0.35);
-            color: #fff;
-        }
-
-        /* === LOGIN FALLBACK SCREEN === */
+        /* ── LOGIN FALLBACK ── */
         .login-container {
             margin: auto;
             max-width: 480px;
             width: 90%;
             background: var(--panel-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 3px;
+            border: 1px solid var(--border-cyan);
+            border-radius: 4px;
             padding: 48px 40px;
             text-align: center;
             box-shadow:
-                0 0 30px rgba(0, 245, 255, 0.1),
-                0 0 70px rgba(184, 0, 255, 0.07),
-                0 24px 64px rgba(0, 0, 0, 0.55);
+                0 0 30px rgba(0, 245, 255, 0.08),
+                0 0 60px rgba(255, 45, 155, 0.05),
+                0 24px 64px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(20px);
             position: relative;
             z-index: 10;
@@ -148,50 +119,50 @@
 
         .login-container h1 {
             font-family: 'Orbitron', monospace;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--neon-cyan);
             letter-spacing: 0.2em;
             text-transform: uppercase;
             margin-bottom: 12px;
-            text-shadow: 0 0 18px rgba(0, 245, 255, 0.4);
+            text-shadow: 0 0 16px rgba(0, 245, 255, 0.4);
         }
 
         .login-container p {
-            color: var(--text-dim);
-            margin-bottom: 30px;
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 15px;
+            color: var(--text-mid);
+            margin-bottom: 28px;
+            line-height: 1.65;
         }
 
-        /* === DASHBOARD PANEL === */
+        /* ── DASHBOARD PANEL ── */
         .dashboard-container {
             display: none;
             max-width: 920px;
             width: 95%;
-            margin: 80px auto 48px auto;
+            margin: 76px auto 48px auto;
             background: var(--panel-bg);
-            border: 1px solid var(--border-subtle);
-            border-radius: 3px;
+            border: 1px solid var(--border-cyan);
+            border-radius: 4px;
             overflow: hidden;
             box-shadow:
-                0 0 0 1px rgba(0, 0, 0, 0.6),
-                0 0 30px rgba(0, 245, 255, 0.1),
-                0 0 70px rgba(184, 0, 255, 0.07),
-                0 28px 72px rgba(0, 0, 0, 0.55);
+                0 0 0 1px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 245, 255, 0.08),
+                0 0 60px rgba(255, 45, 155, 0.05),
+                0 28px 72px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(20px);
             position: relative;
             z-index: 10;
         }
 
-        /* Panel top neon bar */
+        /* Top neon bar — cyan → pink */
         .dashboard-container::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan) 20%, var(--neon-purple) 50%, var(--neon-pink) 80%, transparent);
-            box-shadow: 0 0 14px rgba(0, 245, 255, 0.7), 0 0 28px rgba(184, 0, 255, 0.4);
+            background: linear-gradient(90deg, transparent, var(--neon-cyan) 30%, var(--neon-pink) 70%, transparent);
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.7), 0 0 24px rgba(255, 45, 155, 0.5);
             animation: top-bar-glow 5s ease-in-out infinite;
             z-index: 2;
         }
@@ -209,14 +180,13 @@
             padding: 20px 32px;
             border-bottom: 1px solid rgba(0, 245, 255, 0.1);
             background: var(--header-bg);
-            position: relative;
         }
 
         header h2 {
             font-family: 'Orbitron', monospace;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             display: flex;
             align-items: center;
@@ -231,141 +201,118 @@
 
         header h2 span {
             color: var(--neon-cyan);
-            text-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.4);
         }
 
-        /* Main form area */
-        .main-form {
-            padding: 40px 36px;
-        }
+        /* Main form */
+        .main-form { padding: 40px 36px; }
 
         .main-form > p {
-            font-size: 13px;
-            color: var(--text-dim);
+            font-size: 15px;
+            font-weight: 400;
+            color: var(--text-mid);
             text-align: center;
             margin-bottom: 32px;
             line-height: 1.7;
-            letter-spacing: 0.03em;
         }
 
-        /* === UPLOAD ZONE === */
+        /* ── UPLOAD ZONE ──
+           Fix: input is display:none, click triggered via JS.
+           No pseudo-elements blocking the click area.
+        ── */
         .upload-zone {
-            border: 1px dashed rgba(0, 245, 255, 0.35);
+            border: 1px dashed rgba(0, 245, 255, 0.4);
             background: rgba(0, 10, 28, 0.6);
-            border-radius: 3px;
+            border-radius: 4px;
             padding: 44px 24px;
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 30px;
+            cursor: pointer;
             transition: all 0.3s;
             position: relative;
-            cursor: pointer;
-            overflow: hidden;
+            user-select: none;
         }
 
-        /* Corner brackets on upload zone */
-        .upload-zone::before {
-            content: '';
+        .upload-zone:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 20, 40, 0.7);
+            box-shadow: 0 0 24px rgba(0, 245, 255, 0.1), inset 0 0 20px rgba(0, 245, 255, 0.04);
+        }
+
+        .upload-zone.drag-over {
+            border-color: var(--neon-pink);
+            background: rgba(255, 45, 155, 0.05);
+            box-shadow: 0 0 24px rgba(255, 45, 155, 0.15);
+        }
+
+        /* Corner brackets via gradient (no pseudo-elements used for ::after/::before to
+           avoid blocking the zone's own click events) */
+        .upload-zone-corners {
             position: absolute;
             inset: 0;
             background:
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top left    / 16px 1px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top left    / 1px 16px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top right   / 16px 1px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top right   / 1px 16px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom left / 16px 1px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom left / 1px 16px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom right/ 16px 1px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom right/ 1px 16px no-repeat;
-            opacity: 0.3;
+                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top    left  / 16px 1px no-repeat,
+                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top    left  / 1px 16px no-repeat,
+                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top    right / 16px 1px no-repeat,
+                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top    right / 1px 16px no-repeat,
+                linear-gradient(var(--neon-pink), var(--neon-pink)) bottom left  / 16px 1px no-repeat,
+                linear-gradient(var(--neon-pink), var(--neon-pink)) bottom left  / 1px 16px no-repeat,
+                linear-gradient(var(--neon-pink), var(--neon-pink)) bottom right / 16px 1px no-repeat,
+                linear-gradient(var(--neon-pink), var(--neon-pink)) bottom right / 1px 16px no-repeat;
+            opacity: 0.4;
+            pointer-events: none;
+            border-radius: 4px;
             transition: opacity 0.3s;
-            pointer-events: none;
         }
 
-        /* Scanline texture on hover */
-        .upload-zone::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent 0px, transparent 4px,
-                rgba(0, 245, 255, 0.03) 4px, rgba(0, 245, 255, 0.03) 5px
-            );
-            opacity: 0;
-            transition: opacity 0.4s;
-            pointer-events: none;
-        }
+        .upload-zone:hover .upload-zone-corners { opacity: 0.8; }
 
-        .upload-zone:hover::before { opacity: 0.7; }
-        .upload-zone:hover::after  { opacity: 1; }
-
-        .upload-zone:hover {
-            border-color: rgba(0, 245, 255, 0.6);
-            background: rgba(0, 15, 38, 0.7);
-            box-shadow: 0 0 25px rgba(0, 245, 255, 0.1), inset 0 0 25px rgba(0, 245, 255, 0.04);
-        }
+        /* Hidden file input */
+        #pdf-upload { display: none; }
 
         .upload-zone i.fa-file-pdf {
             font-size: 46px;
             color: var(--neon-cyan);
-            text-shadow: 0 0 20px rgba(0, 245, 255, 0.6), 0 0 40px rgba(0, 245, 255, 0.3);
+            text-shadow: 0 0 18px rgba(0, 245, 255, 0.6), 0 0 36px rgba(0, 245, 255, 0.3);
             margin-bottom: 16px;
             display: block;
-            position: relative;
-            z-index: 1;
         }
 
         .upload-zone h3 {
-            font-family: 'Orbitron', monospace;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            margin-bottom: 6px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
             color: var(--text-bright);
-            position: relative;
-            z-index: 1;
+            margin-bottom: 6px;
         }
 
         .upload-zone p {
-            color: var(--text-dim);
-            font-size: 13px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .upload-zone input[type="file"] {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-mid);
         }
 
         #file-name-display {
             margin-top: 16px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--neon-green);
-            font-size: 13px;
+            font-size: 14px;
             display: none;
             text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
-            position: relative;
-            z-index: 1;
         }
 
-        /* === AI PROMPT AREA === */
+        /* ── AI PROMPT ── */
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
         }
 
         .form-group label {
-            font-family: 'Orbitron', monospace;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.05em;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -373,42 +320,42 @@
         }
 
         .form-group label i {
-            color: var(--neon-purple);
-            text-shadow: 0 0 12px rgba(184, 0, 255, 0.6);
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px rgba(255, 45, 155, 0.6);
         }
 
         textarea {
             width: 100%;
             padding: 16px;
-            background: rgba(0, 0, 18, 0.75);
-            border: 1px solid rgba(0, 245, 255, 0.12);
-            border-radius: 2px;
+            background: rgba(0, 0, 18, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.15);
+            border-radius: 3px;
             color: var(--text-bright);
             font-family: 'Share Tech Mono', monospace;
             font-size: 14px;
+            line-height: 1.65;
             outline: none;
             transition: all 0.3s;
             resize: vertical;
             min-height: 130px;
-            line-height: 1.65;
         }
 
         textarea::placeholder { color: var(--text-dim); }
 
         textarea:focus {
-            border-color: rgba(184, 0, 255, 0.45);
-            box-shadow: 0 0 0 1px rgba(184, 0, 255, 0.18), 0 0 18px rgba(184, 0, 255, 0.1);
-            background: rgba(0, 0, 22, 0.9);
+            border-color: rgba(255, 45, 155, 0.5);
+            box-shadow: 0 0 0 1px rgba(255, 45, 155, 0.2), 0 0 16px rgba(255, 45, 155, 0.08);
+            background: rgba(0, 0, 22, 0.95);
         }
 
-        /* === BUTTONS === */
+        /* ── BUTTONS ── */
         .btn {
             padding: 14px 28px;
-            border-radius: 2px;
+            border-radius: 3px;
             font-family: 'Orbitron', monospace;
             font-size: 13px;
             font-weight: 700;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             cursor: pointer;
             border: none;
@@ -421,16 +368,15 @@
             overflow: hidden;
         }
 
-        /* PRIMARY — Generate */
+        /* Primary — cyan */
         .btn-primary {
-            background: linear-gradient(135deg, #00d0e8 0%, #0070cc 100%);
-            color: #000820;
+            background: linear-gradient(135deg, #00d8f0 0%, #0088d4 100%);
+            color: #001824;
             width: 100%;
             font-size: 14px;
-            box-shadow: 0 0 25px rgba(0, 245, 255, 0.3), 0 4px 16px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 0 24px rgba(0, 245, 255, 0.3), 0 4px 14px rgba(0, 0, 0, 0.4);
         }
 
-        /* Shine sweep */
         .btn-primary::before {
             content: '';
             position: absolute;
@@ -439,18 +385,16 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
             transform: skewX(-18deg);
-            transition: left 0.65s ease;
+            transition: left 0.6s ease;
         }
 
-        /* Scanline texture on hover */
         .btn-primary::after {
             content: '';
             position: absolute;
             inset: 0;
             background: repeating-linear-gradient(
-                0deg,
-                rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
-                rgba(0,0,0,0.13) 2px, rgba(0,0,0,0.13) 3px
+                0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
+                rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 3px
             );
             opacity: 0;
             transition: opacity 0.3s;
@@ -459,30 +403,30 @@
         .btn-primary:hover::before { left: 140%; }
         .btn-primary:hover::after  { opacity: 1; }
         .btn-primary:hover {
-            box-shadow: 0 0 40px rgba(0, 245, 255, 0.55), 0 6px 22px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 0 38px rgba(0, 245, 255, 0.55), 0 6px 20px rgba(0, 0, 0, 0.4);
             transform: translateY(-2px);
         }
 
-        /* DANGER — Logout */
+        /* Danger — pink */
         .btn-danger {
             background: transparent;
-            border: 1px solid rgba(255, 0, 200, 0.35);
-            color: rgba(255, 0, 200, 0.8);
+            border: 1px solid rgba(255, 45, 155, 0.4);
+            color: var(--neon-pink);
             padding: 8px 18px;
             font-size: 11px;
         }
 
         .btn-danger:hover {
-            background: rgba(255, 0, 200, 0.1);
+            background: rgba(255, 45, 155, 0.1);
             border-color: var(--neon-pink);
-            color: var(--neon-pink);
-            box-shadow: 0 0 18px rgba(255, 0, 200, 0.3);
+            box-shadow: 0 0 18px rgba(255, 45, 155, 0.3);
+            color: #ff80c0;
         }
 
-        /* Login redirect button */
+        /* Redirect button */
         .btn-redirect {
-            background: linear-gradient(135deg, #00d0e8 0%, #0070cc 100%);
-            color: #000820;
+            background: linear-gradient(135deg, #00d8f0 0%, #0088d4 100%);
+            color: #001824;
             padding: 12px 28px;
             font-size: 13px;
             width: auto;
@@ -490,11 +434,11 @@
         }
 
         .btn-redirect:hover {
-            box-shadow: 0 0 35px rgba(0, 245, 255, 0.55);
+            box-shadow: 0 0 36px rgba(0, 245, 255, 0.55);
             transform: translateY(-2px);
         }
 
-        /* === STATUS / LOADING / RESULT === */
+        /* ── STATUS / LOADING ── */
         .status-area {
             margin-top: 28px;
             text-align: center;
@@ -503,95 +447,88 @@
 
         .spinner {
             display: inline-block;
-            width: 42px;
-            height: 42px;
-            border: 3px solid rgba(0, 245, 255, 0.15);
+            width: 44px;
+            height: 44px;
+            border: 3px solid rgba(0, 245, 255, 0.12);
             border-radius: 50%;
             border-top-color: var(--neon-cyan);
-            border-right-color: var(--neon-purple);
+            border-right-color: var(--neon-pink);
             animation: spin 0.9s linear infinite;
             margin-bottom: 14px;
-            box-shadow: 0 0 12px rgba(0, 245, 255, 0.3);
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.25);
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         #status-text {
             font-family: 'Orbitron', monospace;
             font-size: 12px;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             color: var(--neon-cyan);
             text-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
             text-transform: uppercase;
         }
 
         .status-hint {
-            font-size: 12px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
             color: var(--text-dim);
             margin-top: 6px;
         }
 
-        /* Success state */
+        /* Success */
         .success-icon {
-            font-size: 44px;
+            font-size: 46px;
             color: var(--neon-green);
-            text-shadow: 0 0 22px rgba(57, 255, 20, 0.6), 0 0 44px rgba(57, 255, 20, 0.3);
+            text-shadow: 0 0 22px rgba(57, 255, 20, 0.6);
             margin-bottom: 14px;
         }
 
         .success-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
             color: var(--neon-green);
-            text-shadow: 0 0 14px rgba(57, 255, 20, 0.5);
             margin-bottom: 18px;
-            text-transform: uppercase;
         }
 
         .result-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 4px;
             padding: 12px 28px;
             background: rgba(57, 255, 20, 0.07);
             border: 1px solid rgba(57, 255, 20, 0.35);
-            border-radius: 2px;
+            border-radius: 3px;
             color: var(--neon-green);
             font-family: 'Orbitron', monospace;
             font-size: 12px;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             text-decoration: none;
-            box-shadow: 0 0 18px rgba(57, 255, 20, 0.15);
+            box-shadow: 0 0 16px rgba(57, 255, 20, 0.14);
             transition: all 0.3s;
         }
 
         .result-link:hover {
             background: rgba(57, 255, 20, 0.14);
-            box-shadow: 0 0 30px rgba(57, 255, 20, 0.35);
+            box-shadow: 0 0 28px rgba(57, 255, 20, 0.35);
             transform: translateY(-2px);
         }
 
         @media (max-width: 768px) {
             .dashboard-container { margin: 70px auto 30px; }
-            header { flex-direction: column; gap: 14px; align-items: flex-start; padding: 18px 20px; }
+            header { flex-direction: column; gap: 12px; align-items: flex-start; padding: 18px 20px; }
             .main-form { padding: 28px 20px; }
         }
     </style>
 </head>
 <body>
 
-<!-- CRT Scanlines -->
 <div class="scanlines" aria-hidden="true"></div>
 
-<!-- Falling neon lines -->
 <div class="neon-lines" aria-hidden="true">
     <div class="neon-line"></div>
     <div class="neon-line"></div>
@@ -599,26 +536,17 @@
     <div class="neon-line"></div>
 </div>
 
-<!-- Theme toggle -->
-<div class="top-controls">
-    <button id="theme-toggle" class="top-btn" title="Toggle theme">⚡</button>
-</div>
-
-<!-- ============================================================
-     LOGIN FALLBACK SCREEN (shown when not authenticated)
-============================================================ -->
-<div id="login-screen" class="login-container">
+<!-- Login fallback -->
+<div id="login-screen" class="login-container" style="display:none;">
     <i class="fa-solid fa-lock lock-icon"></i>
     <h1>Access Restricted</h1>
-    <p>Neural link not established.<br>Please authenticate to enter the system.</p>
+    <p>Phiên đăng nhập chưa được xác thực.<br>Vui lòng đăng nhập để tiếp tục.</p>
     <button id="btn-login-redirect" class="btn btn-redirect">
-        <i class="fa-solid fa-right-to-bracket"></i> Authenticate
+        <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập hệ thống
     </button>
 </div>
 
-<!-- ============================================================
-     MAIN DASHBOARD
-============================================================ -->
+<!-- Dashboard -->
 <div id="dashboard-screen" class="dashboard-container">
 
     <header>
@@ -634,8 +562,9 @@
     <div class="main-form">
         <p>Hệ thống AI sẽ tự động đọc CV gốc và thiết kế một trang web hoàn chỉnh dựa trên yêu cầu bạn đưa ra.</p>
 
-        <!-- PDF Upload -->
+        <!-- Upload zone — click handled via JS, no opacity-0 trick -->
         <div class="upload-zone" id="upload-zone">
+            <div class="upload-zone-corners"></div>
             <i class="fa-regular fa-file-pdf"></i>
             <h3>Tải lên CV của bạn (Định dạng PDF)</h3>
             <p>Nhấp vào đây hoặc kéo thả file PDF vào khu vực này</p>
@@ -643,7 +572,7 @@
             <div id="file-name-display"></div>
         </div>
 
-        <!-- AI Prompt -->
+        <!-- AI prompt -->
         <div class="form-group">
             <label>
                 <i class="fa-solid fa-robot"></i>
@@ -654,22 +583,20 @@
             </textarea>
         </div>
 
-        <!-- Generate button -->
         <button id="btn-generate" class="btn btn-primary">
             <i class="fa-solid fa-rocket"></i>
             Bắt đầu phân tích &amp; Tạo Website
         </button>
 
-        <!-- Status area -->
         <div id="status-area" class="status-area">
             <div id="loading-indicator">
                 <div class="spinner"></div>
                 <p id="status-text">Hệ thống đang xử lý...</p>
                 <p class="status-hint">(Vui lòng giữ nguyên trang web trong quá trình này)</p>
             </div>
-            <div id="success-result" style="display: none;">
+            <div id="success-result" style="display:none;">
                 <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <p class="success-title">Website của bạn đã lên sóng!</p>
+                <p class="success-title">Tuyệt vời! Website của bạn đã lên sóng.</p>
                 <a href="#" id="public-url-btn" class="result-link">
                     <i class="fa-solid fa-globe"></i> Xem trang web ngay
                 </a>
@@ -679,32 +606,10 @@
     </div>
 </div>
 
-<!-- ============================================================
-     ALL ORIGINAL JS PRESERVED UNCHANGED
-============================================================ -->
 <script>
-    // --- Theme toggle ---
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const currentTheme   = localStorage.getItem('theme');
-    if (currentTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggleBtn.innerText = '☀️';
-    }
-    themeToggleBtn.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        if (theme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-            themeToggleBtn.innerText = '🌙';
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            themeToggleBtn.innerText = '☀️';
-        }
-    });
-
-    // --- Auth check ---
+    // ── Auth check ──
     const REDIRECT_URI = '/index.html';
+
     document.addEventListener('DOMContentLoaded', function () {
         const token    = localStorage.getItem('id_token');
         const username = localStorage.getItem('logged_username');
@@ -719,18 +624,36 @@
         }
     });
 
-    document.getElementById('btn-login-redirect').onclick = () => {
-        window.location.href = REDIRECT_URI;
-    };
-
+    document.getElementById('btn-login-redirect').onclick = () => window.location.href = REDIRECT_URI;
     document.getElementById('btn-logout').onclick = () => {
         localStorage.clear();
         window.location.href = REDIRECT_URI;
     };
 
-    // --- File selection ---
+    // ── Upload zone: click triggers file picker ──
     const fileInput       = document.getElementById('pdf-upload');
     const fileNameDisplay = document.getElementById('file-name-display');
+    const uploadZone      = document.getElementById('upload-zone');
+
+    uploadZone.addEventListener('click', () => fileInput.click());
+
+    // Drag-and-drop support
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('drag-over');
+    });
+    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const dt = new DataTransfer();
+            dt.items.add(files[0]);
+            fileInput.files = dt.files;
+            fileInput.dispatchEvent(new Event('change'));
+        }
+    });
 
     fileInput.addEventListener('change', function () {
         if (this.files && this.files[0]) {
@@ -741,76 +664,67 @@
                 fileNameDisplay.style.display = 'none';
                 return;
             }
-            fileNameDisplay.innerText      = `📄 Đã chọn: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-            fileNameDisplay.style.display  = 'block';
+            fileNameDisplay.innerText     = `📄 Đã chọn: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+            fileNameDisplay.style.display = 'block';
         }
     });
 
-    // --- Generate & AI call ---
+    // ── Generate & AI call ──
     document.getElementById('btn-generate').addEventListener('click', async function () {
         const file     = fileInput.files[0];
         const prompt   = document.getElementById('ai-prompt').value.trim();
         const username = localStorage.getItem('logged_username') || 'guest';
 
-        if (!file)   return alert("Bạn quên chưa tải lên file CV (PDF) rồi!");
+        if (!file)   return alert('Bạn quên chưa tải lên file CV (PDF) rồi!');
         if (!prompt) {
-            alert("Hãy nhập yêu cầu thiết kế giao diện cho AI nhé!");
+            alert('Hãy nhập yêu cầu thiết kế giao diện cho AI nhé!');
             return document.getElementById('ai-prompt').focus();
         }
 
-        const statusArea  = document.getElementById('status-area');
-        const statusText  = document.getElementById('status-text');
+        const statusArea = document.getElementById('status-area');
+        const statusText = document.getElementById('status-text');
         statusArea.style.display = 'block';
         document.getElementById('loading-indicator').style.display = 'block';
         document.getElementById('success-result').style.display    = 'none';
 
         try {
-            // 1. Get presigned URL
-            statusText.innerText = "Đang xin cấp phép upload từ server...";
+            statusText.innerText = 'Đang xin cấp phép upload từ server...';
             const apiGetUrl = `https://qgczs1jilf.execute-api.ap-southeast-2.amazonaws.com/get-upload-url?username=${username}`;
             const resUrl    = await fetch(apiGetUrl);
             const dataUrl   = await resUrl.json();
-            if (!dataUrl.upload_url) throw new Error("Không lấy được đường dẫn Upload (Kiểm tra lại cấu hình CORS của API Gateway)");
+            if (!dataUrl.upload_url) throw new Error('Không lấy được đường dẫn Upload (Kiểm tra lại cấu hình CORS của API Gateway)');
 
-            // 2. Upload PDF to S3
-            statusText.innerText = "Đang tải file PDF mã hóa lên kho S3 an toàn...";
+            statusText.innerText = 'Đang tải file PDF mã hóa lên kho S3 an toàn...';
             const uploadResponse = await fetch(dataUrl.upload_url, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/pdf' },
                 body: file
             });
-            if (!uploadResponse.ok) throw new Error("Upload file PDF thất bại! (Kiểm tra lại cấu hình CORS của S3 Bucket)");
+            if (!uploadResponse.ok) throw new Error('Upload file PDF thất bại! (Kiểm tra lại cấu hình CORS của S3 Bucket)');
 
-            // 3. Call AI Lambda
-            statusText.innerText = "Tải lên hoàn tất! Claude AI đang đọc CV, suy luận và lập trình Web...";
-            const aiBuilderApiUrl = `https://pmy6chg3ujmcsruw7nepspuiaa0luolc.lambda-url.ap-southeast-2.on.aws/`;
+            statusText.innerText = 'Tải lên hoàn tất! Claude AI đang đọc CV, suy luận và lập trình Web...';
+            const aiBuilderApiUrl = 'https://pmy6chg3ujmcsruw7nepspuiaa0luolc.lambda-url.ap-southeast-2.on.aws/';
             const aiResponse = await fetch(aiBuilderApiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username:   username,
-                    project_id: dataUrl.project_id,
-                    file_key:   dataUrl.file_key,
-                    prompt:     prompt
-                })
+                body: JSON.stringify({ username, project_id: dataUrl.project_id, file_key: dataUrl.file_key, prompt })
             });
 
             const aiData = await aiResponse.json();
-            if (!aiResponse.ok) throw new Error(aiData.error || "Lỗi trong quá trình AI tạo web");
+            if (!aiResponse.ok) throw new Error(aiData.error || 'Lỗi trong quá trình AI tạo web');
 
-            // Success
             document.getElementById('loading-indicator').style.display = 'none';
             document.getElementById('success-result').style.display    = 'block';
 
             const resultBtn  = document.getElementById('public-url-btn');
             resultBtn.href   = aiData.public_url;
             resultBtn.removeAttribute('target');
-            resultBtn.innerHTML = `<i class="fa-solid fa-globe"></i> Xem trang web ngay`;
+            resultBtn.innerHTML = '<i class="fa-solid fa-globe"></i> Xem trang web ngay';
 
         } catch (error) {
             console.error(error);
-            statusText.innerText = "❌ Có lỗi xảy ra: " + error.message;
-            statusText.style.color = "var(--neon-pink)";
+            statusText.innerText  = '❌ Có lỗi xảy ra: ' + error.message;
+            statusText.style.color = 'var(--neon-pink)';
         }
     });
 </script>

@@ -4,31 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CloudResume — Neural Auth Interface</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js/dist/amazon-cognito-identity.min.js"></script>
     <style>
         /* ============================================================
-           CYBERPUNK NEON DYSTOPIA — CloudResume Auth Interface
-           Palette: Void Black · Electric Cyan · Neon Purple · Hot Pink
-           Type: Orbitron (display) · Share Tech Mono (body/inputs)
+           CYBERPUNK NEON DYSTOPIA v2 — Neon Cyan & Hot Pink Dominant
+           Type: Orbitron (headings) · Exo 2 (body) · Share Tech Mono (inputs)
         ============================================================ */
         :root {
-            --void:          #07000f;
-            --panel-bg:      rgba(9, 0, 22, 0.94);
-            --neon-cyan:     #00f5ff;
-            --neon-purple:   #b800ff;
-            --neon-pink:     #ff00c8;
-            --neon-green:    #39ff14;
-            --text-bright:   #cdc5ee;
-            --text-dim:      #4a3a6a;
-            --border-subtle: rgba(0, 245, 255, 0.18);
+            --void:        #07000f;
+            --panel-bg:    rgba(10, 0, 22, 0.96);
+            --neon-cyan:   #00f5ff;
+            --neon-pink:   #ff2d9b;
+            --neon-green:  #39ff14;
+            --text-bright: #f0eaff;
+            --text-mid:    #b8aad8;
+            --text-dim:    #6e5e8e;
+            --border-cyan: rgba(0, 245, 255, 0.25);
+            --border-pink: rgba(255, 45, 155, 0.25);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Share Tech Mono', monospace;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 400;
             background: var(--void);
             color: var(--text-bright);
             display: flex;
@@ -39,33 +40,33 @@
             position: relative;
         }
 
-        /* Neon grid background */
+        /* Neon grid */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
             background:
-                linear-gradient(rgba(0, 245, 255, 0.028) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 245, 255, 0.028) 1px, transparent 1px);
+                linear-gradient(rgba(0, 245, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 245, 255, 0.025) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
             z-index: 0;
         }
 
-        /* Global CRT scanlines overlay */
+        /* CRT scanlines */
         .scanlines {
             position: fixed;
             inset: 0;
             background: repeating-linear-gradient(
                 0deg,
                 transparent 0px, transparent 3px,
-                rgba(0, 0, 0, 0.07) 3px, rgba(0, 0, 0, 0.07) 4px
+                rgba(0, 0, 0, 0.06) 3px, rgba(0, 0, 0, 0.06) 4px
             );
             pointer-events: none;
             z-index: 9999;
         }
 
-        /* Animated falling neon lines */
+        /* Falling neon lines — cyan & pink only */
         .neon-lines {
             position: fixed;
             inset: 0;
@@ -81,17 +82,17 @@
             animation: neon-fall linear infinite;
         }
 
-        .neon-line:nth-child(1) { left: 10%; background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 7s; animation-delay: -1s; }
-        .neon-line:nth-child(2) { left: 32%; background: linear-gradient(transparent, var(--neon-purple), transparent); animation-duration: 11s; animation-delay: -4.5s; }
-        .neon-line:nth-child(3) { left: 68%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 9s; animation-delay: -7s; }
-        .neon-line:nth-child(4) { left: 88%; background: linear-gradient(transparent, rgba(0, 245, 255, 0.6), transparent); animation-duration: 14s; animation-delay: -2s; }
+        .neon-line:nth-child(1) { left: 10%; background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 7s;  animation-delay: -1s; }
+        .neon-line:nth-child(2) { left: 35%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 11s; animation-delay: -4s; }
+        .neon-line:nth-child(3) { left: 68%; background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 9s;  animation-delay: -7s; }
+        .neon-line:nth-child(4) { left: 88%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 14s; animation-delay: -2s; }
 
         @keyframes neon-fall {
             from { top: -25%; }
             to   { top: 125%; }
         }
 
-        /* Top controls */
+        /* Lang toggle only (no theme toggle) */
         .top-controls {
             position: fixed;
             top: 20px;
@@ -103,28 +104,28 @@
 
         .top-btn {
             padding: 7px 14px;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 500;
             cursor: pointer;
-            background: rgba(0, 0, 15, 0.8);
+            background: rgba(0, 0, 15, 0.85);
             color: var(--neon-cyan);
-            border: 1px solid var(--border-subtle);
-            border-radius: 2px;
-            font-family: 'Share Tech Mono', monospace;
+            border: 1px solid var(--border-cyan);
+            border-radius: 3px;
+            font-family: 'Exo 2', sans-serif;
             display: flex;
             align-items: center;
             gap: 8px;
             transition: all 0.2s;
             backdrop-filter: blur(10px);
-            letter-spacing: 0.05em;
         }
 
         .top-btn:hover {
             border-color: var(--neon-cyan);
-            box-shadow: 0 0 12px rgba(0, 245, 255, 0.35), inset 0 0 8px rgba(0, 245, 255, 0.06);
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.35);
             color: #fff;
         }
 
-        /* Main layout */
+        /* ── LAYOUT ── */
         .container {
             display: flex;
             max-width: 1100px;
@@ -135,10 +136,10 @@
             flex-wrap: wrap;
             position: relative;
             z-index: 10;
-            gap: 40px;
+            gap: 48px;
         }
 
-        /* === BRAND SECTION === */
+        /* ── BRAND ── */
         .brand-section {
             flex: 1;
             min-width: 280px;
@@ -146,9 +147,11 @@
         }
 
         .brand-eyebrow {
-            font-size: 10px;
-            color: var(--neon-purple);
-            letter-spacing: 0.35em;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 500;
+            font-size: 11px;
+            color: var(--neon-pink);
+            letter-spacing: 0.3em;
             text-transform: uppercase;
             margin-bottom: 18px;
             display: flex;
@@ -161,8 +164,8 @@
             display: inline-block;
             width: 28px;
             height: 1px;
-            background: var(--neon-purple);
-            box-shadow: 0 0 8px var(--neon-purple);
+            background: var(--neon-pink);
+            box-shadow: 0 0 8px var(--neon-pink);
             flex-shrink: 0;
         }
 
@@ -171,8 +174,8 @@
             font-size: 52px;
             font-weight: 900;
             line-height: 1.08;
-            margin-bottom: 22px;
-            background: linear-gradient(135deg, var(--neon-cyan) 0%, #8855ff 55%, var(--neon-purple) 100%);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-pink) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -187,106 +190,108 @@
             }
             88% { filter: none; transform: translate(3px, 0); }
             90% {
-                filter: drop-shadow(-2px 0 var(--neon-purple)) drop-shadow(2px 0 var(--neon-cyan));
+                filter: drop-shadow(-2px 0 var(--neon-cyan)) drop-shadow(2px 0 var(--neon-pink));
                 transform: translate(0, 1px) skewX(3deg);
             }
             92% { filter: none; transform: none; }
         }
 
         .brand-subtitle {
-            font-size: 15px;
-            color: var(--text-bright);
-            line-height: 1.75;
-            opacity: 0.6;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            color: var(--text-mid);
+            line-height: 1.7;
             max-width: 380px;
         }
 
-        /* === AUTH PANEL === */
+        /* ── AUTH PANEL ── */
         .auth-section {
             width: 430px;
             min-width: 320px;
             background: var(--panel-bg);
             padding: 32px;
-            border: 1px solid var(--border-subtle);
-            border-radius: 3px;
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 4px;
             box-shadow:
-                0 0 0 1px rgba(0, 0, 0, 0.6),
-                0 0 30px rgba(0, 245, 255, 0.1),
-                0 0 70px rgba(184, 0, 255, 0.07),
-                0 24px 64px rgba(0, 0, 0, 0.55);
+                0 0 0 1px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 245, 255, 0.08),
+                0 0 60px rgba(255, 45, 155, 0.06),
+                0 24px 64px rgba(0, 0, 0, 0.5);
             position: relative;
             backdrop-filter: blur(20px);
         }
 
-        /* Animated top neon gradient bar */
+        /* Top neon bar — cyan → pink */
         .auth-section::before {
             content: '';
             position: absolute;
             top: -1px;
-            left: 8%;
-            right: 8%;
+            left: 6%;
+            right: 6%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-purple), var(--neon-pink), transparent);
-            box-shadow: 0 0 14px rgba(0, 245, 255, 0.8), 0 0 28px rgba(184, 0, 255, 0.4);
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-pink), transparent);
+            box-shadow: 0 0 12px rgba(0, 245, 255, 0.7), 0 0 24px rgba(255, 45, 155, 0.5);
             animation: top-bar-glow 4s ease-in-out infinite;
         }
 
         @keyframes top-bar-glow {
-            0%, 100% { opacity: 0.65; left: 12%; right: 12%; }
-            50%       { opacity: 1;    left: 3%;  right: 3%;  }
+            0%, 100% { opacity: 0.6; left: 10%; right: 10%; }
+            50%       { opacity: 1;   left: 2%;  right: 2%;  }
         }
 
-        /* Corner bracket decorators */
+        /* Corner brackets */
         .corner {
             position: absolute;
             width: 18px;
             height: 18px;
             border-style: solid;
-            border-color: rgba(0, 245, 255, 0.55);
         }
 
-        .corner-tl { top: -1px; left: -1px;  border-width: 2px 0 0 2px; box-shadow: -2px -2px 6px rgba(0, 245, 255, 0.25); }
-        .corner-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; box-shadow:  2px -2px 6px rgba(0, 245, 255, 0.25); }
-        .corner-bl { bottom: -1px; left: -1px;  border-width: 0 0 2px 2px; box-shadow: -2px 2px 6px rgba(184, 0, 255, 0.25); }
-        .corner-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; box-shadow:  2px 2px 6px rgba(184, 0, 255, 0.25); }
+        /* Top corners: cyan */
+        .corner-tl { top: -1px; left: -1px;  border-width: 2px 0 0 2px; border-color: var(--neon-cyan); box-shadow: -2px -2px 6px rgba(0, 245, 255, 0.3); }
+        .corner-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; border-color: var(--neon-cyan); box-shadow:  2px -2px 6px rgba(0, 245, 255, 0.3); }
+        /* Bottom corners: pink */
+        .corner-bl { bottom: -1px; left: -1px;  border-width: 0 0 2px 2px; border-color: var(--neon-pink); box-shadow: -2px 2px 6px rgba(255, 45, 155, 0.3); }
+        .corner-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-color: var(--neon-pink); box-shadow:  2px 2px 6px rgba(255, 45, 155, 0.3); }
 
         /* Error */
         #error-msg {
-            background: rgba(255, 0, 200, 0.07);
-            color: var(--neon-pink);
-            padding: 10px 14px;
-            border: 1px solid rgba(255, 0, 200, 0.22);
-            border-radius: 2px;
+            background: rgba(255, 45, 155, 0.08);
+            color: #ff6db8;
+            padding: 11px 14px;
+            border: 1px solid rgba(255, 45, 155, 0.3);
+            border-radius: 3px;
             text-align: center;
             margin-bottom: 18px;
-            font-size: 12px;
+            font-size: 13px;
+            font-family: 'Exo 2', sans-serif;
             display: none;
-            text-shadow: 0 0 10px rgba(255, 0, 200, 0.5);
-            letter-spacing: 0.05em;
         }
 
-        /* Form fields */
-        .form-group       { margin-bottom: 14px; }
-        .form-grid-3      { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .form-grid-phone  { display: grid; grid-template-columns: 1fr 2.5fr; gap: 8px; margin-bottom: 4px; }
+        /* ── FORM FIELDS ── */
+        .form-group      { margin-bottom: 14px; }
+        .form-grid-3     { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .form-grid-phone { display: grid; grid-template-columns: 1fr 2.5fr; gap: 8px; margin-bottom: 4px; }
 
         label {
             display: block;
-            font-size: 10px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            font-size: 11px;
             color: var(--neon-cyan);
-            margin-bottom: 5px;
-            letter-spacing: 0.22em;
+            margin-bottom: 6px;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
-            opacity: 0.8;
         }
 
         input, select {
             width: 100%;
             padding: 11px 14px;
-            background: rgba(0, 0, 18, 0.75);
-            border: 1px solid rgba(0, 245, 255, 0.12);
+            background: rgba(0, 0, 18, 0.8);
+            border: 1px solid rgba(0, 245, 255, 0.15);
             color: var(--text-bright);
-            border-radius: 2px;
+            border-radius: 3px;
             font-size: 14px;
             font-family: 'Share Tech Mono', monospace;
             outline: none;
@@ -296,15 +301,16 @@
         input::placeholder { color: var(--text-dim); }
 
         input:focus, select:focus {
-            border-color: rgba(0, 245, 255, 0.45);
-            box-shadow: 0 0 0 1px rgba(0, 245, 255, 0.18), 0 0 16px rgba(0, 245, 255, 0.12);
-            background: rgba(0, 5, 22, 0.9);
+            border-color: rgba(0, 245, 255, 0.5);
+            box-shadow: 0 0 0 1px rgba(0, 245, 255, 0.2), 0 0 14px rgba(0, 245, 255, 0.1);
+            background: rgba(0, 5, 22, 0.95);
         }
 
-        select option { background: #0c001e; color: var(--text-bright); }
+        select option { background: #0c0020; color: var(--text-bright); }
 
         .helper-text {
-            font-size: 11px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 12px;
             color: var(--text-dim);
             display: block;
             margin-top: 4px;
@@ -313,12 +319,13 @@
         }
 
         .warning-text {
-            font-size: 11px;
-            color: var(--neon-pink);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 12px;
+            color: #ff6db8;
             display: block;
             margin-top: 4px;
             margin-bottom: 12px;
-            text-shadow: 0 0 8px rgba(255, 0, 200, 0.4);
+            line-height: 1.5;
         }
 
         .pwd-wrapper { position: relative; }
@@ -337,19 +344,19 @@
 
         .pwd-toggle:hover {
             color: var(--neon-cyan);
-            text-shadow: 0 0 10px rgba(0, 245, 255, 0.6);
+            text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
         }
 
-        /* === BUTTONS === */
+        /* ── BUTTONS ── */
         .btn {
             width: 100%;
-            padding: 12px;
+            padding: 13px;
             border: none;
-            border-radius: 2px;
+            border-radius: 3px;
             font-size: 13px;
             font-weight: 700;
             font-family: 'Orbitron', monospace;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.25s;
@@ -357,35 +364,32 @@
             overflow: hidden;
         }
 
-        /* PRIMARY — Login / Verify */
+        /* Login / Verify — cyan primary */
         .btn-login {
-            background: linear-gradient(135deg, #00d0e8 0%, #0070cc 100%);
-            color: #000820;
+            background: linear-gradient(135deg, #00d8f0 0%, #0088d4 100%);
+            color: #001a24;
             margin-bottom: 16px;
-            box-shadow: 0 0 22px rgba(0, 245, 255, 0.28), 0 4px 16px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 0 22px rgba(0, 245, 255, 0.3), 0 4px 14px rgba(0, 0, 0, 0.4);
         }
 
-        /* Shine sweep */
         .btn-login::before {
             content: '';
             position: absolute;
             top: 0; left: -130%;
             width: 75%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transform: skewX(-18deg);
-            transition: left 0.65s ease;
+            transition: left 0.6s ease;
         }
 
-        /* Scanline texture on hover */
         .btn-login::after {
             content: '';
             position: absolute;
             inset: 0;
             background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 2px,
-                rgba(0, 0, 0, 0.13) 2px, rgba(0, 0, 0, 0.13) 3px
+                0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
+                rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 3px
             );
             opacity: 0;
             transition: opacity 0.3s;
@@ -394,7 +398,7 @@
         .btn-login:hover::before { left: 140%; }
         .btn-login:hover::after  { opacity: 1; }
         .btn-login:hover {
-            box-shadow: 0 0 35px rgba(0, 245, 255, 0.55), 0 6px 22px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 0 36px rgba(0, 245, 255, 0.55), 0 6px 20px rgba(0, 0, 0, 0.4);
             transform: translateY(-2px);
         }
 
@@ -403,7 +407,7 @@
             margin: 22px 0;
             border: none;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.14), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 45, 155, 0.2), transparent);
             position: relative;
         }
 
@@ -420,74 +424,74 @@
             letter-spacing: 6px;
         }
 
-        /* SECONDARY — Register */
+        /* Register — pink secondary */
         .btn-register {
             background: transparent;
-            border: 1px solid rgba(184, 0, 255, 0.45);
-            color: var(--neon-purple);
+            border: 1px solid rgba(255, 45, 155, 0.5);
+            color: var(--neon-pink);
             width: fit-content;
             padding: 10px 26px;
             margin: 0 auto;
             display: block;
-            box-shadow: 0 0 14px rgba(184, 0, 255, 0.14), inset 0 0 14px rgba(184, 0, 255, 0.05);
+            box-shadow: 0 0 14px rgba(255, 45, 155, 0.15);
         }
 
         .btn-register:hover {
-            background: rgba(184, 0, 255, 0.1);
-            border-color: var(--neon-purple);
-            box-shadow: 0 0 28px rgba(184, 0, 255, 0.45), inset 0 0 18px rgba(184, 0, 255, 0.1);
-            color: #d580ff;
+            background: rgba(255, 45, 155, 0.1);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 28px rgba(255, 45, 155, 0.45);
+            color: #ff80c0;
             transform: translateY(-2px);
         }
 
-        /* Form state visibility */
         #register-form, #verify-form { display: none; }
 
-        /* Section heading */
         .form-title {
             font-family: 'Orbitron', monospace;
             font-size: 15px;
+            font-weight: 700;
             text-align: center;
             margin-bottom: 22px;
             color: var(--neon-cyan);
-            letter-spacing: 0.28em;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
-            text-shadow: 0 0 18px rgba(0, 245, 255, 0.5);
+            text-shadow: 0 0 16px rgba(0, 245, 255, 0.5);
         }
 
         .back-link {
             display: block;
             text-align: center;
-            color: rgba(0, 245, 255, 0.55);
+            color: var(--neon-pink);
             cursor: pointer;
             margin-top: 16px;
             text-decoration: none;
-            font-size: 12px;
-            letter-spacing: 0.06em;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0.75;
             transition: all 0.2s;
         }
 
         .back-link:hover {
-            color: var(--neon-cyan);
-            text-shadow: 0 0 10px rgba(0, 245, 255, 0.65);
+            color: #ff80c0;
+            opacity: 1;
+            text-shadow: 0 0 10px rgba(255, 45, 155, 0.5);
         }
 
         @media (max-width: 768px) {
-            .container       { flex-direction: column; padding: 24px; gap: 32px; margin-top: 56px; }
-            .brand-section   { width: 100%; padding: 0; text-align: center; min-width: unset; }
-            .brand-name      { font-size: 38px; }
-            .brand-eyebrow   { justify-content: center; }
-            .brand-subtitle  { margin: 0 auto; }
-            .auth-section    { width: 100%; min-width: unset; }
+            .container     { flex-direction: column; padding: 24px; gap: 32px; margin-top: 56px; }
+            .brand-section { width: 100%; padding: 0; text-align: center; min-width: unset; }
+            .brand-name    { font-size: 38px; }
+            .brand-eyebrow { justify-content: center; }
+            .brand-subtitle { margin: 0 auto; }
+            .auth-section  { width: 100%; min-width: unset; }
         }
     </style>
 </head>
 <body>
 
-<!-- CRT scanlines -->
 <div class="scanlines" aria-hidden="true"></div>
 
-<!-- Falling neon lines -->
 <div class="neon-lines" aria-hidden="true">
     <div class="neon-line"></div>
     <div class="neon-line"></div>
@@ -495,9 +499,8 @@
     <div class="neon-line"></div>
 </div>
 
-<!-- Top controls (theme + lang) -->
+<!-- Lang toggle only — dark mode removed -->
 <div class="top-controls">
-    <button id="theme-toggle" class="top-btn" title="Toggle theme">⚡</button>
     <button id="lang-toggle" class="top-btn">
         <img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN
     </button>
@@ -505,16 +508,13 @@
 
 <div class="container">
 
-    <!-- Brand -->
     <div class="brand-section">
         <div class="brand-eyebrow">AWS Serverless Portfolio</div>
         <div class="brand-name">CloudResume</div>
         <p class="brand-subtitle" data-i18n="subtitle">Create and manage your own Serverless portfolio on the AWS platform.</p>
     </div>
 
-    <!-- Auth panel -->
     <div class="auth-section">
-        <!-- Corner brackets -->
         <div class="corner corner-tl"></div>
         <div class="corner corner-tr"></div>
         <div class="corner corner-bl"></div>
@@ -522,7 +522,7 @@
 
         <div id="error-msg"></div>
 
-        <!-- Login form -->
+        <!-- Login -->
         <div id="login-form">
             <div class="form-group">
                 <input type="email" id="login-email" data-i18n-placeholder="pl_email" placeholder="Your Email">
@@ -536,7 +536,7 @@
             <button class="btn btn-register" onclick="toggleForm('register')" data-i18n="btn_create_acc">Create New Account</button>
         </div>
 
-        <!-- Register form -->
+        <!-- Register -->
         <div id="register-form">
             <h2 class="form-title" data-i18n="reg_title">Sign Up</h2>
 
@@ -565,12 +565,12 @@
 
             <label data-i18n="lbl_phone">Phone Number</label>
             <div class="form-grid-phone">
-                <input type="text" id="reg-phone-code" value="" placeholder="+..." style="text-align: center;">
+                <input type="text" id="reg-phone-code" value="" placeholder="+..." style="text-align:center;">
                 <input type="text" id="reg-phone-num" data-i18n-placeholder="pl_phone" placeholder="Enter the rest of the digits...">
             </div>
             <small class="helper-text" data-i18n="phone_guide">Ex: Enter the country code (e.g., +84) in the first box, and your phone number in the second.</small>
 
-            <div class="form-group pwd-wrapper" style="margin-bottom: 8px;">
+            <div class="form-group pwd-wrapper" style="margin-bottom:8px;">
                 <input type="password" id="reg-password" data-i18n-placeholder="pl_pass_new" placeholder="New Password">
                 <i class="fa-regular fa-eye-slash pwd-toggle" onclick="togglePassword('reg-password', this)"></i>
             </div>
@@ -580,19 +580,19 @@
             </div>
             <small class="warning-text" id="pwd-policy" data-i18n="pwd_policy">⚠️ Password must be 8+ characters, including uppercase, lowercase, numbers, and symbols (@$!%*?&).</small>
 
-            <button class="btn btn-register" style="width: 100%; margin-top: 10px; display: block;" onclick="registerUser()" data-i18n="btn_reg_submit">Sign Up</button>
+            <button class="btn btn-register" style="width:100%;margin-top:10px;display:block;" onclick="registerUser()" data-i18n="btn_reg_submit">Sign Up</button>
             <a class="back-link" onclick="toggleForm('login')" data-i18n="link_back_login">Already have an account? Log in</a>
         </div>
 
-        <!-- Verify form -->
+        <!-- Verify -->
         <div id="verify-form">
             <h2 class="form-title" data-i18n="verify_title">Email Verification</h2>
-            <p style="font-size: 12px; text-align: center; margin-bottom: 20px; color: var(--text-dim);" data-i18n="verify_desc">
+            <p style="font-family:'Exo 2',sans-serif;font-size:14px;text-align:center;margin-bottom:20px;color:var(--text-mid);" data-i18n="verify_desc">
                 Please check your email and enter the 6-digit verification code.
             </p>
             <div class="form-group">
                 <input type="text" id="verify-code" data-i18n-placeholder="pl_code" placeholder="Verification Code"
-                    style="text-align: center; letter-spacing: 0.6em; font-size: 18px;">
+                    style="text-align:center;letter-spacing:0.5em;font-size:18px;">
             </div>
             <button class="btn btn-login" onclick="verifyUser()" data-i18n="btn_verify">Verify</button>
         </div>
@@ -600,149 +600,96 @@
 
 </div>
 
-<!-- ============================================================
-     ALL ORIGINAL JS PRESERVED UNCHANGED
-============================================================ -->
 <script>
-    // ---- Dropdown init ----
+    // ── Dropdown init ──
     const daySelect   = document.getElementById('reg-dob-day');
     const monthSelect = document.getElementById('reg-dob-month');
     const yearSelect  = document.getElementById('reg-dob-year');
 
-    for (let i = 1; i <= 31; i++) daySelect.innerHTML += `<option value="${i < 10 ? '0' + i : i}">${i}</option>`;
-    for (let i = 1; i <= 12; i++) monthSelect.innerHTML += `<option value="${i < 10 ? '0' + i : i}">Tháng ${i}</option>`;
+    for (let i = 1; i <= 31; i++) daySelect.innerHTML += `<option value="${i < 10 ? '0'+i : i}">${i}</option>`;
+    for (let i = 1; i <= 12; i++) monthSelect.innerHTML += `<option value="${i < 10 ? '0'+i : i}">Tháng ${i}</option>`;
     const currentYear = new Date().getFullYear();
     for (let i = currentYear; i >= 1950; i--) yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
-    yearSelect.value = "2000";
+    yearSelect.value = '2000';
 
-    // ---- Password toggle ----
-    function togglePassword(inputId, iconElement) {
+    // ── Password toggle ──
+    function togglePassword(inputId, iconEl) {
         const input = document.getElementById(inputId);
-        if (input.type === "password") {
-            input.type = "text";
-            iconElement.classList.remove("fa-eye-slash");
-            iconElement.classList.add("fa-eye");
+        if (input.type === 'password') {
+            input.type = 'text';
+            iconEl.classList.replace('fa-eye-slash', 'fa-eye');
         } else {
-            input.type = "password";
-            iconElement.classList.remove("fa-eye");
-            iconElement.classList.add("fa-eye-slash");
+            input.type = 'password';
+            iconEl.classList.replace('fa-eye', 'fa-eye-slash');
         }
     }
 
-    // ---- Theme toggle ----
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggleBtn.innerText = '☀️';
-    }
-    themeToggleBtn.addEventListener('click', () => {
-        let theme = document.documentElement.getAttribute('data-theme');
-        if (theme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-            themeToggleBtn.innerText = '🌙';
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            themeToggleBtn.innerText = '☀️';
-        }
-    });
-
-    // ---- i18n ----
+    // ── i18n ──
     let currentLang = 'en';
-    const enMonths = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const enMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
     const translations = {
         vn: {
-            subtitle: "Kiến tạo và quản trị hồ sơ năng lực Serverless của riêng bạn trên nền tảng AWS.",
-            btn_login: "Đăng nhập",
-            btn_create_acc: "Tạo tài khoản mới",
-            reg_title: "Đăng ký",
-            lbl_dob: "Ngày sinh",
-            lbl_gender: "Giới tính",
-            gen_male: "Nam", gen_female: "Nữ", gen_other: "Khác",
-            lbl_phone: "Số điện thoại",
-            phone_guide: "VD: Nhập mã quốc gia (như +84) vào ô đầu tiên, và nhập số điện thoại vào ô thứ hai.",
-            pwd_policy: "⚠️ Mật khẩu phải từ 8 ký tự, bao gồm: chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).",
-            btn_reg_submit: "Đăng ký",
-            link_back_login: "Bạn đã có tài khoản? Đăng nhập ngay",
-            verify_title: "Xác thực Email",
-            verify_desc: "Vui lòng kiểm tra email và nhập mã xác thực gồm 6 chữ số.",
-            btn_verify: "Xác nhận",
-            pl_email: "Email của bạn",
-            pl_email_short: "Email",
-            pl_pass: "Mật khẩu",
-            pl_name: "Họ và tên",
-            pl_phone: "Nhập đuôi số còn lại...",
-            pl_pass_new: "Mật khẩu mới",
-            pl_pass_confirm: "Xác nhận mật khẩu",
-            pl_code: "Mã xác thực",
-            err_empty_login: "Vui lòng nhập đầy đủ email và mật khẩu.",
-            err_login_fail: "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.",
-            err_empty_reg: "Vui lòng điền đầy đủ tất cả thông tin.",
-            err_pwd_weak: "Mật khẩu quá yếu! Hãy kiểm tra lại điều kiện bên dưới.",
-            err_pwd_match: "Mật khẩu xác nhận không trùng khớp.",
-            err_empty_code: "Vui lòng nhập mã xác thực.",
-            err_code_invalid: "Mã xác thực không hợp lệ.",
-            msg_verify_success: "Xác thực tài khoản thành công! Bạn có thể đăng nhập ngay.",
-            msg_processing: "Đang xử lý..."
+            subtitle: 'Kiến tạo và quản trị hồ sơ năng lực Serverless của riêng bạn trên nền tảng AWS.',
+            btn_login: 'Đăng nhập', btn_create_acc: 'Tạo tài khoản mới', reg_title: 'Đăng ký',
+            lbl_dob: 'Ngày sinh', lbl_gender: 'Giới tính',
+            gen_male: 'Nam', gen_female: 'Nữ', gen_other: 'Khác',
+            lbl_phone: 'Số điện thoại',
+            phone_guide: 'VD: Nhập mã quốc gia (như +84) vào ô đầu tiên, và nhập số điện thoại vào ô thứ hai.',
+            pwd_policy: '⚠️ Mật khẩu phải từ 8 ký tự, bao gồm: chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).',
+            btn_reg_submit: 'Đăng ký', link_back_login: 'Bạn đã có tài khoản? Đăng nhập ngay',
+            verify_title: 'Xác thực Email', verify_desc: 'Vui lòng kiểm tra email và nhập mã xác thực gồm 6 chữ số.',
+            btn_verify: 'Xác nhận', pl_email: 'Email của bạn', pl_email_short: 'Email',
+            pl_pass: 'Mật khẩu', pl_name: 'Họ và tên', pl_phone: 'Nhập đuôi số còn lại...',
+            pl_pass_new: 'Mật khẩu mới', pl_pass_confirm: 'Xác nhận mật khẩu', pl_code: 'Mã xác thực',
+            err_empty_login: 'Vui lòng nhập đầy đủ email và mật khẩu.',
+            err_login_fail: 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.',
+            err_empty_reg: 'Vui lòng điền đầy đủ tất cả thông tin.',
+            err_pwd_weak: 'Mật khẩu quá yếu! Hãy kiểm tra lại điều kiện bên dưới.',
+            err_pwd_match: 'Mật khẩu xác nhận không trùng khớp.',
+            err_empty_code: 'Vui lòng nhập mã xác thực.', err_code_invalid: 'Mã xác thực không hợp lệ.',
+            msg_verify_success: 'Xác thực tài khoản thành công! Bạn có thể đăng nhập ngay.', msg_processing: 'Đang xử lý...'
         },
         en: {
-            subtitle: "Create and manage your own Serverless portfolio on the AWS platform.",
-            btn_login: "Log In",
-            btn_create_acc: "Create New Account",
-            reg_title: "Sign Up",
-            lbl_dob: "Date of Birth",
-            lbl_gender: "Gender",
-            gen_male: "Male", gen_female: "Female", gen_other: "Other",
-            lbl_phone: "Phone Number",
-            phone_guide: "Ex: Enter the country code (e.g., +84) in the first box, and your phone number in the second.",
-            pwd_policy: "⚠️ Password must be 8+ characters, including uppercase, lowercase, numbers, and symbols (@$!%*?&).",
-            btn_reg_submit: "Sign Up",
-            link_back_login: "Already have an account? Log in",
-            verify_title: "Email Verification",
-            verify_desc: "Please check your email and enter the 6-digit verification code.",
-            btn_verify: "Verify",
-            pl_email: "Your Email",
-            pl_email_short: "Email",
-            pl_pass: "Password",
-            pl_name: "Full Name",
-            pl_phone: "Enter the rest of the digits...",
-            pl_pass_new: "New Password",
-            pl_pass_confirm: "Confirm Password",
-            pl_code: "Verification Code",
-            err_empty_login: "Please enter both email and password.",
-            err_login_fail: "Login failed. Please check your credentials.",
-            err_empty_reg: "Please fill in all required fields.",
-            err_pwd_weak: "Password is too weak! Please check the requirements below.",
-            err_pwd_match: "Passwords do not match.",
-            err_empty_code: "Please enter the verification code.",
-            err_code_invalid: "Invalid verification code.",
-            msg_verify_success: "Account verified successfully! You can log in now.",
-            msg_processing: "Processing..."
+            subtitle: 'Create and manage your own Serverless portfolio on the AWS platform.',
+            btn_login: 'Log In', btn_create_acc: 'Create New Account', reg_title: 'Sign Up',
+            lbl_dob: 'Date of Birth', lbl_gender: 'Gender',
+            gen_male: 'Male', gen_female: 'Female', gen_other: 'Other',
+            lbl_phone: 'Phone Number',
+            phone_guide: 'Ex: Enter the country code (e.g., +84) in the first box, and your phone number in the second.',
+            pwd_policy: '⚠️ Password must be 8+ characters, including uppercase, lowercase, numbers, and symbols (@$!%*?&).',
+            btn_reg_submit: 'Sign Up', link_back_login: 'Already have an account? Log in',
+            verify_title: 'Email Verification', verify_desc: 'Please check your email and enter the 6-digit verification code.',
+            btn_verify: 'Verify', pl_email: 'Your Email', pl_email_short: 'Email',
+            pl_pass: 'Password', pl_name: 'Full Name', pl_phone: 'Enter the rest of the digits...',
+            pl_pass_new: 'New Password', pl_pass_confirm: 'Confirm Password', pl_code: 'Verification Code',
+            err_empty_login: 'Please enter both email and password.',
+            err_login_fail: 'Login failed. Please check your credentials.',
+            err_empty_reg: 'Please fill in all required fields.',
+            err_pwd_weak: 'Password is too weak! Please check the requirements below.',
+            err_pwd_match: 'Passwords do not match.',
+            err_empty_code: 'Please enter the verification code.', err_code_invalid: 'Invalid verification code.',
+            msg_verify_success: 'Account verified successfully! You can log in now.', msg_processing: 'Processing...'
         }
     };
 
     function updateLanguage() {
-        const langToggleBtn = document.getElementById('lang-toggle');
-        langToggleBtn.innerHTML = currentLang === 'vn'
+        const langBtn = document.getElementById('lang-toggle');
+        langBtn.innerHTML = currentLang === 'vn'
             ? '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"> EN'
             : '<img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN';
 
         const mSel = document.getElementById('reg-dob-month');
         for (let i = 0; i < 12; i++) {
-            mSel.options[i].text = currentLang === 'vn' ? `Tháng ${i + 1}` : enMonths[i];
+            mSel.options[i].text = currentLang === 'vn' ? `Tháng ${i+1}` : enMonths[i];
         }
-
         document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
+            const k = el.getAttribute('data-i18n');
+            if (translations[currentLang][k]) el.innerText = translations[currentLang][k];
         });
-
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-            const key = el.getAttribute('data-i18n-placeholder');
-            if (translations[currentLang][key]) el.placeholder = translations[currentLang][key];
+            const k = el.getAttribute('data-i18n-placeholder');
+            if (translations[currentLang][k]) el.placeholder = translations[currentLang][k];
         });
     }
 
@@ -750,83 +697,73 @@
         currentLang = currentLang === 'vn' ? 'en' : 'vn';
         updateLanguage();
     });
-
     updateLanguage();
 
-    // ---- AWS Cognito ----
-    const poolData = {
-        UserPoolId: 'ap-southeast-2_O6dXPqxDv',
-        ClientId:   'n93k0v18jjsk56ei0su42mdq7'
-    };
+    // ── AWS Cognito ──
+    const poolData = { UserPoolId: 'ap-southeast-2_O6dXPqxDv', ClientId: 'n93k0v18jjsk56ei0su42mdq7' };
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
     let cognitoUser = null;
 
-    function showError(msgKey, isRawMsg = false) {
-        const errDiv = document.getElementById('error-msg');
-        errDiv.innerText = isRawMsg ? msgKey : translations[currentLang][msgKey];
-        errDiv.style.display = 'block';
+    function showError(msgKey, isRaw = false) {
+        const el = document.getElementById('error-msg');
+        el.innerText = isRaw ? msgKey : translations[currentLang][msgKey];
+        el.style.display = 'block';
     }
 
-    function toggleForm(formName) {
+    function toggleForm(name) {
         document.getElementById('error-msg').style.display = 'none';
-        document.getElementById('login-form').style.display    = formName === 'login'    ? 'block' : 'none';
-        document.getElementById('register-form').style.display = formName === 'register' ? 'block' : 'none';
-        document.getElementById('verify-form').style.display   = formName === 'verify'   ? 'block' : 'none';
+        document.getElementById('login-form').style.display    = name === 'login'    ? 'block' : 'none';
+        document.getElementById('register-form').style.display = name === 'register' ? 'block' : 'none';
+        document.getElementById('verify-form').style.display   = name === 'verify'   ? 'block' : 'none';
     }
 
     function loginUser() {
-        const email    = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-        const btnSubmit = document.getElementById('btn-login-submit');
+        const email = document.getElementById('login-email').value;
+        const pass  = document.getElementById('login-password').value;
+        const btn   = document.getElementById('btn-login-submit');
+        if (!email || !pass) return showError('err_empty_login');
 
-        if (!email || !password) return showError('err_empty_login');
-
-        const authDetails = new AmazonCognitoIdentity.AuthenticationDetails({ Username: email, Password: password });
+        const authDetails = new AmazonCognitoIdentity.AuthenticationDetails({ Username: email, Password: pass });
         cognitoUser = new AmazonCognitoIdentity.CognitoUser({ Username: email, Pool: userPool });
-
-        btnSubmit.innerText = translations[currentLang]['msg_processing'];
+        btn.innerText = translations[currentLang]['msg_processing'];
 
         cognitoUser.authenticateUser(authDetails, {
-            onSuccess: function (result) {
-                localStorage.setItem('id_token',        result.getIdToken().getJwtToken());
+            onSuccess: r => {
+                localStorage.setItem('id_token', r.getIdToken().getJwtToken());
                 localStorage.setItem('logged_username', email.split('@')[0]);
                 window.location.href = '/dashboard.html';
             },
-            onFailure: function (err) {
-                btnSubmit.innerText = translations[currentLang]['btn_login'];
+            onFailure: err => {
+                btn.innerText = translations[currentLang]['btn_login'];
                 showError(err.message || 'err_login_fail', !!err.message);
             }
         });
     }
 
     function registerUser() {
-        const name       = document.getElementById('reg-name').value;
-        const email      = document.getElementById('reg-email').value;
-        const phoneCode  = document.getElementById('reg-phone-code').value.trim();
-        const phoneNumRaw = document.getElementById('reg-phone-num').value.trim();
-        const password   = document.getElementById('reg-password').value;
-        const passwordConfirm = document.getElementById('reg-password-confirm').value;
+        const name    = document.getElementById('reg-name').value;
+        const email   = document.getElementById('reg-email').value;
+        const code    = document.getElementById('reg-phone-code').value.trim();
+        const numRaw  = document.getElementById('reg-phone-num').value.trim();
+        const pass    = document.getElementById('reg-password').value;
+        const passC   = document.getElementById('reg-password-confirm').value;
+        const dob     = `${document.getElementById('reg-dob-year').value}-${document.getElementById('reg-dob-month').value}-${document.getElementById('reg-dob-day').value}`;
+        const gender  = document.getElementById('reg-gender').value;
 
-        const dob    = `${document.getElementById('reg-dob-year').value}-${document.getElementById('reg-dob-month').value}-${document.getElementById('reg-dob-day').value}`;
-        const gender = document.getElementById('reg-gender').value;
+        if (!name || !email || !code || !numRaw || !pass) return showError('err_empty_reg');
+        const phone = code + (numRaw.startsWith('0') ? numRaw.substring(1) : numRaw);
+        const pwdRx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!pwdRx.test(pass)) return showError('err_pwd_weak');
+        if (pass !== passC)    return showError('err_pwd_match');
 
-        if (!name || !email || !phoneCode || !phoneNumRaw || !password) return showError('err_empty_reg');
-
-        const cleanPhone = phoneNumRaw.startsWith('0') ? phoneNumRaw.substring(1) : phoneNumRaw;
-        const fullPhone  = phoneCode + cleanPhone;
-
-        const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!pwdRegex.test(password))     return showError('err_pwd_weak');
-        if (password !== passwordConfirm) return showError('err_pwd_match');
-
-        const attributeList = [
+        const attrs = [
             new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'name',         Value: name }),
-            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'phone_number', Value: fullPhone }),
+            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'phone_number', Value: phone }),
             new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'birthdate',    Value: dob }),
             new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'gender',       Value: gender })
         ];
 
-        userPool.signUp(email, password, attributeList, null, function (err, result) {
+        userPool.signUp(email, pass, attrs, null, (err, result) => {
             if (err) { showError(err.message, true); return; }
             cognitoUser = result.user;
             toggleForm('verify');
@@ -836,17 +773,14 @@
     function verifyUser() {
         const code = document.getElementById('verify-code').value;
         if (!code) return showError('err_empty_code');
-
-        cognitoUser.confirmRegistration(code, true, function (err, result) {
+        cognitoUser.confirmRegistration(code, true, (err) => {
             if (err) { showError(err.message || 'err_code_invalid', !!err.message); return; }
             alert(translations[currentLang]['msg_verify_success']);
             toggleForm('login');
         });
     }
 
-    if (localStorage.getItem('id_token')) {
-        window.location.href = '/dashboard.html';
-    }
+    if (localStorage.getItem('id_token')) window.location.href = '/dashboard.html';
 </script>
 </body>
 </html>
