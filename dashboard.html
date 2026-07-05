@@ -3,730 +3,471 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudResume — AI Builder Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>CloudResume - My Portfolios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        /* ============================================================
-           CYBERPUNK NEON DYSTOPIA v2 — Dashboard
-           Neon Cyan & Hot Pink dominant · Exo 2 for readability
-        ============================================================ */
+        /* ---- BIẾN MÀU SẮC ---- */
         :root {
-            --void:        #07000f;
-            --panel-bg:    rgba(10, 0, 22, 0.96);
-            --header-bg:   rgba(6, 0, 16, 0.98);
-            --neon-cyan:   #00f5ff;
-            --neon-pink:   #ff2d9b;
-            --neon-green:  #39ff14;
-            --text-bright: #f0eaff;
-            --text-mid:    #b8aad8;
-            --text-dim:    #6e5e8e;
-            --border-cyan: rgba(0, 245, 255, 0.22);
+            --bg-main: #f4f6f8;
+            --panel-bg: #ffffff;
+            --accent-color: #0ea5e9; 
+            --accent-hover: #0284c7;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #f8fafc;
+            --btn-text: #ffffff;
+            --danger: #ef4444;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 400;
-            background: var(--void);
-            color: var(--text-bright);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow-x: hidden;
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --panel-bg: #1e293b;
+            --accent-color: #1fc7e6;
+            --accent-hover: #16abc7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --input-bg: #0f172a;
         }
 
-        /* Neon grid */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                linear-gradient(rgba(0, 245, 255, 0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 245, 255, 0.025) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; transition: background 0.3s; }
 
-        /* CRT scanlines */
-        .scanlines {
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent 0px, transparent 3px,
-                rgba(0, 0, 0, 0.06) 3px, rgba(0, 0, 0, 0.06) 4px
-            );
-            pointer-events: none;
-            z-index: 9999;
-        }
+        /* ---- TOP NAVIGATION ---- */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: var(--panel-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 50;}
+        .brand { font-size: 24px; font-weight: 700; color: var(--accent-color); letter-spacing: -0.5px;}
+        .nav-controls { display: flex; align-items: center; gap: 15px; }
+        .search-bar { position: relative; }
+        .search-bar input { padding: 10px 15px 10px 35px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); width: 250px; outline: none; transition: 0.3s;}
+        .search-bar input:focus { border-color: var(--accent-color); }
+        .search-bar i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .icon-btn { padding: 8px 15px; cursor: pointer; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; font-weight: 600; transition: 0.2s; display: flex; align-items: center; gap: 8px;}
+        .icon-btn:hover { background: var(--border-color); }
 
-        /* Falling neon lines — cyan & pink */
-        .neon-lines {
-            position: fixed;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 1;
-        }
+        /* ---- MAIN WORKSPACE ---- */
+        .workspace { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .workspace-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .workspace-header h1 { font-size: 28px; }
+        .btn-create { background: var(--accent-color); color: var(--btn-text); padding: 12px 24px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; font-size: 16px;}
+        .btn-create:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3); }
 
-        .neon-line {
-            position: absolute;
-            width: 1px;
-            height: 25%;
-            animation: neon-fall linear infinite;
-        }
+        /* ---- PROJECT GRID & CARDS ---- */
+        .empty-state { text-align: center; padding: 60px 20px; background: var(--panel-bg); border-radius: 12px; border: 1px dashed var(--border-color); margin-top: 20px;}
+        .empty-state i { font-size: 60px; color: var(--border-color); margin-bottom: 20px; }
+        
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; display: none; }
+        .project-card { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; transition: 0.3s; position: relative; }
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-color: var(--accent-color); }
+        .project-card h3 { font-size: 18px; margin-bottom: 5px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 30px;}
+        .project-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+        .card-actions { display: flex; gap: 10px; }
+        .card-actions a { flex: 1; text-align: center; padding: 8px; background: rgba(14, 165, 233, 0.1); color: var(--accent-color); text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px; transition: 0.2s;}
+        .card-actions a:hover { background: var(--accent-color); color: var(--btn-text); }
+        .btn-delete { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; transition: 0.2s; font-size: 16px;}
+        .btn-delete:hover { color: var(--danger); }
 
-        .neon-line:nth-child(1) { left: 8%;  background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 8s;  animation-delay: -2s; }
-        .neon-line:nth-child(2) { left: 28%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 12s; animation-delay: -5s; }
-        .neon-line:nth-child(3) { left: 72%; background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 10s; animation-delay: -8s; }
-        .neon-line:nth-child(4) { left: 92%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 15s; animation-delay: -1s; }
+        /* ---- MODAL (POPUP) TẠO MỚI ---- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--panel-bg); width: 90%; max-width: 600px; border-radius: 16px; padding: 30px; transform: translateY(20px); transition: 0.3s; max-height: 90vh; overflow-y: auto; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { font-size: 22px; }
+        .btn-close { background: none; border: none; font-size: 24px; color: var(--text-muted); cursor: pointer; }
+        .btn-close:hover { color: var(--danger); }
 
-        @keyframes neon-fall {
-            from { top: -25%; }
-            to   { top: 125%; }
-        }
+        /* Form elements trong Modal */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 15px;}
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); border-radius: 8px; outline: none; font-size: 15px; }
+        .form-control:focus { border-color: var(--accent-color); }
+        textarea.form-control { resize: vertical; min-height: 100px; }
 
-        /* ── LOGIN FALLBACK ── */
-        .login-container {
-            margin: auto;
-            max-width: 480px;
-            width: 90%;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-cyan);
-            border-radius: 4px;
-            padding: 48px 40px;
-            text-align: center;
-            box-shadow:
-                0 0 30px rgba(0, 245, 255, 0.08),
-                0 0 60px rgba(255, 45, 155, 0.05),
-                0 24px 64px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px);
-            position: relative;
-            z-index: 10;
-        }
+        /* Prompt Templates Chips */
+        .prompt-templates { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .prompt-chip { padding: 6px 12px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 20px; font-size: 12px; cursor: pointer; color: var(--text-muted); transition: 0.2s; display: flex; align-items: center; gap: 5px;}
+        .prompt-chip:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
-        .login-container .lock-icon {
-            font-size: 48px;
-            margin-bottom: 22px;
-            color: var(--neon-cyan);
-            text-shadow: 0 0 20px rgba(0, 245, 255, 0.6);
-            display: block;
-        }
+        .upload-zone { border: 2px dashed var(--border-color); padding: 30px 20px; text-align: center; border-radius: 8px; cursor: pointer; position: relative; transition: 0.2s; background: var(--input-bg);}
+        .upload-zone:hover { border-color: var(--accent-color); }
+        .upload-zone input { position: absolute; width: 100%; height: 100%; top:0; left:0; opacity: 0; cursor: pointer;}
+        #file-name-display { font-weight: 600; color: var(--accent-color); margin-top: 10px; display: none; }
 
-        .login-container h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--neon-cyan);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            text-shadow: 0 0 16px rgba(0, 245, 255, 0.4);
-        }
-
-        .login-container p {
-            font-size: 15px;
-            color: var(--text-mid);
-            margin-bottom: 28px;
-            line-height: 1.65;
-        }
-
-        /* ── DASHBOARD PANEL ── */
-        .dashboard-container {
-            display: none;
-            max-width: 920px;
-            width: 95%;
-            margin: 76px auto 48px auto;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-cyan);
-            border-radius: 4px;
-            overflow: hidden;
-            box-shadow:
-                0 0 0 1px rgba(0, 0, 0, 0.5),
-                0 0 30px rgba(0, 245, 255, 0.08),
-                0 0 60px rgba(255, 45, 155, 0.05),
-                0 28px 72px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px);
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Top neon bar — cyan → pink */
-        .dashboard-container::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan) 30%, var(--neon-pink) 70%, transparent);
-            box-shadow: 0 0 12px rgba(0, 245, 255, 0.7), 0 0 24px rgba(255, 45, 155, 0.5);
-            animation: top-bar-glow 5s ease-in-out infinite;
-            z-index: 2;
-        }
-
-        @keyframes top-bar-glow {
-            0%, 100% { opacity: 0.65; }
-            50%       { opacity: 1; }
-        }
-
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 32px;
-            border-bottom: 1px solid rgba(0, 245, 255, 0.1);
-            background: var(--header-bg);
-        }
-
-        header h2 {
-            font-family: 'Orbitron', monospace;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-bright);
-        }
-
-        header h2 .fa-wand-magic-sparkles {
-            color: var(--neon-cyan);
-            text-shadow: 0 0 12px rgba(0, 245, 255, 0.7);
-        }
-
-        header h2 span {
-            color: var(--neon-cyan);
-            text-shadow: 0 0 10px rgba(0, 245, 255, 0.4);
-        }
-
-        /* Main form */
-        .main-form { padding: 40px 36px; }
-
-        .main-form > p {
-            font-size: 15px;
-            font-weight: 400;
-            color: var(--text-mid);
-            text-align: center;
-            margin-bottom: 32px;
-            line-height: 1.7;
-        }
-
-        /* ── UPLOAD ZONE ──
-           Fix: input is display:none, click triggered via JS.
-           No pseudo-elements blocking the click area.
-        ── */
-        .upload-zone {
-            border: 1px dashed rgba(0, 245, 255, 0.4);
-            background: rgba(0, 10, 28, 0.6);
-            border-radius: 4px;
-            padding: 44px 24px;
-            text-align: center;
-            margin-bottom: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            user-select: none;
-        }
-
-        .upload-zone:hover {
-            border-color: var(--neon-cyan);
-            background: rgba(0, 20, 40, 0.7);
-            box-shadow: 0 0 24px rgba(0, 245, 255, 0.1), inset 0 0 20px rgba(0, 245, 255, 0.04);
-        }
-
-        .upload-zone.drag-over {
-            border-color: var(--neon-pink);
-            background: rgba(255, 45, 155, 0.05);
-            box-shadow: 0 0 24px rgba(255, 45, 155, 0.15);
-        }
-
-        /* Corner brackets via gradient (no pseudo-elements used for ::after/::before to
-           avoid blocking the zone's own click events) */
-        .upload-zone-corners {
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top    left  / 16px 1px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top    left  / 1px 16px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top    right / 16px 1px no-repeat,
-                linear-gradient(var(--neon-cyan), var(--neon-cyan)) top    right / 1px 16px no-repeat,
-                linear-gradient(var(--neon-pink), var(--neon-pink)) bottom left  / 16px 1px no-repeat,
-                linear-gradient(var(--neon-pink), var(--neon-pink)) bottom left  / 1px 16px no-repeat,
-                linear-gradient(var(--neon-pink), var(--neon-pink)) bottom right / 16px 1px no-repeat,
-                linear-gradient(var(--neon-pink), var(--neon-pink)) bottom right / 1px 16px no-repeat;
-            opacity: 0.4;
-            pointer-events: none;
-            border-radius: 4px;
-            transition: opacity 0.3s;
-        }
-
-        .upload-zone:hover .upload-zone-corners { opacity: 0.8; }
-
-        /* Hidden file input */
-        #pdf-upload { display: none; }
-
-        .upload-zone i.fa-file-pdf {
-            font-size: 46px;
-            color: var(--neon-cyan);
-            text-shadow: 0 0 18px rgba(0, 245, 255, 0.6), 0 0 36px rgba(0, 245, 255, 0.3);
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .upload-zone h3 {
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--text-bright);
-            margin-bottom: 6px;
-        }
-
-        .upload-zone p {
-            font-size: 14px;
-            color: var(--text-mid);
-        }
-
-        #file-name-display {
-            margin-top: 16px;
-            font-weight: 600;
-            color: var(--neon-green);
-            font-size: 14px;
-            display: none;
-            text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
-        }
-
-        /* ── AI PROMPT ── */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 28px;
-        }
-
-        .form-group label {
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 0.05em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-bright);
-        }
-
-        .form-group label i {
-            color: var(--neon-pink);
-            text-shadow: 0 0 10px rgba(255, 45, 155, 0.6);
-        }
-
-        textarea {
-            width: 100%;
-            padding: 16px;
-            background: rgba(0, 0, 18, 0.8);
-            border: 1px solid rgba(0, 245, 255, 0.15);
-            border-radius: 3px;
-            color: var(--text-bright);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 14px;
-            line-height: 1.65;
-            outline: none;
-            transition: all 0.3s;
-            resize: vertical;
-            min-height: 130px;
-        }
-
-        textarea::placeholder { color: var(--text-dim); }
-
-        textarea:focus {
-            border-color: rgba(255, 45, 155, 0.5);
-            box-shadow: 0 0 0 1px rgba(255, 45, 155, 0.2), 0 0 16px rgba(255, 45, 155, 0.08);
-            background: rgba(0, 0, 22, 0.95);
-        }
-
-        /* ── BUTTONS ── */
-        .btn {
-            padding: 14px 28px;
-            border-radius: 3px;
-            font-family: 'Orbitron', monospace;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.25s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Primary — cyan */
-        .btn-primary {
-            background: linear-gradient(135deg, #00d8f0 0%, #0088d4 100%);
-            color: #001824;
-            width: 100%;
-            font-size: 14px;
-            box-shadow: 0 0 24px rgba(0, 245, 255, 0.3), 0 4px 14px rgba(0, 0, 0, 0.4);
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -130%;
-            width: 75%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
-            transform: skewX(-18deg);
-            transition: left 0.6s ease;
-        }
-
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
-                rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 3px
-            );
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .btn-primary:hover::before { left: 140%; }
-        .btn-primary:hover::after  { opacity: 1; }
-        .btn-primary:hover {
-            box-shadow: 0 0 38px rgba(0, 245, 255, 0.55), 0 6px 20px rgba(0, 0, 0, 0.4);
-            transform: translateY(-2px);
-        }
-
-        /* Danger — pink */
-        .btn-danger {
-            background: transparent;
-            border: 1px solid rgba(255, 45, 155, 0.4);
-            color: var(--neon-pink);
-            padding: 8px 18px;
-            font-size: 11px;
-        }
-
-        .btn-danger:hover {
-            background: rgba(255, 45, 155, 0.1);
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 18px rgba(255, 45, 155, 0.3);
-            color: #ff80c0;
-        }
-
-        /* Redirect button */
-        .btn-redirect {
-            background: linear-gradient(135deg, #00d8f0 0%, #0088d4 100%);
-            color: #001824;
-            padding: 12px 28px;
-            font-size: 13px;
-            width: auto;
-            box-shadow: 0 0 22px rgba(0, 245, 255, 0.28);
-        }
-
-        .btn-redirect:hover {
-            box-shadow: 0 0 36px rgba(0, 245, 255, 0.55);
-            transform: translateY(-2px);
-        }
-
-        /* ── STATUS / LOADING ── */
-        .status-area {
-            margin-top: 28px;
-            text-align: center;
-            display: none;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 44px;
-            height: 44px;
-            border: 3px solid rgba(0, 245, 255, 0.12);
-            border-radius: 50%;
-            border-top-color: var(--neon-cyan);
-            border-right-color: var(--neon-pink);
-            animation: spin 0.9s linear infinite;
-            margin-bottom: 14px;
-            box-shadow: 0 0 12px rgba(0, 245, 255, 0.25);
-        }
-
+        /* Loading */
+        .status-area { text-align: center; display: none; padding: 20px 0;}
+        .spinner { display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(14, 165, 233, 0.3); border-radius: 50%; border-top-color: var(--accent-color); animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        #status-text {
-            font-family: 'Orbitron', monospace;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            color: var(--neon-cyan);
-            text-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
-            text-transform: uppercase;
-        }
-
-        .status-hint {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 13px;
-            color: var(--text-dim);
-            margin-top: 6px;
-        }
-
-        /* Success */
-        .success-icon {
-            font-size: 46px;
-            color: var(--neon-green);
-            text-shadow: 0 0 22px rgba(57, 255, 20, 0.6);
-            margin-bottom: 14px;
-        }
-
-        .success-title {
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-            color: var(--neon-green);
-            margin-bottom: 18px;
-        }
-
-        .result-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 28px;
-            background: rgba(57, 255, 20, 0.07);
-            border: 1px solid rgba(57, 255, 20, 0.35);
-            border-radius: 3px;
-            color: var(--neon-green);
-            font-family: 'Orbitron', monospace;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-decoration: none;
-            box-shadow: 0 0 16px rgba(57, 255, 20, 0.14);
-            transition: all 0.3s;
-        }
-
-        .result-link:hover {
-            background: rgba(57, 255, 20, 0.14);
-            box-shadow: 0 0 28px rgba(57, 255, 20, 0.35);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-container { margin: 70px auto 30px; }
-            header { flex-direction: column; gap: 12px; align-items: flex-start; padding: 18px 20px; }
-            .main-form { padding: 28px 20px; }
-        }
     </style>
 </head>
 <body>
 
-<div class="scanlines" aria-hidden="true"></div>
-
-<div class="neon-lines" aria-hidden="true">
-    <div class="neon-line"></div>
-    <div class="neon-line"></div>
-    <div class="neon-line"></div>
-    <div class="neon-line"></div>
-</div>
-
-<!-- Login fallback -->
-<div id="login-screen" class="login-container" style="display:none;">
-    <i class="fa-solid fa-lock lock-icon"></i>
-    <h1>Access Restricted</h1>
-    <p>Phiên đăng nhập chưa được xác thực.<br>Vui lòng đăng nhập để tiếp tục.</p>
-    <button id="btn-login-redirect" class="btn btn-redirect">
-        <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập hệ thống
-    </button>
-</div>
-
-<!-- Dashboard -->
-<div id="dashboard-screen" class="dashboard-container">
-
-    <header>
-        <h2>
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-            AI Website Builder | User: <span id="display-username">...</span>
-        </h2>
-        <button id="btn-logout" class="btn btn-danger">
-            <i class="fa-solid fa-power-off"></i> Đăng xuất
-        </button>
-    </header>
-
-    <div class="main-form">
-        <p>Hệ thống AI sẽ tự động đọc CV gốc và thiết kế một trang web hoàn chỉnh dựa trên yêu cầu bạn đưa ra.</p>
-
-        <!-- Upload zone — click handled via JS, no opacity-0 trick -->
-        <div class="upload-zone" id="upload-zone">
-            <div class="upload-zone-corners"></div>
-            <i class="fa-regular fa-file-pdf"></i>
-            <h3>Tải lên CV của bạn (Định dạng PDF)</h3>
-            <p>Nhấp vào đây hoặc kéo thả file PDF vào khu vực này</p>
-            <input type="file" id="pdf-upload" accept="application/pdf">
-            <div id="file-name-display"></div>
-        </div>
-
-        <!-- AI prompt -->
-        <div class="form-group">
-            <label>
-                <i class="fa-solid fa-robot"></i>
-                Bạn muốn AI thiết kế trang web thế nào?
-            </label>
-            <textarea id="ai-prompt"
-                placeholder="Ví dụ: Hãy phân tích CV này và tạo cho tôi một trang web cá nhân tông màu tối (Dark Mode), giao diện tối giản hiện đại. Đưa phần Kinh nghiệm làm việc lên đầu và nhấn mạnh các kỹ năng về Cloud Computing...">
-            </textarea>
-        </div>
-
-        <button id="btn-generate" class="btn btn-primary">
-            <i class="fa-solid fa-rocket"></i>
-            Bắt đầu phân tích &amp; Tạo Website
-        </button>
-
-        <div id="status-area" class="status-area">
-            <div id="loading-indicator">
-                <div class="spinner"></div>
-                <p id="status-text">Hệ thống đang xử lý...</p>
-                <p class="status-hint">(Vui lòng giữ nguyên trang web trong quá trình này)</p>
+    <!-- NAVBAR -->
+    <nav>
+        <div class="brand">CloudResume</div>
+        <div class="nav-controls">
+            <div class="search-bar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="search-input" placeholder="Search projects..." data-i18n-placeholder="pl_search">
             </div>
-            <div id="success-result" style="display:none;">
-                <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <p class="success-title">Tuyệt vời! Website của bạn đã lên sóng.</p>
-                <a href="#" id="public-url-btn" class="result-link">
-                    <i class="fa-solid fa-globe"></i> Xem trang web ngay
-                </a>
+            <button id="theme-toggle" class="icon-btn">🌙</button>
+            <button id="lang-toggle" class="icon-btn"><img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN</button>
+            <button id="btn-logout" class="icon-btn" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+    </nav>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="workspace">
+        <div class="workspace-header">
+            <div>
+                <h1 data-i18n="ws_title">My Portfolios</h1>
+                <p style="color: var(--text-muted); margin-top: 5px;" data-i18n="ws_user">User: <span id="display-username" style="font-weight:600; color: var(--accent-color);">...</span></p>
             </div>
+            <button class="btn-create" onclick="openModal()"><i class="fa-solid fa-plus"></i> <span data-i18n="btn_create">Create New</span></button>
         </div>
 
+        <div id="empty-state" class="empty-state">
+            <i class="fa-solid fa-folder-open"></i>
+            <h2 data-i18n="empty_title">No portfolios yet!</h2>
+            <p data-i18n="empty_desc" style="color: var(--text-muted); margin-top: 10px;">Click 'Create New' to generate your first stunning website.</p>
+        </div>
+
+        <div id="project-grid" class="project-grid">
+            <!-- Render danh sách dự án bằng JavaScript -->
+        </div>
     </div>
-</div>
 
-<script>
-    // ── Auth check ──
-    const REDIRECT_URI = '/index.html';
+    <!-- MODAL TẠO MỚI DỰ ÁN -->
+    <div class="modal-overlay" id="create-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-i18n="modal_title">Create New Portfolio</h2>
+                <button class="btn-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div id="form-content">
+                <div class="form-group">
+                    <label data-i18n="lbl_prj_name">Project Name</label>
+                    <input type="text" id="project-name" class="form-control" placeholder="e.g., Senior Data Engineer 2026" data-i18n-placeholder="pl_prj_name">
+                </div>
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const token    = localStorage.getItem('id_token');
-        const username = localStorage.getItem('logged_username');
+                <div class="form-group">
+                    <label data-i18n="lbl_upload">Upload CV (PDF)</label>
+                    <div class="upload-zone">
+                        <i class="fa-regular fa-file-pdf" style="font-size: 30px; color: var(--accent-color); margin-bottom: 10px;"></i>
+                        <p data-i18n="txt_upload_hint">Click or drag & drop your PDF here</p>
+                        <input type="file" id="pdf-upload" accept="application/pdf">
+                        <div id="file-name-display"></div>
+                    </div>
+                </div>
 
-        if (token && username) {
-            document.getElementById('login-screen').style.display    = 'none';
-            document.getElementById('dashboard-screen').style.display = 'block';
-            document.getElementById('display-username').innerText     = username;
+                <div class="form-group">
+                    <label><span data-i18n="lbl_prompt">AI Design Prompt</span></label>
+                    <!-- Templates Prompt -->
+                    <div class="prompt-templates">
+                        <span class="prompt-chip" onclick="applyTemplate('rainbow')"><i class="fa-solid fa-rainbow"></i> Rainbow Glow</span>
+                        <span class="prompt-chip" onclick="applyTemplate('nightsky')"><i class="fa-solid fa-moon"></i> Night Sky</span>
+                        <span class="prompt-chip" onclick="applyTemplate('taylor1989')"><i class="fa-solid fa-camera-retro"></i> 1989 Taylor Swift</span>
+                        <span class="prompt-chip" onclick="applyTemplate('cyberpunk')"><i class="fa-solid fa-bolt"></i> Cyberpunk Neon</span>
+                        <span class="prompt-chip" onclick="applyTemplate('minimalist')"><i class="fa-solid fa-pen-nib"></i> Minimalist Clean</span>
+                        <span class="prompt-chip" onclick="applyTemplate('terminal')"><i class="fa-solid fa-terminal"></i> Terminal CLI</span>
+                        <span class="prompt-chip" onclick="applyTemplate('glass')"><i class="fa-solid fa-clone"></i> Glassmorphism</span>
+                    </div>
+                    <textarea id="ai-prompt" class="form-control" placeholder="Describe the layout, colors, and vibe you want..." data-i18n-placeholder="pl_prompt"></textarea>
+                </div>
+
+                <button id="btn-generate" class="btn-create" style="width: 100%;" onclick="startGeneration()"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="btn_generate">Generate Website</span></button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading-state" class="status-area">
+                <div class="spinner"></div>
+                <h3 style="margin: 15px 0 5px;" data-i18n="msg_building">Building your website...</h3>
+                <p style="color: var(--text-muted); font-size: 14px;" data-i18n="msg_wait">Please wait. Claude is analyzing your CV and generating UI.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // QUẢN LÝ TÀI KHOẢN (COGNITO CHECK)
+        // ==========================================
+        const REDIRECT_URI = '/index.html';
+        const loggedUser = localStorage.getItem('logged_username');
+        const token = localStorage.getItem('id_token');
+
+        if (!token || !loggedUser) {
+            window.location.href = REDIRECT_URI;
         } else {
-            document.getElementById('login-screen').style.display    = 'flex';
-            document.getElementById('dashboard-screen').style.display = 'none';
+            document.getElementById('display-username').innerText = loggedUser;
         }
-    });
 
-    document.getElementById('btn-login-redirect').onclick = () => window.location.href = REDIRECT_URI;
-    document.getElementById('btn-logout').onclick = () => {
-        localStorage.clear();
-        window.location.href = REDIRECT_URI;
-    };
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = REDIRECT_URI;
+        });
 
-    // ── Upload zone: click triggers file picker ──
-    const fileInput       = document.getElementById('pdf-upload');
-    const fileNameDisplay = document.getElementById('file-name-display');
-    const uploadZone      = document.getElementById('upload-zone');
-
-    uploadZone.addEventListener('click', () => fileInput.click());
-
-    // Drag-and-drop support
-    uploadZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadZone.classList.add('drag-over');
-    });
-    uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
-    uploadZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadZone.classList.remove('drag-over');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-            const dt = new DataTransfer();
-            dt.items.add(files[0]);
-            fileInput.files = dt.files;
-            fileInput.dispatchEvent(new Event('change'));
+        // ==========================================
+        // QUẢN LÝ GIAO DIỆN (THEME & LANG)
+        // ==========================================
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggleBtn.innerText = '☀️';
         }
-    });
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.getAttribute('data-theme') === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeToggleBtn.innerText = '🌙';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggleBtn.innerText = '☀️';
+            }
+        });
 
-    fileInput.addEventListener('change', function () {
-        if (this.files && this.files[0]) {
-            const file = this.files[0];
-            if (file.type !== 'application/pdf') {
-                alert('Vui lòng chỉ tải lên file định dạng PDF!');
-                this.value = '';
-                fileNameDisplay.style.display = 'none';
+        let currentLang = 'en';
+        const translations = {
+            en: {
+                pl_search: "Search projects...",
+                ws_title: "My Portfolios",
+                btn_create: "Create New",
+                empty_title: "No portfolios yet!",
+                empty_desc: "Click 'Create New' to generate your first stunning website.",
+                modal_title: "Create New Portfolio",
+                lbl_prj_name: "Project Name",
+                pl_prj_name: "e.g., Senior Data Engineer 2026",
+                lbl_upload: "Upload CV (PDF)",
+                txt_upload_hint: "Click or drag & drop your PDF here",
+                lbl_prompt: "AI Design Prompt",
+                pl_prompt: "Describe the layout, colors, and vibe you want...",
+                btn_generate: "Generate Website",
+                msg_building: "Building your website...",
+                msg_wait: "Please wait. Claude is analyzing your CV and generating UI.",
+                btn_view: "View Live",
+                confirm_del: "Are you sure you want to permanently delete this portfolio?"
+            },
+            vn: {
+                pl_search: "Tìm kiếm dự án...",
+                ws_title: "Hồ sơ của tôi",
+                btn_create: "Tạo mới",
+                empty_title: "Chưa có hồ sơ nào!",
+                empty_desc: "Nhấn 'Tạo mới' và tải lên CV PDF để bắt đầu.",
+                modal_title: "Tạo Hồ sơ mới",
+                lbl_prj_name: "Tên dự án",
+                pl_prj_name: "Ví dụ: CV Data Engineer 2026",
+                lbl_upload: "Tải lên CV (Định dạng PDF)",
+                txt_upload_hint: "Nhấp vào hoặc kéo thả file PDF vào đây",
+                lbl_prompt: "Mô tả thiết kế cho AI",
+                pl_prompt: "Mô tả bố cục, màu sắc, phong cách bạn muốn...",
+                btn_generate: "Tạo Website",
+                msg_building: "Đang xây dựng website...",
+                msg_wait: "Vui lòng đợi. Claude đang phân tích CV và thiết kế giao diện.",
+                btn_view: "Xem Website",
+                confirm_del: "Bạn có chắc chắn muốn xóa vĩnh viễn hồ sơ này không?"
+            }
+        };
+
+        const promptTexts = {
+            rainbow: "Giao diện cầu vồng rực rỡ, sử dụng các dải màu gradient mượt mà cho viền và tiêu đề. Thiết kế hiện đại, thẻ card trong suốt mờ ảo (glassmorphism).",
+            nightsky: "Giao diện bầu trời đêm huyền bí (Night Sky). Nền xanh đen sâu thẳm, điểm xuyết các hạt tinh tú lấp lánh. Các thẻ thông tin có viền phát sáng nhẹ.",
+            taylor1989: "Giao diện mang phong cách Polaroid album 1989 của Taylor Swift. Màu nền pastel xanh dương nhạt. Các mục thông tin giống như những tấm ảnh lấy liền.",
+            cyberpunk: "Giao diện Cyberpunk tương lai. Nền đen tuyền kết hợp viền neon màu hồng và xanh cyan phát sáng. Font chữ điện tử. Các khối thông tin hiển thị như màn hình HUD công nghệ cao.",
+            minimalist: "Giao diện Minimalist tối giản, sang trọng. Tông màu trắng chủ đạo và xám nhạt. Tập trung vào nghệ thuật chữ (typography) sắc nét, dùng nhiều khoảng trắng để tạo sự thanh lịch, chuẩn học thuật.",
+            terminal: "Giao diện mang phong cách màn hình console CLI (Command Line Interface). Nền đen tối màu, chữ màu xanh lá cây kiểu ma trận (Matrix). Các tiêu đề có dấu nháy nhấp nháy mang đậm chất kỹ sư phần mềm.",
+            glass: "Giao diện kính mờ (Glassmorphism) thanh lịch. Nền dùng ảnh dải màu nhạt (pastel gradient). Các thẻ thông tin là các lớp kính bán trong suốt, có đổ bóng mờ và viền trắng mỏng hiện đại."
+        };
+
+        function updateLanguage() {
+            const langToggleBtn = document.getElementById('lang-toggle');
+            langToggleBtn.innerHTML = currentLang === 'vn' 
+                ? '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"> EN' 
+                : '<img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN';
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                el.innerText = translations[currentLang][el.getAttribute('data-i18n')];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                el.placeholder = translations[currentLang][el.getAttribute('data-i18n-placeholder')];
+            });
+            renderGrid(document.getElementById('search-input').value);
+        }
+
+        document.getElementById('lang-toggle').addEventListener('click', () => {
+            currentLang = currentLang === 'vn' ? 'en' : 'vn'; 
+            updateLanguage();
+        });
+
+        // ==========================================
+        // QUẢN LÝ DỰ ÁN (API DYNAMODB & RENDER)
+        // ==========================================
+        let projects = []; // Sẽ được tải từ DynamoDB
+
+        function renderGrid(filterText = '') {
+            const grid = document.getElementById('project-grid');
+            const emptyState = document.getElementById('empty-state');
+            grid.innerHTML = '';
+
+            const filtered = projects.filter(p => p.name.toLowerCase().includes(filterText.toLowerCase()));
+
+            if (filtered.length === 0) {
+                emptyState.style.display = 'block';
+                grid.style.display = 'none';
+            } else {
+                emptyState.style.display = 'none';
+                grid.style.display = 'grid';
+                filtered.forEach(p => {
+                    const viewText = translations[currentLang]['btn_view'];
+                    const card = `
+                        <div class="project-card">
+                            <button class="btn-delete" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                            <h3>${p.name}</h3>
+                            <p><i class="fa-regular fa-clock"></i> ${p.date}</p>
+                            <div class="card-actions">
+                                <a href="${p.url}" target="_blank"><i class="fa-solid fa-globe"></i> ${viewText}</a>
+                            </div>
+                        </div>
+                    `;
+                    grid.innerHTML += card;
+                });
+            }
+        }
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            renderGrid(e.target.value);
+        });
+
+        // Xóa CV khỏi giao diện (cần thêm API để xóa DB thật nếu muốn)
+        window.deleteProject = function(id) {
+            const msg = translations[currentLang]['confirm_del'];
+            if(confirm(msg)) {
+                projects = projects.filter(p => p.id !== id);
+                renderGrid(document.getElementById('search-input').value);
+            }
+        }
+
+        // ==========================================
+        // LOGIC TẠO MỚI DỰ ÁN (MODAL & API CALL)
+        // ==========================================
+        window.openModal = function() {
+            document.getElementById('create-modal').classList.add('active');
+            document.getElementById('form-content').style.display = 'block';
+            document.getElementById('loading-state').style.display = 'none';
+            document.getElementById('project-name').value = '';
+            document.getElementById('ai-prompt').value = '';
+            document.getElementById('pdf-upload').value = '';
+            document.getElementById('file-name-display').style.display = 'none';
+        }
+
+        window.closeModal = function() {
+            document.getElementById('create-modal').classList.remove('active');
+        }
+
+        window.applyTemplate = function(key) {
+            document.getElementById('ai-prompt').value = promptTexts[key];
+        }
+
+        document.getElementById('pdf-upload').addEventListener('change', function() {
+            const display = document.getElementById('file-name-display');
+            if (this.files[0]) {
+                display.innerText = `📄 ${this.files[0].name} (${(this.files[0].size / 1024 / 1024).toFixed(2)} MB)`;
+                display.style.display = 'block';
+            }
+        });
+
+        window.startGeneration = async function() {
+            const name = document.getElementById('project-name').value.trim();
+            const file = document.getElementById('pdf-upload').files[0];
+            const prompt = document.getElementById('ai-prompt').value.trim();
+
+            if(!name || !file || !prompt) {
+                alert("Vui lòng điền đủ thông tin và tải lên PDF.");
                 return;
             }
-            fileNameDisplay.innerText     = `📄 Đã chọn: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
-            fileNameDisplay.style.display = 'block';
+
+            // Chuyển sang giao diện Loading
+            document.getElementById('form-content').style.display = 'none';
+            document.getElementById('loading-state').style.display = 'block';
+
+            try {
+                // 1. Lấy URL tải lên từ API Gateway
+                const apiGetUrl = `https://qgczs1jilf.execute-api.ap-southeast-2.amazonaws.com/get-upload-url?username=${loggedUser}`;
+                const resUrl = await fetch(apiGetUrl);
+                const dataUrl = await resUrl.json();
+
+                // 2. Tải file lên S3
+                await fetch(dataUrl.upload_url, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/pdf' },
+                    body: file
+                });
+
+                // 3. Gọi hàm Lambda tạo web (Backend hiện tại của bạn)
+                const aiBuilderApiUrl = `https://pmy6chg3ujmcsruw7nepspuiaa0luolc.lambda-url.ap-southeast-2.on.aws/`;
+                const aiResponse = await fetch(aiBuilderApiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: loggedUser,
+                        project_id: dataUrl.project_id,
+                        file_key: dataUrl.file_key,
+                        prompt: prompt
+                    })
+                });
+
+                const aiData = await aiResponse.json();
+                if (!aiResponse.ok) throw new Error(aiData.error || "Generation Failed");
+
+                // 4. ĐỒNG BỘ DỮ LIỆU TỪ DYNAMODB
+                await loadProjectsFromDB();
+                closeModal();
+
+            } catch (error) {
+                alert("Lỗi: " + error.message);
+                document.getElementById('form-content').style.display = 'block';
+                document.getElementById('loading-state').style.display = 'none';
+            }
         }
-    });
 
-    // ── Generate & AI call ──
-    document.getElementById('btn-generate').addEventListener('click', async function () {
-        const file     = fileInput.files[0];
-        const prompt   = document.getElementById('ai-prompt').value.trim();
-        const username = localStorage.getItem('logged_username') || 'guest';
+        // ==========================================
+        // FETCH DỮ LIỆU TỪ AWS DYNAMODB
+        // ==========================================
+        async function loadProjectsFromDB() {
+            const username = localStorage.getItem('logged_username');
+            if (!username) return;
 
-        if (!file)   return alert('Bạn quên chưa tải lên file CV (PDF) rồi!');
-        if (!prompt) {
-            alert('Hãy nhập yêu cầu thiết kế giao diện cho AI nhé!');
-            return document.getElementById('ai-prompt').focus();
+            const apiGetProjectsUrl = `https://qgczs1jilf.execute-api.ap-southeast-2.amazonaws.com/projects?username=${username}`;
+
+            try {
+                const response = await fetch(apiGetProjectsUrl);
+                const data = await response.json();
+
+                if (response.ok) {
+                    projects = data.projects.map(item => {
+                        const dateObj = new Date(item.created_at);
+                        return {
+                            id: item.project_id,
+                            name: "CV Project - " + item.project_id.substring(0, 5).toUpperCase(),
+                            date: dateObj.toLocaleDateString('vi-VN') + " " + dateObj.toLocaleTimeString('vi-VN'),
+                            url: item.public_url
+                        };
+                    });
+                    
+                    renderGrid(document.getElementById('search-input').value);
+                } else {
+                    console.error("Lỗi tải dự án từ AWS:", data.error);
+                }
+            } catch (error) {
+                console.error("Lỗi kết nối API:", error);
+            }
         }
 
-        const statusArea = document.getElementById('status-area');
-        const statusText = document.getElementById('status-text');
-        statusArea.style.display = 'block';
-        document.getElementById('loading-indicator').style.display = 'block';
-        document.getElementById('success-result').style.display    = 'none';
-
-        try {
-            statusText.innerText = 'Đang xin cấp phép upload từ server...';
-            const apiGetUrl = `https://qgczs1jilf.execute-api.ap-southeast-2.amazonaws.com/get-upload-url?username=${username}`;
-            const resUrl    = await fetch(apiGetUrl);
-            const dataUrl   = await resUrl.json();
-            if (!dataUrl.upload_url) throw new Error('Không lấy được đường dẫn Upload (Kiểm tra lại cấu hình CORS của API Gateway)');
-
-            statusText.innerText = 'Đang tải file PDF mã hóa lên kho S3 an toàn...';
-            const uploadResponse = await fetch(dataUrl.upload_url, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/pdf' },
-                body: file
-            });
-            if (!uploadResponse.ok) throw new Error('Upload file PDF thất bại! (Kiểm tra lại cấu hình CORS của S3 Bucket)');
-
-            statusText.innerText = 'Tải lên hoàn tất! Claude AI đang đọc CV, suy luận và lập trình Web...';
-            const aiBuilderApiUrl = 'https://pmy6chg3ujmcsruw7nepspuiaa0luolc.lambda-url.ap-southeast-2.on.aws/';
-            const aiResponse = await fetch(aiBuilderApiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, project_id: dataUrl.project_id, file_key: dataUrl.file_key, prompt })
-            });
-
-            const aiData = await aiResponse.json();
-            if (!aiResponse.ok) throw new Error(aiData.error || 'Lỗi trong quá trình AI tạo web');
-
-            document.getElementById('loading-indicator').style.display = 'none';
-            document.getElementById('success-result').style.display    = 'block';
-
-            const resultBtn  = document.getElementById('public-url-btn');
-            resultBtn.href   = aiData.public_url;
-            resultBtn.removeAttribute('target');
-            resultBtn.innerHTML = '<i class="fa-solid fa-globe"></i> Xem trang web ngay';
-
-        } catch (error) {
-            console.error(error);
-            statusText.innerText  = '❌ Có lỗi xảy ra: ' + error.message;
-            statusText.style.color = 'var(--neon-pink)';
-        }
-    });
-</script>
+        // Khởi chạy ngôn ngữ và tải dự án khi load trang
+        updateLanguage();
+        loadProjectsFromDB();
+    </script>
 </body>
 </html>

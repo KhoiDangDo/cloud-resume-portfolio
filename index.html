@@ -3,526 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudResume — Neural Auth Interface</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>CloudResume - Đăng nhập / Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js/dist/amazon-cognito-identity.min.js"></script>
     <style>
-        /* ============================================================
-           CYBERPUNK NEON DYSTOPIA v2 — Neon Cyan & Hot Pink Dominant
-           Type: Orbitron (headings) · Exo 2 (body) · Share Tech Mono (inputs)
-        ============================================================ */
+        /* ---- BIẾN MÀU SẮC SÁNG / TỐI ---- */
         :root {
-            --void:        #07000f;
-            --panel-bg:    rgba(10, 0, 22, 0.96);
-            --neon-cyan:   #00f5ff;
-            --neon-pink:   #ff2d9b;
-            --neon-green:  #39ff14;
-            --text-bright: #f0eaff;
-            --text-mid:    #b8aad8;
-            --text-dim:    #6e5e8e;
-            --border-cyan: rgba(0, 245, 255, 0.25);
-            --border-pink: rgba(255, 45, 155, 0.25);
+            --bg-main: #f0f2f5;
+            --text-brand: #1c1e21;
+            --form-bg: #ffffff;
+            --text-main: #1c1e21;
+            --text-muted: #65676b;
+            --input-bg: #ffffff;
+            --input-border: #dddfe2;
+            --input-text: #1c1e21;
+            --control-bg: #ffffff;
+            --control-text: #1c1e21;
+            --control-border: #dddfe2;
+            --control-hover: #f5f6f7;
+            --divider-color: #dadde1;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 400;
-            background: var(--void);
-            color: var(--text-bright);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+        [data-theme="dark"] {
+            --bg-main: #0f172a;
+            --text-brand: #e2e8f0;
+            --form-bg: #1e293b;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --input-bg: #0f172a;
+            --input-border: #334155;
+            --input-text: #e2e8f0;
+            --control-bg: #1e293b;
+            --control-text: #e2e8f0;
+            --control-border: #334155;
+            --control-hover: #334155;
+            --divider-color: #334155;
         }
 
-        /* Neon grid */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background:
-                linear-gradient(rgba(0, 245, 255, 0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 245, 255, 0.025) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; position: relative; transition: background-color 0.3s ease; }
+        
+        .top-controls { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 10; }
+        .top-btn { 
+            padding: 8px 15px; font-size: 14px; font-weight: 600; cursor: pointer;
+            background: var(--control-bg); color: var(--control-text); border: 1px solid var(--control-border); border-radius: 6px;
+            display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease; min-width: 40px;
         }
+        .top-btn:hover { background: var(--control-hover); transform: translateY(-1px); }
 
-        /* CRT scanlines */
-        .scanlines {
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent 0px, transparent 3px,
-                rgba(0, 0, 0, 0.06) 3px, rgba(0, 0, 0, 0.06) 4px
-            );
-            pointer-events: none;
-            z-index: 9999;
+        .container { display: flex; max-width: 1000px; width: 100%; padding: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        
+        .brand-section { width: 50%; padding-right: 40px; }
+        .brand-section h1 { color: #1fc7e6; font-size: 56px; margin-bottom: 10px; font-weight: 700; letter-spacing: -1px; }
+        .brand-section p { font-size: 24px; color: var(--text-brand); line-height: 1.3; transition: color 0.3s; }
+
+        .auth-section { width: 420px; background: var(--form-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: background 0.3s; }
+        
+        .form-group { margin-bottom: 12px; }
+        .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .form-grid-phone { display: grid; grid-template-columns: 1fr 2.5fr; gap: 10px; margin-bottom: 4px; }
+        
+        label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600; }
+        
+        input, select { 
+            width: 100%; padding: 12px 14px; border: 1px solid var(--input-border); background: var(--input-bg); 
+            color: var(--input-text); border-radius: 6px; font-size: 15px; outline: none; transition: all 0.3s; 
         }
+        input:focus, select:focus { border-color: #1fc7e6; box-shadow: 0 0 0 2px rgba(31, 199, 230, 0.2); }
+        
+        .helper-text { font-size: 12px; color: var(--text-muted); display: block; margin-top: 4px; margin-bottom: 12px; line-height: 1.4; }
+        .warning-text { font-size: 12px; color: #e74a3b; display: block; margin-top: 4px; margin-bottom: 12px; font-weight: 600;}
 
-        /* Falling neon lines — cyan & pink only */
-        .neon-lines {
-            position: fixed;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 1;
+        .pwd-wrapper { position: relative; width: 100%; }
+        .pwd-wrapper input { padding-right: 40px; margin-bottom: 0; }
+        .pwd-toggle { 
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%); 
+            cursor: pointer; color: var(--text-muted); font-size: 16px; transition: color 0.2s;
         }
+        .pwd-toggle:hover { color: #1fc7e6; }
 
-        .neon-line {
-            position: absolute;
-            width: 1px;
-            height: 25%;
-            animation: neon-fall linear infinite;
-        }
-
-        .neon-line:nth-child(1) { left: 10%; background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 7s;  animation-delay: -1s; }
-        .neon-line:nth-child(2) { left: 35%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 11s; animation-delay: -4s; }
-        .neon-line:nth-child(3) { left: 68%; background: linear-gradient(transparent, var(--neon-cyan), transparent); animation-duration: 9s;  animation-delay: -7s; }
-        .neon-line:nth-child(4) { left: 88%; background: linear-gradient(transparent, var(--neon-pink), transparent); animation-duration: 14s; animation-delay: -2s; }
-
-        @keyframes neon-fall {
-            from { top: -25%; }
-            to   { top: 125%; }
-        }
-
-        /* Lang toggle only (no theme toggle) */
-        .top-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 1000;
-        }
-
-        .top-btn {
-            padding: 7px 14px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            background: rgba(0, 0, 15, 0.85);
-            color: var(--neon-cyan);
-            border: 1px solid var(--border-cyan);
-            border-radius: 3px;
-            font-family: 'Exo 2', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-            backdrop-filter: blur(10px);
-        }
-
-        .top-btn:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 12px rgba(0, 245, 255, 0.35);
-            color: #fff;
-        }
-
-        /* ── LAYOUT ── */
-        .container {
-            display: flex;
-            max-width: 1100px;
-            width: 100%;
-            padding: 40px;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 10;
-            gap: 48px;
-        }
-
-        /* ── BRAND ── */
-        .brand-section {
-            flex: 1;
-            min-width: 280px;
-            padding-right: 20px;
-        }
-
-        .brand-eyebrow {
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 500;
-            font-size: 11px;
-            color: var(--neon-pink);
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-eyebrow::before {
-            content: '';
-            display: inline-block;
-            width: 28px;
-            height: 1px;
-            background: var(--neon-pink);
-            box-shadow: 0 0 8px var(--neon-pink);
-            flex-shrink: 0;
-        }
-
-        .brand-name {
-            font-family: 'Orbitron', monospace;
-            font-size: 52px;
-            font-weight: 900;
-            line-height: 1.08;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-pink) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: glitch-brand 9s infinite;
-        }
-
-        @keyframes glitch-brand {
-            0%, 84%, 100% { filter: none; transform: none; }
-            86% {
-                filter: drop-shadow(3px 0 var(--neon-pink)) drop-shadow(-3px 0 var(--neon-cyan));
-                transform: translate(-2px, 0) skewX(-5deg);
-            }
-            88% { filter: none; transform: translate(3px, 0); }
-            90% {
-                filter: drop-shadow(-2px 0 var(--neon-cyan)) drop-shadow(2px 0 var(--neon-pink));
-                transform: translate(0, 1px) skewX(3deg);
-            }
-            92% { filter: none; transform: none; }
-        }
-
-        .brand-subtitle {
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 400;
-            font-size: 16px;
-            color: var(--text-mid);
-            line-height: 1.7;
-            max-width: 380px;
-        }
-
-        /* ── AUTH PANEL ── */
-        .auth-section {
-            width: 430px;
-            min-width: 320px;
-            background: var(--panel-bg);
-            padding: 32px;
-            border: 1px solid rgba(0, 245, 255, 0.2);
-            border-radius: 4px;
-            box-shadow:
-                0 0 0 1px rgba(0, 0, 0, 0.5),
-                0 0 30px rgba(0, 245, 255, 0.08),
-                0 0 60px rgba(255, 45, 155, 0.06),
-                0 24px 64px rgba(0, 0, 0, 0.5);
-            position: relative;
-            backdrop-filter: blur(20px);
-        }
-
-        /* Top neon bar — cyan → pink */
-        .auth-section::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 6%;
-            right: 6%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-pink), transparent);
-            box-shadow: 0 0 12px rgba(0, 245, 255, 0.7), 0 0 24px rgba(255, 45, 155, 0.5);
-            animation: top-bar-glow 4s ease-in-out infinite;
-        }
-
-        @keyframes top-bar-glow {
-            0%, 100% { opacity: 0.6; left: 10%; right: 10%; }
-            50%       { opacity: 1;   left: 2%;  right: 2%;  }
-        }
-
-        /* Corner brackets */
-        .corner {
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            border-style: solid;
-        }
-
-        /* Top corners: cyan */
-        .corner-tl { top: -1px; left: -1px;  border-width: 2px 0 0 2px; border-color: var(--neon-cyan); box-shadow: -2px -2px 6px rgba(0, 245, 255, 0.3); }
-        .corner-tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; border-color: var(--neon-cyan); box-shadow:  2px -2px 6px rgba(0, 245, 255, 0.3); }
-        /* Bottom corners: pink */
-        .corner-bl { bottom: -1px; left: -1px;  border-width: 0 0 2px 2px; border-color: var(--neon-pink); box-shadow: -2px 2px 6px rgba(255, 45, 155, 0.3); }
-        .corner-br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; border-color: var(--neon-pink); box-shadow:  2px 2px 6px rgba(255, 45, 155, 0.3); }
-
-        /* Error */
-        #error-msg {
-            background: rgba(255, 45, 155, 0.08);
-            color: #ff6db8;
-            padding: 11px 14px;
-            border: 1px solid rgba(255, 45, 155, 0.3);
-            border-radius: 3px;
-            text-align: center;
-            margin-bottom: 18px;
-            font-size: 13px;
-            font-family: 'Exo 2', sans-serif;
-            display: none;
-        }
-
-        /* ── FORM FIELDS ── */
-        .form-group      { margin-bottom: 14px; }
-        .form-grid-3     { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .form-grid-phone { display: grid; grid-template-columns: 1fr 2.5fr; gap: 8px; margin-bottom: 4px; }
-
-        label {
-            display: block;
-            font-family: 'Exo 2', sans-serif;
-            font-weight: 600;
-            font-size: 11px;
-            color: var(--neon-cyan);
-            margin-bottom: 6px;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 11px 14px;
-            background: rgba(0, 0, 18, 0.8);
-            border: 1px solid rgba(0, 245, 255, 0.15);
-            color: var(--text-bright);
-            border-radius: 3px;
-            font-size: 14px;
-            font-family: 'Share Tech Mono', monospace;
-            outline: none;
-            transition: all 0.25s;
-        }
-
-        input::placeholder { color: var(--text-dim); }
-
-        input:focus, select:focus {
-            border-color: rgba(0, 245, 255, 0.5);
-            box-shadow: 0 0 0 1px rgba(0, 245, 255, 0.2), 0 0 14px rgba(0, 245, 255, 0.1);
-            background: rgba(0, 5, 22, 0.95);
-        }
-
-        select option { background: #0c0020; color: var(--text-bright); }
-
-        .helper-text {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 12px;
-            color: var(--text-dim);
-            display: block;
-            margin-top: 4px;
-            margin-bottom: 12px;
-            line-height: 1.55;
-        }
-
-        .warning-text {
-            font-family: 'Exo 2', sans-serif;
-            font-size: 12px;
-            color: #ff6db8;
-            display: block;
-            margin-top: 4px;
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-
-        .pwd-wrapper { position: relative; }
-        .pwd-wrapper input { padding-right: 42px; }
-
-        .pwd-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: var(--text-dim);
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .pwd-toggle:hover {
-            color: var(--neon-cyan);
-            text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
-        }
-
-        /* ── BUTTONS ── */
-        .btn {
-            width: 100%;
-            padding: 13px;
-            border: none;
-            border-radius: 3px;
-            font-size: 13px;
-            font-weight: 700;
-            font-family: 'Orbitron', monospace;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.25s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Login / Verify — cyan primary */
-        .btn-login {
-            background: linear-gradient(135deg, #00d8f0 0%, #0088d4 100%);
-            color: #001a24;
-            margin-bottom: 16px;
-            box-shadow: 0 0 22px rgba(0, 245, 255, 0.3), 0 4px 14px rgba(0, 0, 0, 0.4);
-        }
-
-        .btn-login::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -130%;
-            width: 75%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transform: skewX(-18deg);
-            transition: left 0.6s ease;
-        }
-
-        .btn-login::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
-                rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 3px
-            );
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .btn-login:hover::before { left: 140%; }
-        .btn-login:hover::after  { opacity: 1; }
-        .btn-login:hover {
-            box-shadow: 0 0 36px rgba(0, 245, 255, 0.55), 0 6px 20px rgba(0, 0, 0, 0.4);
-            transform: translateY(-2px);
-        }
-
-        /* Divider */
-        .divider {
-            margin: 22px 0;
-            border: none;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 45, 155, 0.2), transparent);
-            position: relative;
-        }
-
-        .divider::before {
-            content: '◇  ◇  ◇';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 9px;
-            color: var(--text-dim);
-            background: var(--panel-bg);
-            padding: 0 14px;
-            letter-spacing: 6px;
-        }
-
-        /* Register — pink secondary */
-        .btn-register {
-            background: transparent;
-            border: 1px solid rgba(255, 45, 155, 0.5);
-            color: var(--neon-pink);
-            width: fit-content;
-            padding: 10px 26px;
-            margin: 0 auto;
-            display: block;
-            box-shadow: 0 0 14px rgba(255, 45, 155, 0.15);
-        }
-
-        .btn-register:hover {
-            background: rgba(255, 45, 155, 0.1);
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 28px rgba(255, 45, 155, 0.45);
-            color: #ff80c0;
-            transform: translateY(-2px);
-        }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 18px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-login { background: #1fc7e6; color: #fff; margin-bottom: 15px; }
+        .btn-login:hover { background: #16abc7; }
+        
+        .divider { border-bottom: 1px solid var(--divider-color); margin: 20px 0; transition: border-color 0.3s; }
+        
+        .btn-register { background: #42b72a; color: #fff; width: fit-content; padding: 10px 20px; margin: 0 auto; display: block; }
+        .btn-register:hover { background: #36a420; }
 
         #register-form, #verify-form { display: none; }
+        .back-link { display: block; text-align: center; color: #1fc7e6; cursor: pointer; margin-top: 15px; text-decoration: none; font-weight: 600; font-size: 15px;}
+        .back-link:hover { text-decoration: underline; }
 
-        .form-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 15px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 22px;
-            color: var(--neon-cyan);
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            text-shadow: 0 0 16px rgba(0, 245, 255, 0.5);
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            color: var(--neon-pink);
-            cursor: pointer;
-            margin-top: 16px;
-            text-decoration: none;
-            font-family: 'Exo 2', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            opacity: 0.75;
-            transition: all 0.2s;
-        }
-
-        .back-link:hover {
-            color: #ff80c0;
-            opacity: 1;
-            text-shadow: 0 0 10px rgba(255, 45, 155, 0.5);
-        }
+        #error-msg { background: #fde8e8; color: #e74a3b; padding: 10px; border-radius: 6px; text-align: center; margin-bottom: 15px; font-size: 14px; display: none; font-weight: 600; border: 1px solid #fbd5d5;}
 
         @media (max-width: 768px) {
-            .container     { flex-direction: column; padding: 24px; gap: 32px; margin-top: 56px; }
-            .brand-section { width: 100%; padding: 0; text-align: center; min-width: unset; }
-            .brand-name    { font-size: 38px; }
-            .brand-eyebrow { justify-content: center; }
-            .brand-subtitle { margin: 0 auto; }
-            .auth-section  { width: 100%; min-width: unset; }
+            .container { flex-direction: column; text-align: center; margin-top: 60px;}
+            .brand-section { width: 100%; padding: 0; margin-bottom: 40px; }
+            .auth-section { width: 100%; max-width: 420px; }
         }
     </style>
 </head>
 <body>
 
-<div class="scanlines" aria-hidden="true"></div>
-
-<div class="neon-lines" aria-hidden="true">
-    <div class="neon-line"></div>
-    <div class="neon-line"></div>
-    <div class="neon-line"></div>
-    <div class="neon-line"></div>
-</div>
-
-<!-- Lang toggle only — dark mode removed -->
 <div class="top-controls">
+    <button id="theme-toggle" class="top-btn" title="Chuyển chế độ Sáng/Tối">🌙</button>
     <button id="lang-toggle" class="top-btn">
         <img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN
     </button>
 </div>
 
 <div class="container">
-
     <div class="brand-section">
-        <div class="brand-eyebrow">AWS Serverless Portfolio</div>
-        <div class="brand-name">CloudResume</div>
-        <p class="brand-subtitle" data-i18n="subtitle">Create and manage your own Serverless portfolio on the AWS platform.</p>
+        <h1>CloudResume</h1>
+        <p data-i18n="subtitle">Create and manage your own Serverless portfolio on the AWS platform.</p>
     </div>
 
     <div class="auth-section">
-        <div class="corner corner-tl"></div>
-        <div class="corner corner-tr"></div>
-        <div class="corner corner-bl"></div>
-        <div class="corner corner-br"></div>
-
         <div id="error-msg"></div>
 
-        <!-- Login -->
         <div id="login-form">
             <div class="form-group">
                 <input type="email" id="login-email" data-i18n-placeholder="pl_email" placeholder="Your Email">
@@ -536,10 +137,9 @@
             <button class="btn btn-register" onclick="toggleForm('register')" data-i18n="btn_create_acc">Create New Account</button>
         </div>
 
-        <!-- Register -->
         <div id="register-form">
-            <h2 class="form-title" data-i18n="reg_title">Sign Up</h2>
-
+            <h2 style="margin-bottom: 15px; text-align: center;" data-i18n="reg_title">Sign Up</h2>
+            
             <div class="form-group">
                 <input type="text" id="reg-name" data-i18n-placeholder="pl_name" placeholder="Full Name">
             </div>
@@ -557,20 +157,20 @@
             <div class="form-group">
                 <label data-i18n="lbl_gender">Gender</label>
                 <select id="reg-gender">
-                    <option value="Male"   data-i18n="gen_male">Male</option>
+                    <option value="Male" data-i18n="gen_male">Male</option>
                     <option value="Female" data-i18n="gen_female">Female</option>
-                    <option value="Other"  data-i18n="gen_other">Other</option>
+                    <option value="Other" data-i18n="gen_other">Other</option>
                 </select>
             </div>
 
             <label data-i18n="lbl_phone">Phone Number</label>
             <div class="form-grid-phone">
-                <input type="text" id="reg-phone-code" value="" placeholder="+..." style="text-align:center;">
+                <input type="text" id="reg-phone-code" value="" placeholder="+..." style="text-align: center;">
                 <input type="text" id="reg-phone-num" data-i18n-placeholder="pl_phone" placeholder="Enter the rest of the digits...">
             </div>
             <small class="helper-text" data-i18n="phone_guide">Ex: Enter the country code (e.g., +84) in the first box, and your phone number in the second.</small>
 
-            <div class="form-group pwd-wrapper" style="margin-bottom:8px;">
+            <div class="form-group pwd-wrapper" style="margin-bottom: 8px;">
                 <input type="password" id="reg-password" data-i18n-placeholder="pl_pass_new" placeholder="New Password">
                 <i class="fa-regular fa-eye-slash pwd-toggle" onclick="togglePassword('reg-password', this)"></i>
             </div>
@@ -580,207 +180,290 @@
             </div>
             <small class="warning-text" id="pwd-policy" data-i18n="pwd_policy">⚠️ Password must be 8+ characters, including uppercase, lowercase, numbers, and symbols (@$!%*?&).</small>
 
-            <button class="btn btn-register" style="width:100%;margin-top:10px;display:block;" onclick="registerUser()" data-i18n="btn_reg_submit">Sign Up</button>
+            <button class="btn btn-register" style="width: 100%; margin-top: 10px;" onclick="registerUser()" data-i18n="btn_reg_submit">Sign Up</button>
             <a class="back-link" onclick="toggleForm('login')" data-i18n="link_back_login">Already have an account? Log in</a>
         </div>
 
-        <!-- Verify -->
         <div id="verify-form">
-            <h2 class="form-title" data-i18n="verify_title">Email Verification</h2>
-            <p style="font-family:'Exo 2',sans-serif;font-size:14px;text-align:center;margin-bottom:20px;color:var(--text-mid);" data-i18n="verify_desc">
-                Please check your email and enter the 6-digit verification code.
-            </p>
+            <h2 style="margin-bottom: 15px; text-align: center;" data-i18n="verify_title">Email Verification</h2>
+            <p style="font-size: 14px; text-align: center; margin-bottom: 15px; color: var(--text-muted);" data-i18n="verify_desc">Please check your email and enter the 6-digit verification code.</p>
             <div class="form-group">
-                <input type="text" id="verify-code" data-i18n-placeholder="pl_code" placeholder="Verification Code"
-                    style="text-align:center;letter-spacing:0.5em;font-size:18px;">
+                <input type="text" id="verify-code" data-i18n-placeholder="pl_code" placeholder="Verification Code">
             </div>
             <button class="btn btn-login" onclick="verifyUser()" data-i18n="btn_verify">Verify</button>
         </div>
     </div>
-
 </div>
 
 <script>
-    // ── Dropdown init ──
-    const daySelect   = document.getElementById('reg-dob-day');
+    // ==========================================
+    // KHỞI TẠO DATA CHO DROPDOWN NGÀY SINH
+    // ==========================================
+    const daySelect = document.getElementById('reg-dob-day');
     const monthSelect = document.getElementById('reg-dob-month');
-    const yearSelect  = document.getElementById('reg-dob-year');
+    const yearSelect = document.getElementById('reg-dob-year');
 
-    for (let i = 1; i <= 31; i++) daySelect.innerHTML += `<option value="${i < 10 ? '0'+i : i}">${i}</option>`;
-    for (let i = 1; i <= 12; i++) monthSelect.innerHTML += `<option value="${i < 10 ? '0'+i : i}">Tháng ${i}</option>`;
+    for(let i=1; i<=31; i++) daySelect.innerHTML += `<option value="${i<10?'0'+i:i}">${i}</option>`;
+    for(let i=1; i<=12; i++) monthSelect.innerHTML += `<option value="${i<10?'0'+i:i}">Tháng ${i}</option>`;
     const currentYear = new Date().getFullYear();
-    for (let i = currentYear; i >= 1950; i--) yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
-    yearSelect.value = '2000';
+    for(let i=currentYear; i>=1950; i--) yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
+    yearSelect.value = "2000"; 
 
-    // ── Password toggle ──
-    function togglePassword(inputId, iconEl) {
+    // ==========================================
+    // LOGIC ẨN/HIỆN MẬT KHẨU
+    // ==========================================
+    function togglePassword(inputId, iconElement) {
         const input = document.getElementById(inputId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            iconEl.classList.replace('fa-eye-slash', 'fa-eye');
+        if (input.type === "password") {
+            input.type = "text"; 
+            iconElement.classList.remove("fa-eye-slash");
+            iconElement.classList.add("fa-eye");
         } else {
-            input.type = 'password';
-            iconEl.classList.replace('fa-eye', 'fa-eye-slash');
+            input.type = "password"; 
+            iconElement.classList.remove("fa-eye");
+            iconElement.classList.add("fa-eye-slash");
         }
     }
 
-    // ── i18n ──
-    let currentLang = 'en';
-    const enMonths = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    // ==========================================
+    // LOGIC CHUYỂN ĐỔI CHẾ ĐỘ SÁNG / TỐI
+    // ==========================================
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggleBtn.innerText = '☀️';
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeToggleBtn.innerText = '🌙';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            themeToggleBtn.innerText = '☀️';
+        }
+    });
+
+    // ==========================================
+    // LOGIC TỪ ĐIỂN SONG NGỮ (EN/VN)
+    // ==========================================
+    let currentLang = 'en'; // ĐÃ ĐỔI: Mặc định khởi tạo trang là tiếng Anh
+    const enMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const translations = {
         vn: {
-            subtitle: 'Kiến tạo và quản trị hồ sơ năng lực Serverless của riêng bạn trên nền tảng AWS.',
-            btn_login: 'Đăng nhập', btn_create_acc: 'Tạo tài khoản mới', reg_title: 'Đăng ký',
-            lbl_dob: 'Ngày sinh', lbl_gender: 'Giới tính',
-            gen_male: 'Nam', gen_female: 'Nữ', gen_other: 'Khác',
-            lbl_phone: 'Số điện thoại',
-            phone_guide: 'VD: Nhập mã quốc gia (như +84) vào ô đầu tiên, và nhập số điện thoại vào ô thứ hai.',
-            pwd_policy: '⚠️ Mật khẩu phải từ 8 ký tự, bao gồm: chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).',
-            btn_reg_submit: 'Đăng ký', link_back_login: 'Bạn đã có tài khoản? Đăng nhập ngay',
-            verify_title: 'Xác thực Email', verify_desc: 'Vui lòng kiểm tra email và nhập mã xác thực gồm 6 chữ số.',
-            btn_verify: 'Xác nhận', pl_email: 'Email của bạn', pl_email_short: 'Email',
-            pl_pass: 'Mật khẩu', pl_name: 'Họ và tên', pl_phone: 'Nhập đuôi số còn lại...',
-            pl_pass_new: 'Mật khẩu mới', pl_pass_confirm: 'Xác nhận mật khẩu', pl_code: 'Mã xác thực',
-            err_empty_login: 'Vui lòng nhập đầy đủ email và mật khẩu.',
-            err_login_fail: 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.',
-            err_empty_reg: 'Vui lòng điền đầy đủ tất cả thông tin.',
-            err_pwd_weak: 'Mật khẩu quá yếu! Hãy kiểm tra lại điều kiện bên dưới.',
-            err_pwd_match: 'Mật khẩu xác nhận không trùng khớp.',
-            err_empty_code: 'Vui lòng nhập mã xác thực.', err_code_invalid: 'Mã xác thực không hợp lệ.',
-            msg_verify_success: 'Xác thực tài khoản thành công! Bạn có thể đăng nhập ngay.', msg_processing: 'Đang xử lý...'
+            subtitle: "Kiến tạo và quản trị hồ sơ năng lực Serverless của riêng bạn trên nền tảng AWS.",
+            btn_login: "Đăng nhập",
+            btn_create_acc: "Tạo tài khoản mới",
+            reg_title: "Đăng ký",
+            lbl_dob: "Ngày sinh",
+            lbl_gender: "Giới tính",
+            gen_male: "Nam", gen_female: "Nữ", gen_other: "Khác",
+            lbl_phone: "Số điện thoại",
+            phone_guide: "VD: Nhập mã quốc gia (như +84) vào ô đầu tiên, và nhập số điện thoại vào ô thứ hai.",
+            pwd_policy: "⚠️ Mật khẩu phải từ 8 ký tự, bao gồm: chữ hoa, chữ thường, số và ký tự đặc biệt (@$!%*?&).",
+            btn_reg_submit: "Đăng ký",
+            link_back_login: "Bạn đã có tài khoản? Đăng nhập ngay",
+            verify_title: "Xác thực Email",
+            verify_desc: "Vui lòng kiểm tra email và nhập mã xác thực gồm 6 chữ số.",
+            btn_verify: "Xác nhận",
+            pl_email: "Email của bạn",
+            pl_email_short: "Email",
+            pl_pass: "Mật khẩu",
+            pl_name: "Họ và tên",
+            pl_phone: "Nhập đuôi số còn lại...",
+            pl_pass_new: "Mật khẩu mới",
+            pl_pass_confirm: "Xác nhận mật khẩu",
+            pl_code: "Mã xác thực",
+            err_empty_login: "Vui lòng nhập đầy đủ email và mật khẩu.",
+            err_login_fail: "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.",
+            err_empty_reg: "Vui lòng điền đầy đủ tất cả thông tin.",
+            err_pwd_weak: "Mật khẩu quá yếu! Hãy kiểm tra lại điều kiện bên dưới.",
+            err_pwd_match: "Mật khẩu xác nhận không trùng khớp.",
+            err_empty_code: "Vui lòng nhập mã xác thực.",
+            err_code_invalid: "Mã xác thực không hợp lệ.",
+            msg_verify_success: "Xác thực tài khoản thành công! Bạn có thể đăng nhập ngay.",
+            msg_processing: "Đang xử lý..."
         },
         en: {
-            subtitle: 'Create and manage your own Serverless portfolio on the AWS platform.',
-            btn_login: 'Log In', btn_create_acc: 'Create New Account', reg_title: 'Sign Up',
-            lbl_dob: 'Date of Birth', lbl_gender: 'Gender',
-            gen_male: 'Male', gen_female: 'Female', gen_other: 'Other',
-            lbl_phone: 'Phone Number',
-            phone_guide: 'Ex: Enter the country code (e.g., +84) in the first box, and your phone number in the second.',
-            pwd_policy: '⚠️ Password must be 8+ characters, including uppercase, lowercase, numbers, and symbols (@$!%*?&).',
-            btn_reg_submit: 'Sign Up', link_back_login: 'Already have an account? Log in',
-            verify_title: 'Email Verification', verify_desc: 'Please check your email and enter the 6-digit verification code.',
-            btn_verify: 'Verify', pl_email: 'Your Email', pl_email_short: 'Email',
-            pl_pass: 'Password', pl_name: 'Full Name', pl_phone: 'Enter the rest of the digits...',
-            pl_pass_new: 'New Password', pl_pass_confirm: 'Confirm Password', pl_code: 'Verification Code',
-            err_empty_login: 'Please enter both email and password.',
-            err_login_fail: 'Login failed. Please check your credentials.',
-            err_empty_reg: 'Please fill in all required fields.',
-            err_pwd_weak: 'Password is too weak! Please check the requirements below.',
-            err_pwd_match: 'Passwords do not match.',
-            err_empty_code: 'Please enter the verification code.', err_code_invalid: 'Invalid verification code.',
-            msg_verify_success: 'Account verified successfully! You can log in now.', msg_processing: 'Processing...'
+            subtitle: "Create and manage your own Serverless portfolio on the AWS platform.",
+            btn_login: "Log In",
+            btn_create_acc: "Create New Account",
+            reg_title: "Sign Up",
+            lbl_dob: "Date of Birth",
+            lbl_gender: "Gender",
+            gen_male: "Male", gen_female: "Female", gen_other: "Other",
+            lbl_phone: "Phone Number",
+            phone_guide: "Ex: Enter the country code (e.g., +84) in the first box, and your phone number in the second.",
+            pwd_policy: "⚠️ Password must be 8+ characters, including uppercase, lowercase, numbers, and symbols (@$!%*?&).",
+            btn_reg_submit: "Sign Up",
+            link_back_login: "Already have an account? Log in",
+            verify_title: "Email Verification",
+            verify_desc: "Please check your email and enter the 6-digit verification code.",
+            btn_verify: "Verify",
+            pl_email: "Your Email",
+            pl_email_short: "Email",
+            pl_pass: "Password",
+            pl_name: "Full Name",
+            pl_phone: "Enter the rest of the digits...",
+            pl_pass_new: "New Password",
+            pl_pass_confirm: "Confirm Password",
+            pl_code: "Verification Code",
+            err_empty_login: "Please enter both email and password.",
+            err_login_fail: "Login failed. Please check your credentials.",
+            err_empty_reg: "Please fill in all required fields.",
+            err_pwd_weak: "Password is too weak! Please check the requirements below.",
+            err_pwd_match: "Passwords do not match.",
+            err_empty_code: "Please enter the verification code.",
+            err_code_invalid: "Invalid verification code.",
+            msg_verify_success: "Account verified successfully! You can log in now.",
+            msg_processing: "Processing..."
         }
     };
 
     function updateLanguage() {
-        const langBtn = document.getElementById('lang-toggle');
-        langBtn.innerHTML = currentLang === 'vn'
-            ? '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"> EN'
+        const langToggleBtn = document.getElementById('lang-toggle');
+        // Luồng CTA đúng chuẩn: Giao diện tiếng Anh (currentLang == 'en') thì nút hiện chữ "VN" để mời bấm đổi
+        langToggleBtn.innerHTML = currentLang === 'vn' 
+            ? '<img src="https://flagcdn.com/w20/gb.png" width="16" alt="EN"> EN' 
             : '<img src="https://flagcdn.com/w20/vn.png" width="16" alt="VN"> VN';
 
-        const mSel = document.getElementById('reg-dob-month');
-        for (let i = 0; i < 12; i++) {
-            mSel.options[i].text = currentLang === 'vn' ? `Tháng ${i+1}` : enMonths[i];
+        // Cập nhật các tháng trong select Box bằng mảng chuẩn theo ngôn ngữ hiện tại
+        const monthSelect = document.getElementById('reg-dob-month');
+        for(let i=0; i<12; i++) {
+            monthSelect.options[i].text = currentLang === 'vn' ? `Tháng ${i+1}` : enMonths[i];
         }
+
         document.querySelectorAll('[data-i18n]').forEach(el => {
-            const k = el.getAttribute('data-i18n');
-            if (translations[currentLang][k]) el.innerText = translations[currentLang][k];
+            const key = el.getAttribute('data-i18n');
+            if(translations[currentLang][key]) el.innerText = translations[currentLang][key];
         });
+
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-            const k = el.getAttribute('data-i18n-placeholder');
-            if (translations[currentLang][k]) el.placeholder = translations[currentLang][k];
+            const key = el.getAttribute('data-i18n-placeholder');
+            if(translations[currentLang][key]) el.placeholder = translations[currentLang][key];
         });
     }
 
     document.getElementById('lang-toggle').addEventListener('click', () => {
-        currentLang = currentLang === 'vn' ? 'en' : 'vn';
+        currentLang = currentLang === 'vn' ? 'en' : 'vn'; 
         updateLanguage();
     });
-    updateLanguage();
 
-    // ── AWS Cognito ──
-    const poolData = { UserPoolId: 'ap-southeast-2_O6dXPqxDv', ClientId: 'n93k0v18jjsk56ei0su42mdq7' };
+    updateLanguage(); // Chạy hàm đồng bộ chữ nghĩa ngay khi tải trang
+
+    // ==========================================
+    // LOGIC AWS COGNITO XÁC THỰC
+    // ==========================================
+    const poolData = {
+        UserPoolId: 'ap-southeast-2_O6dXPqxDv', 
+        ClientId: 'n93k0v18jjsk56ei0su42mdq7'   
+    };
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-    let cognitoUser = null;
+    let cognitoUser = null; 
 
-    function showError(msgKey, isRaw = false) {
-        const el = document.getElementById('error-msg');
-        el.innerText = isRaw ? msgKey : translations[currentLang][msgKey];
-        el.style.display = 'block';
+    function showError(msgKey, isRawMsg = false) {
+        const errDiv = document.getElementById('error-msg');
+        errDiv.innerText = isRawMsg ? msgKey : translations[currentLang][msgKey];
+        errDiv.style.display = 'block';
     }
 
-    function toggleForm(name) {
+    function toggleForm(formName) {
         document.getElementById('error-msg').style.display = 'none';
-        document.getElementById('login-form').style.display    = name === 'login'    ? 'block' : 'none';
-        document.getElementById('register-form').style.display = name === 'register' ? 'block' : 'none';
-        document.getElementById('verify-form').style.display   = name === 'verify'   ? 'block' : 'none';
+        document.getElementById('login-form').style.display = formName === 'login' ? 'block' : 'none';
+        document.getElementById('register-form').style.display = formName === 'register' ? 'block' : 'none';
+        document.getElementById('verify-form').style.display = formName === 'verify' ? 'block' : 'none';
     }
 
+    // --- HÀM ĐĂNG NHẬP ---
     function loginUser() {
         const email = document.getElementById('login-email').value;
-        const pass  = document.getElementById('login-password').value;
-        const btn   = document.getElementById('btn-login-submit');
-        if (!email || !pass) return showError('err_empty_login');
+        const password = document.getElementById('login-password').value;
+        const btnSubmit = document.getElementById('btn-login-submit');
 
-        const authDetails = new AmazonCognitoIdentity.AuthenticationDetails({ Username: email, Password: pass });
+        if(!email || !password) return showError('err_empty_login');
+
+        const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails({ Username: email, Password: password });
         cognitoUser = new AmazonCognitoIdentity.CognitoUser({ Username: email, Pool: userPool });
-        btn.innerText = translations[currentLang]['msg_processing'];
 
-        cognitoUser.authenticateUser(authDetails, {
-            onSuccess: r => {
-                localStorage.setItem('id_token', r.getIdToken().getJwtToken());
+        btnSubmit.innerText = translations[currentLang]['msg_processing'];
+
+        cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess: function (result) {
+                localStorage.setItem('id_token', result.getIdToken().getJwtToken());
                 localStorage.setItem('logged_username', email.split('@')[0]);
                 window.location.href = '/dashboard.html';
             },
-            onFailure: err => {
-                btn.innerText = translations[currentLang]['btn_login'];
+            onFailure: function(err) {
+                btnSubmit.innerText = translations[currentLang]['btn_login'];
                 showError(err.message || 'err_login_fail', !!err.message);
             }
         });
     }
 
+    // --- HÀM ĐĂNG KÝ TÀI KHOẢN MỚI ---
     function registerUser() {
-        const name    = document.getElementById('reg-name').value;
-        const email   = document.getElementById('reg-email').value;
-        const code    = document.getElementById('reg-phone-code').value.trim();
-        const numRaw  = document.getElementById('reg-phone-num').value.trim();
-        const pass    = document.getElementById('reg-password').value;
-        const passC   = document.getElementById('reg-password-confirm').value;
-        const dob     = `${document.getElementById('reg-dob-year').value}-${document.getElementById('reg-dob-month').value}-${document.getElementById('reg-dob-day').value}`;
-        const gender  = document.getElementById('reg-gender').value;
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const phoneCode = document.getElementById('reg-phone-code').value.trim();
+        const phoneNumRaw = document.getElementById('reg-phone-num').value.trim();
+        const password = document.getElementById('reg-password').value;
+        const passwordConfirm = document.getElementById('reg-password-confirm').value;
 
-        if (!name || !email || !code || !numRaw || !pass) return showError('err_empty_reg');
-        const phone = code + (numRaw.startsWith('0') ? numRaw.substring(1) : numRaw);
-        const pwdRx = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        if (!pwdRx.test(pass)) return showError('err_pwd_weak');
-        if (pass !== passC)    return showError('err_pwd_match');
+        const dob = `${document.getElementById('reg-dob-year').value}-${document.getElementById('reg-dob-month').value}-${document.getElementById('reg-dob-day').value}`;
+        const gender = document.getElementById('reg-gender').value;
 
-        const attrs = [
-            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'name',         Value: name }),
-            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'phone_number', Value: phone }),
-            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'birthdate',    Value: dob }),
-            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'gender',       Value: gender })
+        if(!name || !email || !phoneCode || !phoneNumRaw || !password) return showError('err_empty_reg');
+        
+        const cleanPhoneNum = phoneNumRaw.startsWith('0') ? phoneNumRaw.substring(1) : phoneNumRaw;
+        const fullPhone = phoneCode + cleanPhoneNum;
+
+        const pwdRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!pwdRegex.test(password)) return showError('err_pwd_weak');
+
+        if (password !== passwordConfirm) return showError('err_pwd_match');
+
+        const attributeList = [
+            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'name', Value: name }),
+            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'phone_number', Value: fullPhone }),
+            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'birthdate', Value: dob }),
+            new AmazonCognitoIdentity.CognitoUserAttribute({ Name: 'gender', Value: gender })
         ];
 
-        userPool.signUp(email, pass, attrs, null, (err, result) => {
-            if (err) { showError(err.message, true); return; }
+        userPool.signUp(email, password, attributeList, null, function(err, result) {
+            if (err) {
+                showError(err.message, true);
+                return;
+            }
             cognitoUser = result.user;
-            toggleForm('verify');
+            toggleForm('verify'); 
         });
     }
 
+    // --- HÀM XÁC THỰC MÃ OTP ---
     function verifyUser() {
         const code = document.getElementById('verify-code').value;
-        if (!code) return showError('err_empty_code');
-        cognitoUser.confirmRegistration(code, true, (err) => {
-            if (err) { showError(err.message || 'err_code_invalid', !!err.message); return; }
+        if(!code) return showError('err_empty_code');
+
+        cognitoUser.confirmRegistration(code, true, function(err, result) {
+            if (err) {
+                showError(err.message || 'err_code_invalid', !!err.message);
+                return;
+            }
             alert(translations[currentLang]['msg_verify_success']);
             toggleForm('login');
         });
     }
 
-    if (localStorage.getItem('id_token')) window.location.href = '/dashboard.html';
+    if (localStorage.getItem('id_token')) {
+        window.location.href = '/dashboard.html';
+    }
 </script>
+
 </body>
 </html>
