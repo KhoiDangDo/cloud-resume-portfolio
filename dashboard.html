@@ -104,7 +104,6 @@
 </head>
 <body>
 
-    <!-- NAVBAR -->
     <nav>
         <div class="brand">CloudResume</div>
         <div class="nav-controls">
@@ -118,12 +117,11 @@
         </div>
     </nav>
 
-    <!-- MAIN WORKSPACE -->
     <div class="workspace">
         <div class="workspace-header">
             <div>
                 <h1 data-i18n="ws_title">My Portfolios</h1>
-                <p style="color: var(--text-muted); margin-top: 5px;" data-i18n="ws_user">User: <span id="display-username" style="font-weight:600; color: var(--accent-color);">...</span></p>
+                <p style="color: var(--text-muted); margin-top: 5px;"><span data-i18n="ws_user">User</span>: <span id="display-username" style="font-weight:600; color: var(--accent-color);">...</span></p>
             </div>
             <button class="btn-create" onclick="openModal()"><i class="fa-solid fa-plus"></i> <span data-i18n="btn_create">Create New</span></button>
         </div>
@@ -135,11 +133,9 @@
         </div>
 
         <div id="project-grid" class="project-grid">
-            <!-- Render danh sách dự án bằng JavaScript -->
-        </div>
+            </div>
     </div>
 
-    <!-- MODAL TẠO MỚI DỰ ÁN -->
     <div class="modal-overlay" id="create-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -165,11 +161,10 @@
 
                 <div class="form-group">
                     <label><span data-i18n="lbl_prompt">AI Design Prompt</span></label>
-                    <!-- Templates Prompt -->
                     <div class="prompt-templates">
                         <span class="prompt-chip" onclick="applyTemplate('rainbow')"><i class="fa-solid fa-rainbow"></i> Rainbow Glow</span>
                         <span class="prompt-chip" onclick="applyTemplate('nightsky')"><i class="fa-solid fa-moon"></i> Night Sky</span>
-                        <span class="prompt-chip" onclick="applyTemplate('taylor1989')"><i class="fa-solid fa-camera-retro"></i> 1989 Taylor Swift</span>
+                        <span class="prompt-chip" onclick="applyTemplate('taylor')"><i class="fa-solid fa-camera-retro"></i> 1989 Taylor Swift</span>
                         <span class="prompt-chip" onclick="applyTemplate('cyberpunk')"><i class="fa-solid fa-bolt"></i> Cyberpunk Neon</span>
                         <span class="prompt-chip" onclick="applyTemplate('minimalist')"><i class="fa-solid fa-pen-nib"></i> Minimalist Clean</span>
                         <span class="prompt-chip" onclick="applyTemplate('terminal')"><i class="fa-solid fa-terminal"></i> Terminal CLI</span>
@@ -181,7 +176,6 @@
                 <button id="btn-generate" class="btn-create" style="width: 100%;" onclick="startGeneration()"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="btn_generate">Generate Website</span></button>
             </div>
 
-            <!-- Loading State -->
             <div id="loading-state" class="status-area">
                 <div class="spinner"></div>
                 <h3 style="margin: 15px 0 5px;" data-i18n="msg_building">Building your website...</h3>
@@ -234,6 +228,7 @@
             en: {
                 pl_search: "Search projects...",
                 ws_title: "My Portfolios",
+                ws_user: "User", // ĐÃ BỔ SUNG
                 btn_create: "Create New",
                 empty_title: "No portfolios yet!",
                 empty_desc: "Click 'Create New' to generate your first stunning website.",
@@ -253,6 +248,7 @@
             vn: {
                 pl_search: "Tìm kiếm dự án...",
                 ws_title: "Hồ sơ của tôi",
+                ws_user: "Người dùng", // ĐÃ BỔ SUNG
                 btn_create: "Tạo mới",
                 empty_title: "Chưa có hồ sơ nào!",
                 empty_desc: "Nhấn 'Tạo mới' và tải lên CV PDF để bắt đầu.",
@@ -271,14 +267,36 @@
             }
         };
 
+        // ĐÃ NÂNG CẤP THÀNH ĐỐI TƯỢNG ĐA NGÔN NGỮ
         const promptTexts = {
-            rainbow: "Giao diện cầu vồng rực rỡ, sử dụng các dải màu gradient mượt mà cho viền và tiêu đề. Thiết kế hiện đại, thẻ card trong suốt mờ ảo (glassmorphism).",
-            nightsky: "Giao diện bầu trời đêm huyền bí (Night Sky). Nền xanh đen sâu thẳm, điểm xuyết các hạt tinh tú lấp lánh. Các thẻ thông tin có viền phát sáng nhẹ.",
-            taylor1989: "Giao diện mang phong cách Polaroid album 1989 của Taylor Swift. Màu nền pastel xanh dương nhạt. Các mục thông tin giống như những tấm ảnh lấy liền.",
-            cyberpunk: "Giao diện Cyberpunk tương lai. Nền đen tuyền kết hợp viền neon màu hồng và xanh cyan phát sáng. Font chữ điện tử. Các khối thông tin hiển thị như màn hình HUD công nghệ cao.",
-            minimalist: "Giao diện Minimalist tối giản, sang trọng. Tông màu trắng chủ đạo và xám nhạt. Tập trung vào nghệ thuật chữ (typography) sắc nét, dùng nhiều khoảng trắng để tạo sự thanh lịch, chuẩn học thuật.",
-            terminal: "Giao diện mang phong cách màn hình console CLI (Command Line Interface). Nền đen tối màu, chữ màu xanh lá cây kiểu ma trận (Matrix). Các tiêu đề có dấu nháy nhấp nháy mang đậm chất kỹ sư phần mềm.",
-            glass: "Giao diện kính mờ (Glassmorphism) thanh lịch. Nền dùng ảnh dải màu nhạt (pastel gradient). Các thẻ thông tin là các lớp kính bán trong suốt, có đổ bóng mờ và viền trắng mỏng hiện đại."
+            rainbow: {
+                vn: "Giao diện cầu vồng rực rỡ, sử dụng các dải màu gradient mượt mà cho viền và tiêu đề. Thiết kế hiện đại, thẻ card trong suốt mờ ảo (glassmorphism).",
+                en: "Vibrant rainbow interface, using smooth gradient colors for borders and headers. Modern design, translucent glassmorphism cards."
+            },
+            nightsky: {
+                vn: "Giao diện bầu trời đêm huyền bí (Night Sky). Nền xanh đen sâu thẳm, điểm xuyết các hạt tinh tú lấp lánh. Các thẻ thông tin có viền phát sáng nhẹ.",
+                en: "Mysterious Night Sky interface. Deep blue-black background dotted with sparkling stars. Information cards have a soft glowing border."
+            },
+            taylor: {
+                vn: "Giao diện mang phong cách Polaroid album 1989 của Taylor Swift. Màu nền pastel xanh dương nhạt. Các mục thông tin giống như những tấm ảnh lấy liền.",
+                en: "1989 Taylor Swift Polaroid album style. Light pastel blue background. Information sections look like instant polaroid photos."
+            },
+            cyberpunk: {
+                vn: "Giao diện Cyberpunk tương lai. Nền đen tuyền kết hợp viền neon màu hồng và xanh cyan phát sáng. Font chữ điện tử. Các khối thông tin hiển thị như màn hình HUD công nghệ cao.",
+                en: "Futuristic Cyberpunk interface. Pitch-black background combined with glowing neon pink and cyan borders. Electronic font. Information blocks displayed like a high-tech HUD."
+            },
+            minimalist: {
+                vn: "Giao diện Minimalist tối giản, sang trọng. Tông màu trắng chủ đạo và xám nhạt. Tập trung vào nghệ thuật chữ (typography) sắc nét, dùng nhiều khoảng trắng để tạo sự thanh lịch, chuẩn học thuật.",
+                en: "Elegant minimalist interface. Predominantly white and light gray tones. Focus on crisp typography, using ample whitespace for a refined, academic look."
+            },
+            terminal: {
+                vn: "Giao diện mang phong cách màn hình console CLI (Command Line Interface). Nền đen tối màu, chữ màu xanh lá cây kiểu ma trận (Matrix). Các tiêu đề có dấu nháy nhấp nháy mang đậm chất kỹ sư phần mềm.",
+                en: "CLI (Command Line Interface) console style. Dark black background, Matrix-style green text. Headers feature a blinking cursor, giving it a strong software engineer vibe."
+            },
+            glass: {
+                vn: "Giao diện kính mờ (Glassmorphism) thanh lịch. Nền dùng ảnh dải màu nhạt (pastel gradient). Các thẻ thông tin là các lớp kính bán trong suốt, có đổ bóng mờ và viền trắng mỏng hiện đại.",
+                en: "Elegant Glassmorphism interface. Pastel gradient background. Information cards are semi-transparent glass layers with soft shadows and modern thin white borders."
+            }
         };
 
         function updateLanguage() {
@@ -367,7 +385,8 @@
         }
 
         window.applyTemplate = function(key) {
-            document.getElementById('ai-prompt').value = promptTexts[key];
+            // ĐÃ NÂNG CẤP: Lấy giá trị tương ứng với ngôn ngữ hiện tại
+            document.getElementById('ai-prompt').value = promptTexts[key][currentLang];
         }
 
         document.getElementById('pdf-upload').addEventListener('change', function() {
