@@ -34,9 +34,16 @@
         html, body { background: var(--void); }
         body { color: var(--text-primary); min-height: 100vh; position: relative; overflow-x: hidden; }
 
+        /* ---- Custom neon scrollbar ---- */
+        * { scrollbar-width: thin; scrollbar-color: var(--neon-violet) var(--void); }
+        ::-webkit-scrollbar { width: 11px; height: 11px; }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan)); border-radius: 20px; border: 2px solid var(--void); background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { box-shadow: 0 0 10px rgba(5,230,245,0.6) inset; }
+
         /* ---- Atmosphere: grid floor, glow orbs, scanline ---- */
         body::before {
-            content: ''; position: fixed; inset: 0;
+            content: ''; position: fixed; inset: -46px 0 0 -46px;
             background-image:
                 linear-gradient(rgba(139, 61, 255, 0.14) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(139, 61, 255, 0.14) 1px, transparent 1px);
@@ -44,13 +51,16 @@
             -webkit-mask-image: radial-gradient(ellipse 75% 55% at 50% 0%, black 30%, transparent 100%);
             mask-image: radial-gradient(ellipse 75% 55% at 50% 0%, black 30%, transparent 100%);
             z-index: 0; pointer-events: none;
+            animation: grid-drift 18s linear infinite;
         }
+        @keyframes grid-drift { from { background-position: 0px 0px, 0px 0px; } to { background-position: 46px 46px, 46px 46px; } }
         body::after {
             content: ''; position: fixed; inset: 0;
             background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px);
             z-index: 30; pointer-events: none; mix-blend-mode: overlay;
         }
-        .bg-orb { position: fixed; width: 460px; height: 460px; border-radius: 50%; filter: blur(130px); opacity: 0.22; z-index: 0; pointer-events: none; animation: float-orb 14s ease-in-out infinite; }
+        .bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; transform: translate(0, 0); transition: transform 0.7s ease-out; }
+        .bg-orb { position: fixed; width: 460px; height: 460px; border-radius: 50%; filter: blur(130px); opacity: 0.22; pointer-events: none; animation: float-orb 14s ease-in-out infinite; }
         .orb-pink { background: var(--neon-pink); top: -160px; left: -120px; }
         .orb-cyan { background: var(--neon-cyan); top: 40vh; right: -140px; animation-delay: -7s; }
         @keyframes float-orb { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(36px,-28px) scale(1.08); } }
@@ -59,8 +69,31 @@
         .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 8px var(--neon-lime); animation: pulse-dot 1.6s ease-in-out infinite; }
         @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
+        /* ---- Glitch-flicker brand text ---- */
+        .glitch-text { position: relative; display: inline-block; }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(100deg, var(--neon-pink) 10%, var(--neon-violet) 50%, var(--neon-cyan) 90%);
+            -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 0;
+        }
+        .glitch-text::before { transform: translate(-2px, 0); animation: glitch-flicker-1 7s infinite; }
+        .glitch-text::after { transform: translate(2px, 0); animation: glitch-flicker-2 7s infinite; }
+        @keyframes glitch-flicker-1 {
+            0%, 94%, 100% { opacity: 0; clip-path: inset(45% 0 45% 0); }
+            95% { opacity: 0.9; clip-path: inset(10% 0 60% 0); }
+            96% { opacity: 0.9; clip-path: inset(70% 0 5% 0); }
+            97% { opacity: 0; }
+        }
+        @keyframes glitch-flicker-2 {
+            0%, 93%, 100% { opacity: 0; clip-path: inset(45% 0 45% 0); }
+            94% { opacity: 0.9; clip-path: inset(60% 0 15% 0); }
+            96% { opacity: 0.9; clip-path: inset(5% 0 80% 0); }
+            98% { opacity: 0; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
-            .bg-orb, .status-dot { animation: none !important; }
+            .bg-orb, .bg-orbs, .status-dot, body::before, .glitch-text::before, .glitch-text::after,
+            nav::after, .project-card, .radar-ring, nav, .workspace-header { animation: none !important; transition: none !important; }
         }
 
         /* ---- Signature HUD corner-bracket frame ---- */
@@ -70,8 +103,11 @@
         .hud-frame::after { bottom: -2px; right: -2px; border-bottom: 3px solid var(--neon-pink); border-right: 3px solid var(--neon-pink); filter: drop-shadow(0 0 6px rgba(255,46,151,0.6)); }
 
         /* ---- TOP NAVIGATION ---- */
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 40px; background: rgba(10,6,18,0.7); backdrop-filter: blur(18px); border-bottom: 1px solid var(--void-border); position: sticky; top: 0; z-index: 50; }
-        nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan)); opacity: 0.75; }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 40px; background: rgba(10,6,18,0.7); backdrop-filter: blur(18px); border-bottom: 1px solid var(--void-border); position: sticky; top: 0; z-index: 50; animation: fade-in-down 0.6s ease both; }
+        @keyframes fade-in-down { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan), var(--neon-pink)); background-size: 300% 100%; opacity: 0.8; animation: sweep-line 6s linear infinite; }
+        @keyframes sweep-line { from { background-position: 0% 0; } to { background-position: -300% 0; } }
         .brand { position: relative; font-family: var(--font-display); font-size: 24px; font-weight: 800; letter-spacing: 1px; background: linear-gradient(100deg, var(--neon-pink), var(--neon-violet) 50%, var(--neon-cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 10px rgba(255,46,151,0.3)); }
         .nav-controls { display: flex; align-items: center; gap: 14px; }
         .search-bar { position: relative; }
@@ -87,21 +123,34 @@
 
         /* ---- MAIN WORKSPACE ---- */
         .workspace { max-width: 1200px; margin: 44px auto; padding: 0 24px; position: relative; z-index: 1; }
-        .workspace-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+        .workspace-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; animation: fade-in-up 0.6s ease 0.1s both; }
         .section-tag { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px; color: var(--neon-lime); text-transform: uppercase; margin-bottom: 8px; opacity: 0.9; }
         .workspace-header h1 { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--text-primary); letter-spacing: 0.5px; text-shadow: 0 0 18px rgba(139,61,255,0.35); }
         .user-line { color: var(--text-secondary); margin-top: 8px; font-size: 14px; }
-        .btn-create { background: linear-gradient(100deg, var(--neon-pink), var(--neon-violet) 50%, var(--neon-cyan)); background-size: 200% 100%; background-position: 0% 0%; color: #0a0612; padding: 13px 26px; border-radius: 6px; font-weight: 700; border: none; cursor: pointer; transition: 0.25s; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-body); box-shadow: 0 0 20px rgba(255,46,151,0.3), 0 0 20px rgba(5,230,245,0.2); }
+        .btn-create { position: relative; overflow: hidden; background: linear-gradient(100deg, var(--neon-pink), var(--neon-violet) 50%, var(--neon-cyan)); background-size: 200% 100%; background-position: 0% 0%; color: #0a0612; padding: 13px 26px; border-radius: 6px; font-weight: 700; border: none; cursor: pointer; transition: 0.25s; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-body); box-shadow: 0 0 20px rgba(255,46,151,0.3), 0 0 20px rgba(5,230,245,0.2); }
         .btn-create:hover { background-position: 100% 0%; transform: translateY(-2px); box-shadow: 0 0 28px rgba(255,46,151,0.45), 0 0 28px rgba(5,230,245,0.35); }
+        .btn-create::after { content: ''; position: absolute; top: 0; left: -75%; width: 45%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent); transform: skewX(-20deg); transition: left 0.6s ease; }
+        .btn-create:hover::after { left: 130%; }
 
         /* ---- PROJECT GRID & CARDS ---- */
-        .empty-state { text-align: center; padding: 70px 20px; background: rgba(21,11,38,0.4); border-radius: 8px; border: 1px dashed var(--void-border); margin-top: 20px; }
+        .empty-state { position: relative; overflow: hidden; text-align: center; padding: 70px 20px; background: rgba(21,11,38,0.4); border-radius: 8px; border: 1px dashed var(--void-border); margin-top: 20px; }
+        .empty-state i, .empty-state h2, .empty-state p { position: relative; z-index: 1; }
         .empty-state i { font-size: 56px; color: var(--neon-violet); margin-bottom: 20px; filter: drop-shadow(0 0 14px rgba(139,61,255,0.5)); }
         .empty-state h2 { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); letter-spacing: 0.5px; }
+        .radar-ring { position: absolute; top: 50%; left: 50%; width: 260px; height: 260px; margin: -130px 0 0 -130px; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0%, rgba(5,230,245,0.16) 10%, transparent 22%); animation: radar-spin 5s linear infinite; pointer-events: none; z-index: 0; }
+        @keyframes radar-spin { to { transform: rotate(360deg); } }
 
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; display: none; }
-        .project-card { background: rgba(21,11,38,0.5); backdrop-filter: blur(10px); border: 1px solid var(--void-border); border-radius: 8px; padding: 22px; transition: 0.3s; position: relative; }
-        .project-card:hover { transform: translateY(-6px); border-color: var(--neon-cyan); box-shadow: 0 16px 34px rgba(0,0,0,0.4), 0 0 26px rgba(5,230,245,0.2); }
+        .project-card {
+            --rx: 0deg; --ry: 0deg; --ty: 0px;
+            background: rgba(21,11,38,0.5); backdrop-filter: blur(10px); border: 1px solid var(--void-border); border-radius: 8px; padding: 22px;
+            transition: transform 0.15s ease-out, border-color 0.3s ease, box-shadow 0.3s ease; position: relative;
+            transform: perspective(800px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--ty));
+            opacity: 0;
+            animation: card-in 0.5s ease forwards;
+        }
+        .project-card:hover { --ty: -6px; border-color: var(--neon-cyan); box-shadow: 0 16px 34px rgba(0,0,0,0.4), 0 0 26px rgba(5,230,245,0.2); }
+        @keyframes card-in { from { opacity: 0; transform: perspective(800px) translateY(18px); } to { opacity: 1; transform: perspective(800px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--ty)); } }
         .project-card h3 { font-size: 17px; margin-bottom: 8px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 30px; font-weight: 700; }
         .project-card p { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); margin-bottom: 20px; letter-spacing: 0.3px; }
         .card-actions { display: flex; gap: 10px; }
@@ -142,6 +191,9 @@
         .status-area { text-align: center; display: none; padding: 24px 0; }
         .spinner { display: inline-block; width: 34px; height: 34px; border: 3px solid rgba(139,61,255,0.2); border-radius: 50%; border-top-color: var(--neon-cyan); border-right-color: var(--neon-pink); animation: spin 0.9s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .boot-log { font-family: var(--font-mono); font-size: 12px; color: var(--neon-lime); margin-top: 16px; letter-spacing: 0.4px; min-height: 16px; }
+        .boot-log:not(:empty)::after { content: '_'; animation: blink 1s steps(1) infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
         @media (max-width: 720px) {
             nav { flex-wrap: wrap; gap: 12px; padding: 14px 20px; }
@@ -154,12 +206,14 @@
 </head>
 <body>
 
-    <div class="bg-orb orb-pink"></div>
-    <div class="bg-orb orb-cyan"></div>
+    <div class="bg-orbs" id="bg-orbs">
+        <div class="bg-orb orb-pink"></div>
+        <div class="bg-orb orb-cyan"></div>
+    </div>
     <div class="sys-status"><span class="status-dot"></span>System Online</div>
 
     <nav>
-        <div class="brand">CloudResume</div>
+        <div class="brand glitch-text" data-text="CloudResume">CloudResume</div>
         <div class="nav-controls">
             <div class="search-bar">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -181,6 +235,7 @@
         </div>
 
         <div id="empty-state" class="empty-state hud-frame">
+            <div class="radar-ring"></div>
             <i class="fa-solid fa-folder-open"></i>
             <h2 data-i18n="empty_title">No portfolios yet!</h2>
             <p data-i18n="empty_desc" style="color: var(--text-secondary); margin-top: 10px;">Click 'Create New' to generate your first stunning website.</p>
@@ -234,6 +289,7 @@
                 <div class="spinner"></div>
                 <h3 style="margin: 15px 0 5px; color: var(--neon-cyan); font-family: var(--font-display); font-size: 15px; letter-spacing: 1px;" data-i18n="msg_building">Building your website...</h3>
                 <p style="color: var(--text-secondary); font-size: 14px;" data-i18n="msg_wait">Please wait. Claude is analyzing your CV and generating UI.</p>
+                <p id="boot-log" class="boot-log"></p>
             </div>
         </div>
     </div>
@@ -256,6 +312,19 @@
             localStorage.clear();
             window.location.href = REDIRECT_URI;
         });
+
+        // ==========================================
+        // HIỆU ỨNG PARALLAX CHO ĐỐM SÁNG NỀN (theo con trỏ chuột)
+        // ==========================================
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!prefersReducedMotion) {
+            const bgOrbs = document.getElementById('bg-orbs');
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 26;
+                const y = (e.clientY / window.innerHeight - 0.5) * 26;
+                if (bgOrbs) bgOrbs.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        }
 
         // ==========================================
         // QUẢN LÝ NGÔN NGỮ (LANG)
@@ -373,10 +442,10 @@
             } else {
                 emptyState.style.display = 'none';
                 grid.style.display = 'grid';
-                filtered.forEach(p => {
+                filtered.forEach((p, i) => {
                     const viewText = translations[currentLang]['btn_view'];
                     const card = `
-                        <div class="project-card hud-frame">
+                        <div class="project-card hud-frame" style="animation-delay: ${i * 0.06}s">
                             <button class="btn-delete" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button>
                             <h3>${p.name}</h3>
                             <p><i class="fa-regular fa-clock"></i> ${p.date}</p>
@@ -387,7 +456,28 @@
                     `;
                     grid.innerHTML += card;
                 });
+                attachCardTilt();
             }
+        }
+
+        // ==========================================
+        // HIỆU ỨNG NGHIÊNG 3D CHO PROJECT CARD (theo con trỏ chuột)
+        // ==========================================
+        function attachCardTilt() {
+            if (prefersReducedMotion) return;
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width - 0.5;
+                    const y = (e.clientY - rect.top) / rect.height - 0.5;
+                    card.style.setProperty('--ry', `${(x * 8).toFixed(2)}deg`);
+                    card.style.setProperty('--rx', `${(-y * 8).toFixed(2)}deg`);
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.setProperty('--rx', '0deg');
+                    card.style.setProperty('--ry', '0deg');
+                });
+            });
         }
 
         document.getElementById('search-input').addEventListener('input', (e) => {
@@ -429,6 +519,31 @@
         }
 
         // ==========================================
+        // TICKER TRẠNG THÁI (BOOT LOG) KHI ĐANG TẠO WEBSITE
+        // ==========================================
+        const bootMessages = {
+            en: ["Parsing CV structure...", "Extracting skills & experience...", "Selecting layout blueprint...", "Compiling neon assets...", "Rendering components...", "Deploying to the edge..."],
+            vn: ["Đang phân tích cấu trúc CV...", "Trích xuất kỹ năng & kinh nghiệm...", "Chọn bố cục giao diện...", "Biên dịch tài nguyên đồ họa...", "Dựng các thành phần giao diện...", "Đang triển khai lên máy chủ..."]
+        };
+        let bootInterval = null;
+        function startBootLog() {
+            const el = document.getElementById('boot-log');
+            if (!el) return;
+            let i = 0;
+            el.innerText = bootMessages[currentLang][0];
+            clearInterval(bootInterval);
+            bootInterval = setInterval(() => {
+                i = (i + 1) % bootMessages[currentLang].length;
+                el.innerText = bootMessages[currentLang][i];
+            }, 1700);
+        }
+        function stopBootLog() {
+            clearInterval(bootInterval);
+            const el = document.getElementById('boot-log');
+            if (el) el.innerText = '';
+        }
+
+        // ==========================================
         // LOGIC TẠO MỚI DỰ ÁN (MODAL & API CALL)
         // ==========================================
         window.openModal = function() {
@@ -439,10 +554,12 @@
             document.getElementById('ai-prompt').value = '';
             document.getElementById('pdf-upload').value = '';
             document.getElementById('file-name-display').style.display = 'none';
+            stopBootLog();
         }
 
         window.closeModal = function() {
             document.getElementById('create-modal').classList.remove('active');
+            stopBootLog();
         }
 
         window.applyTemplate = function(key) {
@@ -470,6 +587,7 @@
             // Chuyển sang giao diện Loading
             document.getElementById('form-content').style.display = 'none';
             document.getElementById('loading-state').style.display = 'block';
+            startBootLog();
 
             try {
                 // 1. Lấy URL tải lên từ API Gateway
@@ -503,9 +621,11 @@
 
                 // 4. ĐỒNG BỘ DỮ LIỆU TỪ DYNAMODB
                 await loadProjectsFromDB();
+                stopBootLog();
                 closeModal();
 
             } catch (error) {
+                stopBootLog();
                 alert("Lỗi: " + error.message);
                 document.getElementById('form-content').style.display = 'block';
                 document.getElementById('loading-state').style.display = 'none';

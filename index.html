@@ -39,9 +39,16 @@
             min-height: 100vh; position: relative; overflow-x: hidden;
         }
 
+        /* ---- Custom neon scrollbar ---- */
+        * { scrollbar-width: thin; scrollbar-color: var(--neon-violet) var(--void); }
+        ::-webkit-scrollbar { width: 11px; height: 11px; }
+        ::-webkit-scrollbar-track { background: var(--void); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan)); border-radius: 20px; border: 2px solid var(--void); background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { box-shadow: 0 0 10px rgba(5,230,245,0.6) inset; }
+
         /* ---- Atmosphere: grid floor, glow orbs, scanline ---- */
         body::before {
-            content: ''; position: fixed; inset: 0;
+            content: ''; position: fixed; inset: -46px 0 0 -46px;
             background-image:
                 linear-gradient(rgba(139, 61, 255, 0.14) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(139, 61, 255, 0.14) 1px, transparent 1px);
@@ -49,13 +56,16 @@
             -webkit-mask-image: radial-gradient(ellipse 75% 55% at 50% 25%, black 30%, transparent 100%);
             mask-image: radial-gradient(ellipse 75% 55% at 50% 25%, black 30%, transparent 100%);
             z-index: -3; pointer-events: none;
+            animation: grid-drift 18s linear infinite;
         }
+        @keyframes grid-drift { from { background-position: 0px 0px, 0px 0px; } to { background-position: 46px 46px, 46px 46px; } }
         body::after {
             content: ''; position: fixed; inset: 0;
             background: repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px);
             z-index: 30; pointer-events: none; mix-blend-mode: overlay;
         }
-        .bg-orb { position: fixed; width: 480px; height: 480px; border-radius: 50%; filter: blur(130px); opacity: 0.32; z-index: -2; pointer-events: none; animation: float-orb 14s ease-in-out infinite; }
+        .bg-orbs { position: fixed; inset: 0; z-index: -2; pointer-events: none; transform: translate(0, 0); transition: transform 0.7s ease-out; }
+        .bg-orb { position: fixed; width: 480px; height: 480px; border-radius: 50%; filter: blur(130px); opacity: 0.32; pointer-events: none; animation: float-orb 14s ease-in-out infinite; }
         .orb-pink { background: var(--neon-pink); top: -160px; left: -120px; }
         .orb-cyan { background: var(--neon-cyan); bottom: -160px; right: -120px; animation-delay: -7s; }
         @keyframes float-orb { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(36px,-28px) scale(1.08); } }
@@ -64,8 +74,32 @@
         .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 8px var(--neon-lime); animation: pulse-dot 1.6s ease-in-out infinite; }
         @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
+        /* ---- Glitch-flicker brand text ---- */
+        .glitch-text { position: relative; display: inline-block; }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(100deg, var(--neon-pink) 10%, var(--neon-violet) 50%, var(--neon-cyan) 90%);
+            -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 0;
+        }
+        .glitch-text::before { transform: translate(-2px, 0); animation: glitch-flicker-1 7s infinite; }
+        .glitch-text::after { transform: translate(2px, 0); animation: glitch-flicker-2 7s infinite; }
+        @keyframes glitch-flicker-1 {
+            0%, 94%, 100% { opacity: 0; clip-path: inset(45% 0 45% 0); }
+            95% { opacity: 0.9; clip-path: inset(10% 0 60% 0); }
+            96% { opacity: 0.9; clip-path: inset(70% 0 5% 0); }
+            97% { opacity: 0; }
+        }
+        @keyframes glitch-flicker-2 {
+            0%, 93%, 100% { opacity: 0; clip-path: inset(45% 0 45% 0); }
+            94% { opacity: 0.9; clip-path: inset(60% 0 15% 0); }
+            96% { opacity: 0.9; clip-path: inset(5% 0 80% 0); }
+            98% { opacity: 0; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
-            .bg-orb, .status-dot, .brand-tag::after { animation: none !important; }
+            .bg-orb, .bg-orbs, .status-dot, .brand-tag::after, body::before,
+            .glitch-text::before, .glitch-text::after, .brand-section, .auth-section,
+            .form-in, .brand-section::after { animation: none !important; transition: none !important; }
         }
 
         .top-controls { position: absolute; top: 24px; right: 24px; display: flex; gap: 10px; z-index: 10; }
@@ -80,7 +114,11 @@
 
         .container { display: flex; max-width: 1040px; width: 100%; padding: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; position: relative; z-index: 1; }
 
-        .brand-section { width: 50%; padding-right: 40px; }
+        .brand-section { width: 50%; padding-right: 40px; animation: fade-in-left 0.7s ease both; }
+        .brand-section::after { content: ''; display: block; margin-top: 30px; height: 2px; width: 140px; border-radius: 2px; background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan), var(--neon-pink)); background-size: 300% 100%; animation: sweep-line 6s linear infinite; }
+        @keyframes sweep-line { from { background-position: 0% 0; } to { background-position: -300% 0; } }
+        @keyframes fade-in-left { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         .brand-tag { display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 3px; color: var(--neon-lime); text-transform: uppercase; margin-bottom: 16px; opacity: 0.9; }
         .brand-tag::after { content: '_'; animation: blink 1s steps(1) infinite; }
         @keyframes blink { 50% { opacity: 0; } }
@@ -103,7 +141,12 @@
             width: 430px; background: rgba(21,11,38,0.55); backdrop-filter: blur(18px);
             border: 1px solid var(--void-border); border-radius: 6px; padding: 30px 32px;
             box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 40px rgba(139,61,255,0.12);
+            animation: fade-in-up 0.7s ease 0.15s both;
         }
+
+        /* ---- Form switch transition (login / register / verify) ---- */
+        .form-in { animation: form-fade-in 0.4s ease; }
+        @keyframes form-fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .form-group { margin-bottom: 14px; }
         .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
@@ -129,12 +172,15 @@
 
         .btn { width: 100%; padding: 14px; border: none; border-radius: 4px; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; transition: all 0.25s ease; font-family: var(--font-body); }
         .btn-login {
+            position: relative; overflow: hidden;
             background: linear-gradient(100deg, var(--neon-pink), var(--neon-violet) 50%, var(--neon-cyan));
             background-size: 200% 100%; background-position: 0% 0%;
             color: #0a0612; margin-bottom: 18px;
             box-shadow: 0 0 22px rgba(255,46,151,0.3), 0 0 22px rgba(5,230,245,0.2);
         }
         .btn-login:hover { background-position: 100% 0%; box-shadow: 0 0 30px rgba(255,46,151,0.45), 0 0 30px rgba(5,230,245,0.35); transform: translateY(-2px); }
+        .btn-login::after { content: ''; position: absolute; top: 0; left: -75%; width: 45%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent); transform: skewX(-20deg); transition: left 0.6s ease; }
+        .btn-login:hover::after { left: 130%; }
 
         .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--void-border) 50%, transparent); margin: 22px 0; border: none; }
 
@@ -161,8 +207,10 @@
 </head>
 <body>
 
-<div class="bg-orb orb-pink"></div>
-<div class="bg-orb orb-cyan"></div>
+<div class="bg-orbs" id="bg-orbs">
+    <div class="bg-orb orb-pink"></div>
+    <div class="bg-orb orb-cyan"></div>
+</div>
 <div class="sys-status"><span class="status-dot"></span>System Online</div>
 
 <div class="top-controls">
@@ -174,14 +222,14 @@
 <div class="container">
     <div class="brand-section">
         <span class="brand-tag">// Serverless Identity Network</span>
-        <h1>CloudResume</h1>
+        <h1 class="glitch-text" data-text="CloudResume">CloudResume</h1>
         <p data-i18n="subtitle">Create and manage your own Serverless portfolio on the AWS platform.</p>
     </div>
 
     <div class="auth-section hud-frame">
         <div id="error-msg"></div>
 
-        <div id="login-form">
+        <div id="login-form" class="form-in">
             <div class="form-group">
                 <input type="email" id="login-email" data-i18n-placeholder="pl_email" placeholder="Your Email">
             </div>
@@ -265,6 +313,19 @@
     const currentYear = new Date().getFullYear();
     for(let i=currentYear; i>=1950; i--) yearSelect.innerHTML += `<option value="${i}">${i}</option>`;
     yearSelect.value = "2000"; 
+
+    // ==========================================
+    // HIỆU ỨNG PARALLAX CHO ĐỐM SÁNG NỀN (theo con trỏ chuột)
+    // ==========================================
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion) {
+        const bgOrbs = document.getElementById('bg-orbs');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 26;
+            const y = (e.clientY / window.innerHeight - 0.5) * 26;
+            if (bgOrbs) bgOrbs.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    }
 
     // ==========================================
     // LOGIC ẨN/HIỆN MẬT KHẨU
@@ -411,6 +472,12 @@
         document.getElementById('login-form').style.display = formName === 'login' ? 'block' : 'none';
         document.getElementById('register-form').style.display = formName === 'register' ? 'block' : 'none';
         document.getElementById('verify-form').style.display = formName === 'verify' ? 'block' : 'none';
+
+        // Phát lại hiệu ứng chuyển động mờ dần khi đổi form
+        const activeEl = document.getElementById(formName + '-form');
+        activeEl.classList.remove('form-in');
+        void activeEl.offsetWidth; // ép trình duyệt reflow để animation chạy lại
+        activeEl.classList.add('form-in');
     }
 
     // --- HÀM ĐĂNG NHẬP ---
