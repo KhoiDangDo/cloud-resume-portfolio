@@ -395,12 +395,37 @@
             renderGrid(e.target.value);
         });
 
-        // Xóa CV khỏi giao diện (cần thêm API để xóa DB thật nếu muốn)
-        window.deleteProject = function(id) {
+        // ==========================================
+        // CẬP NHẬT MỚI BƯỚC 3: XÓA DỰ ÁN HOÀN TOÀN TỪ API
+        // ==========================================
+        window.deleteProject = async function(id) {
             const msg = translations[currentLang]['confirm_del'];
             if(confirm(msg)) {
-                projects = projects.filter(p => p.id !== id);
-                renderGrid(document.getElementById('search-input').value);
+                const username = localStorage.getItem('logged_username');
+                if (!username) return;
+
+                // Đường link gọi đến Route DELETE /projects
+                const apiDeleteUrl = `https://qgczs1jilf.execute-api.ap-southeast-2.amazonaws.com/projects?username=${username}&project_id=${id}`;
+
+                try {
+                    // 1. Xóa ngay trên giao diện cho người dùng cảm giác phản hồi nhanh (Optimistic Update)
+                    projects = projects.filter(p => p.id !== id);
+                    renderGrid(document.getElementById('search-input').value);
+
+                    // 2. Gọi API yêu cầu AWS xóa vĩnh viễn dữ liệu trên DynamoDB và file ở S3
+                    const response = await fetch(apiDeleteUrl, { method: 'DELETE' });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || "Không thể xóa dự án trên Cloud");
+                    }
+                } catch (error) {
+                    console.error("Lỗi xóa dự án:", error);
+                    alert("Đã xảy ra lỗi khi xóa: " + error.message);
+                    
+                    // Nếu lỗi mạng hoặc AWS xóa thất bại, gọi lại API để phục hồi hiển thị CV đó trên màn hình
+                    loadProjectsFromDB();
+                }
             }
         }
 
