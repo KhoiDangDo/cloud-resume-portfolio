@@ -265,7 +265,7 @@
             en: {
                 pl_search: "Search projects...",
                 ws_title: "My Portfolios",
-                ws_user: "User", // ĐÃ BỔ SUNG
+                ws_user: "User",
                 btn_create: "Create New",
                 empty_title: "No portfolios yet!",
                 empty_desc: "Click 'Create New' to generate your first stunning website.",
@@ -285,7 +285,7 @@
             vn: {
                 pl_search: "Tìm kiếm dự án...",
                 ws_title: "Hồ sơ của tôi",
-                ws_user: "Người dùng", // ĐÃ BỔ SUNG
+                ws_user: "Người dùng",
                 btn_create: "Tạo mới",
                 empty_title: "Chưa có hồ sơ nào!",
                 empty_desc: "Nhấn 'Tạo mới' và tải lên CV PDF để bắt đầu.",
@@ -304,7 +304,6 @@
             }
         };
 
-        // ĐÃ NÂNG CẤP THÀNH ĐỐI TƯỢNG ĐA NGÔN NGỮ
         const promptTexts = {
             rainbow: {
                 vn: "Giao diện cầu vồng rực rỡ, sử dụng các dải màu gradient mượt mà cho viền và tiêu đề. Thiết kế hiện đại, thẻ card trong suốt mờ ảo (glassmorphism).",
@@ -447,7 +446,6 @@
         }
 
         window.applyTemplate = function(key) {
-            // ĐÃ NÂNG CẤP: Lấy giá trị tương ứng với ngôn ngữ hiện tại
             document.getElementById('ai-prompt').value = promptTexts[key][currentLang];
         }
 
@@ -495,7 +493,8 @@
                         username: loggedUser,
                         project_id: dataUrl.project_id,
                         file_key: dataUrl.file_key,
-                        prompt: prompt
+                        prompt: prompt,
+                        project_name: name // ĐÃ SỬA: Bổ sung gửi project_name lên API
                     })
                 });
 
@@ -531,7 +530,8 @@
                         const dateObj = new Date(item.created_at);
                         return {
                             id: item.project_id,
-                            name: "CV Project - " + item.project_id.substring(0, 5).toUpperCase(),
+                            // ĐÃ SỬA: Ưu tiên lấy project_name từ Database, nếu không có thì dùng tên mặc định
+                            name: item.project_name || ("CV Project - " + item.project_id.substring(0, 5).toUpperCase()),
                             date: dateObj.toLocaleDateString('vi-VN') + " " + dateObj.toLocaleTimeString('vi-VN'),
                             url: item.public_url
                         };
