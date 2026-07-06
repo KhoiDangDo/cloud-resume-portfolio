@@ -93,7 +93,8 @@
 
         @media (prefers-reduced-motion: reduce) {
             .bg-orb, .bg-orbs, .status-dot, body::before, .glitch-text::before, .glitch-text::after,
-            nav::after, .project-card, .radar-ring, nav, .workspace-header { animation: none !important; transition: none !important; }
+            nav::after, .project-card, .radar-ring, nav, .workspace-header,
+            .circuit-line, .circuit-node, .toast, .ripple-burst { animation: none !important; transition: none !important; }
         }
 
         /* ---- Signature HUD corner-bracket frame ---- */
@@ -195,6 +196,52 @@
         .boot-log:not(:empty)::after { content: '_'; animation: blink 1s steps(1) infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
+        /* ---- Ambient data-mote particle field ---- */
+        .particle-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.55; }
+
+        /* ---- Circuit-trace corner decoration ---- */
+        .circuit-deco { position: fixed; bottom: -10px; right: -10px; width: 180px; height: 180px; z-index: 0; opacity: 0.32; pointer-events: none; }
+        .circuit-line { fill: none; stroke: var(--neon-cyan); stroke-width: 1.2; stroke-dasharray: 7 6; animation: circuit-flow 4s linear infinite; }
+        .circuit-node { fill: var(--neon-pink); filter: drop-shadow(0 0 4px var(--neon-pink)); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes circuit-flow { to { stroke-dashoffset: -130; } }
+
+        /* ---- Live HUD clock ---- */
+        #hud-clock { color: var(--neon-lime); font-weight: 600; }
+        .sys-sep { opacity: 0.4; margin: 0 1px; }
+
+        /* ---- Click ripple burst ---- */
+        .ripple-burst { position: fixed; width: 120px; height: 120px; border-radius: 50%; pointer-events: none; z-index: 400; border: 2px solid var(--neon-cyan); transform: translate(-50%, -50%) scale(0); opacity: 0.85; animation: ripple-expand 0.6s ease-out forwards; }
+        @keyframes ripple-expand { to { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
+
+        /* ---- Toast notifications ---- */
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 500; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: 340px; }
+        .toast {
+            pointer-events: auto; min-width: 260px; background: rgba(21,11,38,0.92); backdrop-filter: blur(14px);
+            border: 1px solid var(--void-border); border-left: 3px solid var(--neon-cyan); border-radius: 6px;
+            padding: 13px 14px; font-size: 13px; color: var(--text-primary);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(5,230,245,0.15);
+            display: flex; align-items: flex-start; gap: 10px; animation: toast-in 0.35s ease;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--neon-lime); }
+        .toast .toast-icon { font-size: 15px; margin-top: 1px; color: var(--neon-cyan); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.success .toast-icon { color: var(--neon-lime); }
+        .toast span.toast-msg { flex: 1; line-height: 1.4; }
+        .toast .toast-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 15px; line-height: 1; }
+        .toast .toast-close:hover { color: var(--text-primary); }
+        .toast.hide { animation: toast-out 0.3s ease forwards; }
+        @keyframes toast-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes toast-out { to { opacity: 0; transform: translateX(40px); } }
+
+        /* ---- Custom confirm modal ---- */
+        .confirm-box { max-width: 420px; text-align: center; }
+        .confirm-box i { font-size: 36px; color: var(--danger); margin-bottom: 14px; filter: drop-shadow(0 0 10px rgba(255,56,96,0.5)); }
+        .confirm-box p { color: var(--text-primary); font-size: 15px; margin-bottom: 22px; line-height: 1.5; }
+        .confirm-actions { display: flex; gap: 12px; }
+        .confirm-actions button { flex: 1; justify-content: center; }
+        .btn-danger-solid { background: linear-gradient(100deg, var(--danger), var(--neon-pink) 85%); }
+
         @media (max-width: 720px) {
             nav { flex-wrap: wrap; gap: 12px; padding: 14px 20px; }
             .search-bar, .search-bar input { width: 100%; }
@@ -206,11 +253,22 @@
 </head>
 <body>
 
+    <canvas class="particle-canvas" id="particle-canvas"></canvas>
+
+    <svg class="circuit-deco" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path class="circuit-line" d="M10 190 L10 120 L60 120 L60 70 L130 70 L130 20 L190 20" />
+        <circle class="circuit-node" cx="10" cy="190" r="3" />
+        <circle class="circuit-node" cx="60" cy="120" r="3" />
+        <circle class="circuit-node" cx="130" cy="70" r="3" />
+    </svg>
+
     <div class="bg-orbs" id="bg-orbs">
         <div class="bg-orb orb-pink"></div>
         <div class="bg-orb orb-cyan"></div>
     </div>
-    <div class="sys-status"><span class="status-dot"></span>System Online</div>
+    <div class="sys-status"><span class="status-dot"></span><span id="hud-clock">00:00:00</span><span class="sys-sep">//</span>System Online</div>
+
+    <div class="toast-container" id="toast-container"></div>
 
     <nav>
         <div class="brand glitch-text" data-text="CloudResume">CloudResume</div>
@@ -294,6 +352,17 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal-content hud-frame confirm-box">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p id="confirm-message"></p>
+            <div class="confirm-actions">
+                <button id="confirm-cancel" class="icon-btn" data-i18n="confirm_cancel">Cancel</button>
+                <button id="confirm-ok" class="btn-create btn-danger-solid" data-i18n="confirm_delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==========================================
         // QUẢN LÝ TÀI KHOẢN (COGNITO CHECK)
@@ -327,6 +396,141 @@
         }
 
         // ==========================================
+        // TRƯỜNG HẠT DỮ LIỆU TRÔI NỔI (AMBIENT PARTICLE FIELD)
+        // ==========================================
+        (function initParticles() {
+            const canvas = document.getElementById('particle-canvas');
+            if (!canvas || prefersReducedMotion) return;
+            const ctx = canvas.getContext('2d');
+            const COLORS = ['255,46,151', '5,230,245', '139,61,255'];
+            let particles = [];
+
+            function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            function createParticles() {
+                const count = Math.min(55, Math.floor((window.innerWidth * window.innerHeight) / 24000));
+                particles = Array.from({ length: count }, () => ({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 1.6 + 0.6,
+                    speed: Math.random() * 0.3 + 0.08,
+                    drift: (Math.random() - 0.5) * 0.2,
+                    alpha: Math.random() * 0.5 + 0.15,
+                    color: COLORS[Math.floor(Math.random() * COLORS.length)]
+                }));
+            }
+            function tick() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y -= p.speed;
+                    p.x += p.drift;
+                    if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+                    if (p.x < -10) p.x = canvas.width + 10;
+                    if (p.x > canvas.width + 10) p.x = -10;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(tick);
+            }
+            resize(); createParticles(); tick();
+            window.addEventListener('resize', () => { resize(); createParticles(); });
+        })();
+
+        // ==========================================
+        // ĐỒNG HỒ HUD SỐNG (LIVE HUD CLOCK)
+        // ==========================================
+        function updateHudClock() {
+            const el = document.getElementById('hud-clock');
+            if (el) el.textContent = new Date().toLocaleTimeString('en-GB');
+        }
+        updateHudClock();
+        setInterval(updateHudClock, 1000);
+
+        // ==========================================
+        // HIỆU ỨNG GÕ CHỮ (TYPEWRITER) CHO DÒNG EYEBROW
+        // ==========================================
+        function typewriter(el, text, speed = 26) {
+            if (!el) return;
+            if (prefersReducedMotion) { el.textContent = text; return; }
+            el.textContent = '';
+            let i = 0;
+            const timer = setInterval(() => {
+                el.textContent += text.charAt(i);
+                i++;
+                if (i >= text.length) clearInterval(timer);
+            }, speed);
+        }
+        typewriter(document.querySelector('.section-tag'), '// Control Panel');
+
+        // ==========================================
+        // HIỆU ỨNG GỢN SÓNG NĂNG LƯỢNG KHI NHẤN NÚT (RIPPLE BURST)
+        // ==========================================
+        function spawnRipple(x, y, color) {
+            const el = document.createElement('div');
+            el.className = 'ripple-burst';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            if (color) el.style.borderColor = color;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 650);
+        }
+        if (!prefersReducedMotion) {
+            document.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-create, #confirm-ok')) {
+                    spawnRipple(e.clientX, e.clientY);
+                }
+            });
+        }
+
+        // ==========================================
+        // THÔNG BÁO DẠNG TOAST (THAY THẾ alert() MẶC ĐỊNH)
+        // ==========================================
+        function showToast(message, type = 'info', duration = 4200) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const iconClass = type === 'error' ? 'fa-triangle-exclamation' : (type === 'success' ? 'fa-circle-check' : 'fa-circle-info');
+            const icon = document.createElement('i');
+            icon.className = `fa-solid ${iconClass} toast-icon`;
+            const text = document.createElement('span');
+            text.className = 'toast-msg';
+            text.textContent = message;
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'toast-close';
+            closeBtn.innerHTML = '&times;';
+            toast.appendChild(icon); toast.appendChild(text); toast.appendChild(closeBtn);
+            container.appendChild(toast);
+            const remove = () => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 300); };
+            closeBtn.addEventListener('click', remove);
+            setTimeout(remove, duration);
+        }
+
+        // ==========================================
+        // HỘP THOẠI XÁC NHẬN TÙY CHỈNH (THAY THẾ confirm() MẶC ĐỊNH)
+        // ==========================================
+        function customConfirm(message) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('confirm-modal');
+                document.getElementById('confirm-message').textContent = message;
+                modal.classList.add('active');
+                const okBtn = document.getElementById('confirm-ok');
+                const cancelBtn = document.getElementById('confirm-cancel');
+                const cleanup = (result) => {
+                    modal.classList.remove('active');
+                    okBtn.removeEventListener('click', onOk);
+                    cancelBtn.removeEventListener('click', onCancel);
+                    resolve(result);
+                };
+                const onOk = () => cleanup(true);
+                const onCancel = () => cleanup(false);
+                okBtn.addEventListener('click', onOk);
+                cancelBtn.addEventListener('click', onCancel);
+            });
+        }
+
+        // ==========================================
         // QUẢN LÝ NGÔN NGỮ (LANG)
         // ==========================================
         let currentLang = 'en';
@@ -349,7 +553,13 @@
                 msg_building: "Building your website...",
                 msg_wait: "Please wait. Claude is analyzing your CV and generating UI.",
                 btn_view: "View Live",
-                confirm_del: "Are you sure you want to permanently delete this portfolio?"
+                confirm_del: "Are you sure you want to permanently delete this portfolio?",
+                confirm_cancel: "Cancel",
+                confirm_delete: "Delete",
+                toast_del_success: "Portfolio deleted successfully.",
+                toast_del_error: "Something went wrong while deleting.",
+                toast_gen_missing: "Please fill in the project name, upload a PDF, and describe your design.",
+                toast_gen_error: "Generation failed: "
             },
             vn: {
                 pl_search: "Tìm kiếm dự án...",
@@ -369,7 +579,13 @@
                 msg_building: "Đang xây dựng website...",
                 msg_wait: "Vui lòng đợi. Claude đang phân tích CV và thiết kế giao diện.",
                 btn_view: "Xem Website",
-                confirm_del: "Bạn có chắc chắn muốn xóa vĩnh viễn hồ sơ này không?"
+                confirm_del: "Bạn có chắc chắn muốn xóa vĩnh viễn hồ sơ này không?",
+                confirm_cancel: "Hủy",
+                confirm_delete: "Xóa",
+                toast_del_success: "Đã xóa hồ sơ thành công.",
+                toast_del_error: "Đã xảy ra lỗi khi xóa hồ sơ.",
+                toast_gen_missing: "Vui lòng điền tên dự án, tải lên PDF và mô tả thiết kế.",
+                toast_gen_error: "Tạo website thất bại: "
             }
         };
 
@@ -489,7 +705,7 @@
         // ==========================================
         window.deleteProject = async function(id) {
             const msg = translations[currentLang]['confirm_del'];
-            if(confirm(msg)) {
+            if (await customConfirm(msg)) {
                 const username = localStorage.getItem('logged_username');
                 if (!username) return;
 
@@ -508,9 +724,10 @@
                         const errorData = await response.json();
                         throw new Error(errorData.error || "Không thể xóa dự án trên Cloud");
                     }
+                    showToast(translations[currentLang]['toast_del_success'], 'success');
                 } catch (error) {
                     console.error("Lỗi xóa dự án:", error);
-                    alert("Đã xảy ra lỗi khi xóa: " + error.message);
+                    showToast(translations[currentLang]['toast_del_error'] + " " + error.message, 'error');
                     
                     // Nếu lỗi mạng hoặc AWS xóa thất bại, gọi lại API để phục hồi hiển thị CV đó trên màn hình
                     loadProjectsFromDB();
@@ -580,7 +797,7 @@
             const prompt = document.getElementById('ai-prompt').value.trim();
 
             if(!name || !file || !prompt) {
-                alert("Vui lòng điền đủ thông tin và tải lên PDF.");
+                showToast(translations[currentLang]['toast_gen_missing'], 'error');
                 return;
             }
 
@@ -623,10 +840,11 @@
                 await loadProjectsFromDB();
                 stopBootLog();
                 closeModal();
+                showToast(translations[currentLang]['btn_generate'] + " ✓", 'success');
 
             } catch (error) {
                 stopBootLog();
-                alert("Lỗi: " + error.message);
+                showToast(translations[currentLang]['toast_gen_error'] + error.message, 'error');
                 document.getElementById('form-content').style.display = 'block';
                 document.getElementById('loading-state').style.display = 'none';
             }

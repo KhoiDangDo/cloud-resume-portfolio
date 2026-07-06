@@ -99,7 +99,7 @@
         @media (prefers-reduced-motion: reduce) {
             .bg-orb, .bg-orbs, .status-dot, .brand-tag::after, body::before,
             .glitch-text::before, .glitch-text::after, .brand-section, .auth-section,
-            .form-in, .brand-section::after { animation: none !important; transition: none !important; }
+            .form-in, .brand-section::after, .circuit-line, .circuit-node, .toast, .ripple-burst { animation: none !important; transition: none !important; }
         }
 
         .top-controls { position: absolute; top: 24px; right: 24px; display: flex; gap: 10px; z-index: 10; }
@@ -197,6 +197,44 @@
 
         #error-msg { background: rgba(255,56,96,0.12); color: #ff9db3; padding: 11px; border-radius: 4px; text-align: center; margin-bottom: 16px; font-size: 13px; display: none; font-weight: 600; border: 1px solid var(--danger); box-shadow: 0 0 16px rgba(255,56,96,0.25); }
 
+        /* ---- Ambient data-mote particle field ---- */
+        .particle-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.6; }
+
+        /* ---- Circuit-trace corner decoration ---- */
+        .circuit-deco { position: fixed; bottom: -10px; right: -10px; width: 180px; height: 180px; z-index: -1; opacity: 0.4; pointer-events: none; }
+        .circuit-line { fill: none; stroke: var(--neon-cyan); stroke-width: 1.2; stroke-dasharray: 7 6; animation: circuit-flow 4s linear infinite; }
+        .circuit-node { fill: var(--neon-pink); filter: drop-shadow(0 0 4px var(--neon-pink)); animation: pulse-dot 2s ease-in-out infinite; }
+        @keyframes circuit-flow { to { stroke-dashoffset: -130; } }
+
+        /* ---- Live HUD clock ---- */
+        #hud-clock { color: var(--neon-lime); font-weight: 600; }
+        .sys-sep { opacity: 0.4; margin: 0 1px; }
+
+        /* ---- Click ripple burst ---- */
+        .ripple-burst { position: fixed; width: 120px; height: 120px; border-radius: 50%; pointer-events: none; z-index: 400; border: 2px solid var(--neon-cyan); transform: translate(-50%, -50%) scale(0); opacity: 0.85; animation: ripple-expand 0.6s ease-out forwards; }
+        @keyframes ripple-expand { to { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
+
+        /* ---- Toast notifications ---- */
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 500; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: 340px; }
+        .toast {
+            pointer-events: auto; min-width: 260px; background: rgba(21,11,38,0.92); backdrop-filter: blur(14px);
+            border: 1px solid var(--void-border); border-left: 3px solid var(--neon-cyan); border-radius: 6px;
+            padding: 13px 14px; font-size: 13px; color: var(--text-primary);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5), 0 0 20px rgba(5,230,245,0.15);
+            display: flex; align-items: flex-start; gap: 10px; animation: toast-in 0.35s ease;
+        }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.success { border-left-color: var(--neon-lime); }
+        .toast .toast-icon { font-size: 15px; margin-top: 1px; color: var(--neon-cyan); }
+        .toast.error .toast-icon { color: var(--danger); }
+        .toast.success .toast-icon { color: var(--neon-lime); }
+        .toast span.toast-msg { flex: 1; line-height: 1.4; }
+        .toast .toast-close { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 15px; line-height: 1; }
+        .toast .toast-close:hover { color: var(--text-primary); }
+        .toast.hide { animation: toast-out 0.3s ease forwards; }
+        @keyframes toast-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes toast-out { to { opacity: 0; transform: translateX(40px); } }
+
         @media (max-width: 768px) {
             .container { flex-direction: column; text-align: center; margin-top: 50px; }
             .brand-section { width: 100%; padding: 0; margin-bottom: 40px; display: flex; flex-direction: column; align-items: center; }
@@ -207,11 +245,22 @@
 </head>
 <body>
 
+<canvas class="particle-canvas" id="particle-canvas"></canvas>
+
+<svg class="circuit-deco" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path class="circuit-line" d="M10 190 L10 120 L60 120 L60 70 L130 70 L130 20 L190 20" />
+    <circle class="circuit-node" cx="10" cy="190" r="3" />
+    <circle class="circuit-node" cx="60" cy="120" r="3" />
+    <circle class="circuit-node" cx="130" cy="70" r="3" />
+</svg>
+
 <div class="bg-orbs" id="bg-orbs">
     <div class="bg-orb orb-pink"></div>
     <div class="bg-orb orb-cyan"></div>
 </div>
-<div class="sys-status"><span class="status-dot"></span>System Online</div>
+<div class="sys-status"><span class="status-dot"></span><span id="hud-clock">00:00:00</span><span class="sys-sep">//</span>System Online</div>
+
+<div class="toast-container" id="toast-container"></div>
 
 <div class="top-controls">
     <button id="lang-toggle" class="top-btn">
@@ -325,6 +374,116 @@
             const y = (e.clientY / window.innerHeight - 0.5) * 26;
             if (bgOrbs) bgOrbs.style.transform = `translate(${x}px, ${y}px)`;
         });
+    }
+
+    // ==========================================
+    // TRƯỜNG HẠT DỮ LIỆU TRÔI NỔI (AMBIENT PARTICLE FIELD)
+    // ==========================================
+    (function initParticles() {
+        const canvas = document.getElementById('particle-canvas');
+        if (!canvas || prefersReducedMotion) return;
+        const ctx = canvas.getContext('2d');
+        const COLORS = ['255,46,151', '5,230,245', '139,61,255'];
+        let particles = [];
+
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        function createParticles() {
+            const count = Math.min(55, Math.floor((window.innerWidth * window.innerHeight) / 24000));
+            particles = Array.from({ length: count }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.6 + 0.6,
+                speed: Math.random() * 0.3 + 0.08,
+                drift: (Math.random() - 0.5) * 0.2,
+                alpha: Math.random() * 0.5 + 0.15,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)]
+            }));
+        }
+        function tick() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.y -= p.speed;
+                p.x += p.drift;
+                if (p.y < -10) { p.y = canvas.height + 10; p.x = Math.random() * canvas.width; }
+                if (p.x < -10) p.x = canvas.width + 10;
+                if (p.x > canvas.width + 10) p.x = -10;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(tick);
+        }
+        resize(); createParticles(); tick();
+        window.addEventListener('resize', () => { resize(); createParticles(); });
+    })();
+
+    // ==========================================
+    // ĐỒNG HỒ HUD SỐNG (LIVE HUD CLOCK)
+    // ==========================================
+    function updateHudClock() {
+        const el = document.getElementById('hud-clock');
+        if (el) el.textContent = new Date().toLocaleTimeString('en-GB');
+    }
+    updateHudClock();
+    setInterval(updateHudClock, 1000);
+
+    // ==========================================
+    // HIỆU ỨNG GÕ CHỮ (TYPEWRITER) CHO DÒNG EYEBROW
+    // ==========================================
+    function typewriter(el, text, speed = 26) {
+        if (!el) return;
+        if (prefersReducedMotion) { el.textContent = text; return; }
+        el.textContent = '';
+        let i = 0;
+        const timer = setInterval(() => {
+            el.textContent += text.charAt(i);
+            i++;
+            if (i >= text.length) clearInterval(timer);
+        }, speed);
+    }
+    typewriter(document.querySelector('.brand-tag'), '// Serverless Identity Network');
+
+    // ==========================================
+    // HIỆU ỨNG GỢN SÓNG NĂNG LƯỢNG KHI NHẤN NÚT (RIPPLE BURST)
+    // ==========================================
+    function spawnRipple(x, y, color) {
+        const el = document.createElement('div');
+        el.className = 'ripple-burst';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        if (color) el.style.borderColor = color;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 650);
+    }
+    if (!prefersReducedMotion) {
+        document.querySelectorAll('.btn-login, .btn-register').forEach(btn => {
+            btn.addEventListener('click', (e) => spawnRipple(e.clientX, e.clientY));
+        });
+    }
+
+    // ==========================================
+    // THÔNG BÁO DẠNG TOAST (THAY THẾ alert() MẶC ĐỊNH)
+    // ==========================================
+    function showToast(message, type = 'info', duration = 4200) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        const iconClass = type === 'error' ? 'fa-triangle-exclamation' : (type === 'success' ? 'fa-circle-check' : 'fa-circle-info');
+        const icon = document.createElement('i');
+        icon.className = `fa-solid ${iconClass} toast-icon`;
+        const text = document.createElement('span');
+        text.className = 'toast-msg';
+        text.textContent = message;
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'toast-close';
+        closeBtn.innerHTML = '&times;';
+        toast.appendChild(icon); toast.appendChild(text); toast.appendChild(closeBtn);
+        container.appendChild(toast);
+        const remove = () => { toast.classList.add('hide'); setTimeout(() => toast.remove(), 300); };
+        closeBtn.addEventListener('click', remove);
+        setTimeout(remove, duration);
     }
 
     // ==========================================
@@ -555,7 +714,7 @@
                 showError(err.message || 'err_code_invalid', !!err.message);
                 return;
             }
-            alert(translations[currentLang]['msg_verify_success']);
+            showToast(translations[currentLang]['msg_verify_success'], 'success');
             toggleForm('login');
         });
     }
