@@ -21,6 +21,7 @@
             --neon-cyan: #05e6f5;
             --neon-violet: #8b3dff;
             --neon-lime: #d4ff3f;
+            --neon-amber: #ffb020;
             --danger: #ff3860;
             --text-primary: #f4eeff;
             --text-secondary: #a996c9;
@@ -68,6 +69,9 @@
         .sys-status { position: fixed; bottom: 18px; left: 22px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; color: var(--text-dim); z-index: 10; display: flex; align-items: center; gap: 7px; text-transform: uppercase; }
         .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 8px var(--neon-lime); animation: pulse-dot 1.6s ease-in-out infinite; }
         @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+        #hud-ping { color: var(--neon-cyan); }
+        .pwr-bar { display: inline-block; width: 34px; height: 7px; background: rgba(139,61,255,0.15); border: 1px solid var(--void-border); border-radius: 2px; overflow: hidden; vertical-align: middle; }
+        .pwr-fill { display: block; height: 100%; width: 70%; background: linear-gradient(90deg, var(--neon-amber), var(--neon-lime)); transition: width 0.5s ease; }
 
         /* ---- Glitch-flicker brand text ---- */
         .glitch-text { position: relative; display: inline-block; }
@@ -94,7 +98,10 @@
         @media (prefers-reduced-motion: reduce) {
             .bg-orb, .bg-orbs, .status-dot, body::before, .glitch-text::before, .glitch-text::after,
             nav::after, .project-card, .radar-ring, nav, .workspace-header,
-            .circuit-line, .circuit-node, .toast, .ripple-burst { animation: none !important; transition: none !important; }
+            .circuit-line, .circuit-node, .toast, .ripple-burst,
+            .brand, .search-beam, .holo-ring, .card-led, .progress-fill,
+            .skyline-canvas, .matrix-rain, .sky-streak, .cursor-reticle { animation: none !important; transition: none !important; }
+            .skyline-canvas, .search-beam, .sky-streak, .cursor-reticle, .matrix-rain { display: none !important; }
         }
 
         /* ---- Signature HUD corner-bracket frame ---- */
@@ -109,7 +116,16 @@
         @keyframes fade-in-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         nav::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan), var(--neon-pink)); background-size: 300% 100%; opacity: 0.8; animation: sweep-line 6s linear infinite; }
         @keyframes sweep-line { from { background-position: 0% 0; } to { background-position: -300% 0; } }
-        .brand { position: relative; font-family: var(--font-display); font-size: 24px; font-weight: 800; letter-spacing: 1px; background: linear-gradient(100deg, var(--neon-pink), var(--neon-violet) 50%, var(--neon-cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 10px rgba(255,46,151,0.3)); }
+        .brand { position: relative; font-family: var(--font-display); font-size: 24px; font-weight: 800; letter-spacing: 1px; background: linear-gradient(100deg, var(--neon-pink), var(--neon-violet) 50%, var(--neon-cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 10px rgba(255,46,151,0.3)); animation: neon-buzz 6s infinite; }
+        @keyframes neon-buzz {
+            0%, 39%, 43%, 78%, 82%, 100% { opacity: 1; filter: drop-shadow(0 0 10px rgba(255,46,151,0.3)); }
+            40% { opacity: 0.4; filter: drop-shadow(0 0 2px rgba(255,46,151,0.1)); }
+            41% { opacity: 1; }
+            42% { opacity: 0.55; }
+            79% { opacity: 0.5; }
+            80% { opacity: 1; }
+            81% { opacity: 0.6; }
+        }
         .nav-controls { display: flex; align-items: center; gap: 14px; }
         .search-bar { position: relative; }
         .search-bar input { padding: 10px 16px 10px 36px; border-radius: 20px; border: 1px solid var(--void-border); background: rgba(10,6,18,0.6); color: var(--text-primary); width: 240px; outline: none; transition: 0.25s; font-size: 14px; font-family: var(--font-body); }
@@ -140,20 +156,30 @@
         .empty-state h2 { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); letter-spacing: 0.5px; }
         .radar-ring { position: absolute; top: 50%; left: 50%; width: 260px; height: 260px; margin: -130px 0 0 -130px; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0%, rgba(5,230,245,0.16) 10%, transparent 22%); animation: radar-spin 5s linear infinite; pointer-events: none; z-index: 0; }
         @keyframes radar-spin { to { transform: rotate(360deg); } }
+        .holo-ring { position: absolute; top: 50%; left: 50%; border-radius: 50%; pointer-events: none; z-index: 0; }
+        .holo-ring.ring-1 { width: 140px; height: 140px; margin: -70px 0 0 -70px; border: 1px solid rgba(5,230,245,0.3); animation: holo-spin 7s linear infinite; }
+        .holo-ring.ring-2 { width: 200px; height: 200px; margin: -100px 0 0 -100px; border: 1px dashed rgba(255,46,151,0.22); animation: holo-spin 11s linear infinite reverse; }
+        .holo-ring.ring-3 { width: 300px; height: 300px; margin: -150px 0 0 -150px; border: 1px solid rgba(255,176,32,0.14); animation: holo-spin 16s linear infinite; }
+        @keyframes holo-spin { to { transform: rotate(360deg); } }
 
         .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; display: none; }
         .project-card {
             --rx: 0deg; --ry: 0deg; --ty: 0px;
             background: rgba(21,11,38,0.5); backdrop-filter: blur(10px); border: 1px solid var(--void-border); border-radius: 8px; padding: 22px;
-            transition: transform 0.15s ease-out, border-color 0.3s ease, box-shadow 0.3s ease; position: relative;
+            transition: transform 0.15s ease-out, border-color 0.3s ease, box-shadow 0.3s ease; position: relative; overflow: hidden;
             transform: perspective(800px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--ty));
             opacity: 0;
             animation: card-in 0.5s ease forwards;
         }
+        .project-card::before { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, rgba(5,230,245,0.14), transparent); pointer-events: none; transition: left 0.7s ease; z-index: 1; }
+        .project-card:hover::before { left: 130%; }
         .project-card:hover { --ty: -6px; border-color: var(--neon-cyan); box-shadow: 0 16px 34px rgba(0,0,0,0.4), 0 0 26px rgba(5,230,245,0.2); }
         @keyframes card-in { from { opacity: 0; transform: perspective(800px) translateY(18px); } to { opacity: 1; transform: perspective(800px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--ty)); } }
-        .project-card h3 { font-size: 17px; margin-bottom: 8px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 30px; font-weight: 700; }
-        .project-card p { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); margin-bottom: 20px; letter-spacing: 0.3px; }
+        .card-tag { display: inline-block; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.5px; color: var(--neon-cyan); opacity: 0.75; margin-bottom: 7px; text-transform: uppercase; }
+        .project-card h3 { position: relative; font-size: 17px; margin-bottom: 8px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 30px; font-weight: 700; transition: text-shadow 0.2s ease; }
+        .project-card:hover h3 { text-shadow: 1.5px 0 rgba(255,46,151,0.7), -1.5px 0 rgba(5,230,245,0.7); }
+        .project-card p { font-family: var(--font-mono); font-size: 12px; color: var(--text-dim); margin-bottom: 20px; letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px; }
+        .card-led { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 6px var(--neon-lime); animation: pulse-dot 1.8s ease-in-out infinite; flex-shrink: 0; }
         .card-actions { display: flex; gap: 10px; }
         .card-actions a { flex: 1; text-align: center; padding: 9px; background: rgba(5,230,245,0.08); color: var(--neon-cyan); text-decoration: none; border: 1px solid rgba(5,230,245,0.25); border-radius: 5px; font-weight: 700; font-size: 13px; transition: 0.25s; text-transform: uppercase; letter-spacing: 0.4px; }
         .card-actions a:hover { background: var(--neon-cyan); color: #0a0612; box-shadow: 0 0 16px rgba(5,230,245,0.4); }
@@ -189,12 +215,26 @@
         #file-name-display { font-weight: 600; color: var(--neon-lime); margin-top: 10px; display: none; font-family: var(--font-mono); font-size: 13px; }
 
         /* Loading */
-        .status-area { text-align: center; display: none; padding: 24px 0; }
+        .status-area { text-align: center; display: none; padding: 24px 0; position: relative; overflow: hidden; border-radius: 8px; }
+        .status-area > * { position: relative; z-index: 1; }
+        .matrix-rain { position: absolute; inset: 0; z-index: 0; opacity: 0.22; pointer-events: none; }
         .spinner { display: inline-block; width: 34px; height: 34px; border: 3px solid rgba(139,61,255,0.2); border-radius: 50%; border-top-color: var(--neon-cyan); border-right-color: var(--neon-pink); animation: spin 0.9s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .progress-track { width: 100%; max-width: 280px; height: 6px; margin: 18px auto 0; background: rgba(139,61,255,0.12); border: 1px solid var(--void-border); border-radius: 3px; overflow: hidden; }
+        .progress-fill { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan)); background-size: 200% 100%; animation: progress-shimmer 2s linear infinite; transition: width 1.4s ease; }
+        @keyframes progress-shimmer { to { background-position: -200% 0; } }
         .boot-log { font-family: var(--font-mono); font-size: 12px; color: var(--neon-lime); margin-top: 16px; letter-spacing: 0.4px; min-height: 16px; }
         .boot-log:not(:empty)::after { content: '_'; animation: blink 1s steps(1) infinite; }
         @keyframes blink { 50% { opacity: 0; } }
+
+        /* ---- Living city skyline (canvas-rendered, flickering windows) ---- */
+        .skyline-canvas { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: 260px; z-index: 0; pointer-events: none; opacity: 0.6; }
+        .search-beam { position: fixed; bottom: 40px; left: 50%; width: 3px; height: 130px; background: linear-gradient(180deg, rgba(5,230,245,0.55), transparent); transform-origin: bottom center; z-index: 0; pointer-events: none; animation: beam-sweep 7s ease-in-out infinite; mix-blend-mode: screen; }
+        @keyframes beam-sweep { 0%, 100% { transform: rotate(-28deg); opacity: 0.7; } 50% { transform: rotate(28deg); opacity: 1; } }
+
+        /* ---- Sky traffic: distant light-transports streaking past ---- */
+        .sky-streak { position: fixed; left: -80px; width: 70px; height: 2px; background: linear-gradient(90deg, transparent, var(--trail-color, var(--neon-cyan)), transparent); z-index: 0; pointer-events: none; filter: drop-shadow(0 0 4px var(--trail-color, var(--neon-cyan))); animation: streak-fly linear forwards; }
+        @keyframes streak-fly { 0% { transform: translate(0,0); opacity: 0; } 8% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(calc(100vw + 160px), -70px); opacity: 0; } }
 
         /* ---- Ambient data-mote particle field ---- */
         .particle-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.55; }
@@ -208,6 +248,12 @@
         /* ---- Live HUD clock ---- */
         #hud-clock { color: var(--neon-lime); font-weight: 600; }
         .sys-sep { opacity: 0.4; margin: 0 1px; }
+
+        /* ---- HUD cursor reticle ---- */
+        .cursor-reticle { position: fixed; top: 0; left: 0; width: 26px; height: 26px; margin: -13px 0 0 -13px; border: 1px solid var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 10px rgba(5,230,245,0.5), inset 0 0 6px rgba(5,230,245,0.25); pointer-events: none; z-index: 999; opacity: 0; transition: transform 0.12s ease-out, opacity 0.3s ease; mix-blend-mode: screen; }
+        .cursor-reticle::before, .cursor-reticle::after { content: ''; position: absolute; background: var(--neon-cyan); }
+        .cursor-reticle::before { top: 50%; left: -7px; width: 6px; height: 1px; }
+        .cursor-reticle::after { top: -7px; left: 50%; width: 1px; height: 6px; }
 
         /* ---- Click ripple burst ---- */
         .ripple-burst { position: fixed; width: 120px; height: 120px; border-radius: 50%; pointer-events: none; z-index: 400; border: 2px solid var(--neon-cyan); transform: translate(-50%, -50%) scale(0); opacity: 0.85; animation: ripple-expand 0.6s ease-out forwards; }
@@ -247,12 +293,15 @@
             .search-bar, .search-bar input { width: 100%; }
             .nav-controls { width: 100%; justify-content: space-between; }
             .workspace { margin: 28px auto; }
+            .hud-extra { display: none; }
         }
 
     </style>
 </head>
 <body>
 
+    <canvas class="skyline-canvas" id="skyline-canvas" aria-hidden="true"></canvas>
+    <div class="search-beam" id="search-beam" aria-hidden="true"></div>
     <canvas class="particle-canvas" id="particle-canvas"></canvas>
 
     <svg class="circuit-deco" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -266,9 +315,10 @@
         <div class="bg-orb orb-pink"></div>
         <div class="bg-orb orb-cyan"></div>
     </div>
-    <div class="sys-status"><span class="status-dot"></span><span id="hud-clock">00:00:00</span><span class="sys-sep">//</span>System Online</div>
+    <div class="sys-status"><span class="status-dot"></span><span id="hud-clock">00:00:00</span><span class="sys-sep">//</span>System Online<span class="hud-extra"><span class="sys-sep">//</span>NET <span id="hud-ping">12ms</span><span class="sys-sep">//</span>PWR <span class="pwr-bar"><span class="pwr-fill" id="pwr-fill"></span></span></span></div>
 
     <div class="toast-container" id="toast-container"></div>
+    <div class="cursor-reticle" id="cursor-reticle" aria-hidden="true"></div>
 
     <nav>
         <div class="brand glitch-text" data-text="CloudResume">CloudResume</div>
@@ -293,6 +343,9 @@
         </div>
 
         <div id="empty-state" class="empty-state hud-frame">
+            <div class="holo-ring ring-3"></div>
+            <div class="holo-ring ring-2"></div>
+            <div class="holo-ring ring-1"></div>
             <div class="radar-ring"></div>
             <i class="fa-solid fa-folder-open"></i>
             <h2 data-i18n="empty_title">No portfolios yet!</h2>
@@ -344,9 +397,11 @@
             </div>
 
             <div id="loading-state" class="status-area">
+                <canvas class="matrix-rain" id="matrix-rain" aria-hidden="true"></canvas>
                 <div class="spinner"></div>
                 <h3 style="margin: 15px 0 5px; color: var(--neon-cyan); font-family: var(--font-display); font-size: 15px; letter-spacing: 1px;" data-i18n="msg_building">Building your website...</h3>
                 <p style="color: var(--text-secondary); font-size: 14px;" data-i18n="msg_wait">Please wait. Claude is analyzing your CV and generating UI.</p>
+                <div class="progress-track"><span class="progress-fill" id="progress-fill"></span></div>
                 <p id="boot-log" class="boot-log"></p>
             </div>
         </div>
@@ -435,6 +490,148 @@
             }
             resize(); createParticles(); tick();
             window.addEventListener('resize', () => { resize(); createParticles(); });
+        })();
+
+        // ==========================================
+        // ĐƯỜNG CHÂN TRỜI THÀNH PHỐ SỐNG (LIVING CITY SKYLINE)
+        // Vẽ các tòa nhà với cửa sổ nhấp nháy ngẫu nhiên bằng canvas
+        // ==========================================
+        (function initSkyline() {
+            const canvas = document.getElementById('skyline-canvas');
+            const beam = document.getElementById('search-beam');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const WINDOW_COLORS = ['255,46,151', '5,230,245', '255,176,32', '139,61,255'];
+            let buildings = [];
+
+            function buildLayout() {
+                buildings = [];
+                const w = canvas.width;
+                let x = -20;
+                while (x < w + 40) {
+                    const bw = 46 + Math.random() * 60;
+                    const bh = 70 + Math.random() * 150;
+                    const cols = Math.max(2, Math.floor(bw / 16));
+                    const rows = Math.max(3, Math.floor(bh / 18));
+                    const windows = [];
+                    for (let c = 0; c < cols; c++) {
+                        for (let r = 0; r < rows; r++) {
+                            if (Math.random() > 0.42) {
+                                windows.push({
+                                    x: 6 + c * ((bw - 12) / cols),
+                                    y: 10 + r * ((bh - 20) / rows),
+                                    on: Math.random() > 0.5,
+                                    color: WINDOW_COLORS[Math.floor(Math.random() * WINDOW_COLORS.length)],
+                                    t: Math.random() * 6000,
+                                    flip: 3000 + Math.random() * 7000
+                                });
+                            }
+                        }
+                    }
+                    buildings.push({ x, w: bw, h: bh, windows, tower: false });
+                    x += bw + 6 + Math.random() * 14;
+                }
+                const tallest = buildings.reduce((a, b) => (b.h > a.h ? b : a), buildings[0]);
+                if (tallest) {
+                    tallest.tower = true;
+                    if (beam) {
+                        beam.style.left = (tallest.x + tallest.w / 2) + 'px';
+                        beam.style.bottom = (tallest.h + 20) + 'px';
+                    }
+                }
+            }
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = 260;
+                buildLayout();
+            }
+            function draw(dt) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const baseY = canvas.height;
+                buildings.forEach(b => {
+                    const top = baseY - b.h;
+                    ctx.fillStyle = 'rgba(21, 11, 38, 0.92)';
+                    ctx.fillRect(b.x, top, b.w, b.h);
+                    ctx.strokeStyle = 'rgba(139, 61, 255, 0.22)';
+                    ctx.strokeRect(b.x, top, b.w, b.h);
+                    if (b.tower) {
+                        ctx.strokeStyle = 'rgba(139, 61, 255, 0.4)';
+                        ctx.beginPath();
+                        ctx.moveTo(b.x + b.w / 2, top);
+                        ctx.lineTo(b.x + b.w / 2, top - 20);
+                        ctx.stroke();
+                    }
+                    b.windows.forEach(win => {
+                        win.t += dt;
+                        if (win.t > win.flip) { win.on = !win.on; win.t = 0; win.flip = 3000 + Math.random() * 7000; }
+                        if (win.on) {
+                            ctx.fillStyle = `rgba(${win.color}, 0.65)`;
+                            ctx.fillRect(b.x + win.x, top + win.y, 4, 6);
+                        }
+                    });
+                });
+            }
+            if (prefersReducedMotion) {
+                resize();
+                draw(0);
+                return;
+            }
+            let last = performance.now();
+            function tick(now) {
+                draw(now - last);
+                last = now;
+                requestAnimationFrame(tick);
+            }
+            resize();
+            requestAnimationFrame(tick);
+            window.addEventListener('resize', resize);
+        })();
+
+        // ==========================================
+        // GIAO THÔNG BẦU TRỜI: VỆT SÁNG BAY NGANG (SKY-TRAFFIC LIGHT STREAKS)
+        // ==========================================
+        if (!prefersReducedMotion) {
+            const streakColors = ['rgba(255,46,151,0.85)', 'rgba(5,230,245,0.85)', 'rgba(255,176,32,0.8)'];
+            function spawnSkyStreak() {
+                const el = document.createElement('div');
+                el.className = 'sky-streak';
+                el.style.top = (Math.random() * window.innerHeight * 0.45) + 'px';
+                el.style.setProperty('--trail-color', streakColors[Math.floor(Math.random() * streakColors.length)]);
+                el.style.animationDuration = (2.4 + Math.random() * 1.8) + 's';
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 4600);
+            }
+            setInterval(() => { if (Math.random() > 0.4) spawnSkyStreak(); }, 4200);
+        }
+
+        // ==========================================
+        // KÍNH NGẮM HUD THEO CON TRỎ CHUỘT (CURSOR HUD RETICLE)
+        // ==========================================
+        (function initCursorReticle() {
+            const reticle = document.getElementById('cursor-reticle');
+            const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+            if (!reticle || prefersReducedMotion || isCoarsePointer) return;
+            let shown = false;
+            document.addEventListener('mousemove', (e) => {
+                reticle.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+                if (!shown) { reticle.style.opacity = '0.85'; shown = true; }
+            });
+            document.addEventListener('mouseleave', () => { reticle.style.opacity = '0'; });
+        })();
+
+        // ==========================================
+        // CHỈ SỐ HỆ THỐNG GIẢ LẬP (NET PING & PWR) TRONG HUD
+        // ==========================================
+        (function tickHudStats() {
+            const ping = document.getElementById('hud-ping');
+            const pwr = document.getElementById('pwr-fill');
+            if (!ping && !pwr) return;
+            function update() {
+                if (ping) ping.textContent = (8 + Math.floor(Math.random() * 38)) + 'ms';
+                if (pwr) pwr.style.width = (58 + Math.floor(Math.random() * 38)) + '%';
+            }
+            update();
+            setInterval(update, 2600);
         })();
 
         // ==========================================
@@ -663,8 +860,9 @@
                     const card = `
                         <div class="project-card hud-frame" style="animation-delay: ${i * 0.06}s">
                             <button class="btn-delete" onclick="deleteProject('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                            <span class="card-tag">NODE-${String(i + 1).padStart(2, '0')}</span>
                             <h3>${p.name}</h3>
-                            <p><i class="fa-regular fa-clock"></i> ${p.date}</p>
+                            <p><span class="card-led"></span><i class="fa-regular fa-clock"></i> ${p.date}</p>
                             <div class="card-actions">
                                 <a href="${p.url}" target="_blank"><i class="fa-solid fa-globe"></i> ${viewText}</a>
                             </div>
@@ -743,21 +941,61 @@
             vn: ["Đang phân tích cấu trúc CV...", "Trích xuất kỹ năng & kinh nghiệm...", "Chọn bố cục giao diện...", "Biên dịch tài nguyên đồ họa...", "Dựng các thành phần giao diện...", "Đang triển khai lên máy chủ..."]
         };
         let bootInterval = null;
+        let matrixInterval = null;
+        function startMatrixRain() {
+            const canvas = document.getElementById('matrix-rain');
+            if (!canvas || prefersReducedMotion) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            const glyphs = '01アイウエオカキクケコ$#%&';
+            const fontSize = 12;
+            const columns = Math.max(1, Math.ceil(canvas.width / fontSize));
+            const drops = Array(columns).fill(1);
+            clearInterval(matrixInterval);
+            matrixInterval = setInterval(() => {
+                ctx.fillStyle = 'rgba(10,6,18,0.16)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.font = fontSize + 'px monospace';
+                drops.forEach((y, i) => {
+                    ctx.fillStyle = Math.random() > 0.92 ? 'rgba(255,46,151,0.8)' : 'rgba(5,230,245,0.7)';
+                    ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], i * fontSize, y * fontSize);
+                    if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                });
+            }, 60);
+        }
+        function stopMatrixRain() {
+            clearInterval(matrixInterval);
+            const canvas = document.getElementById('matrix-rain');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
         function startBootLog() {
             const el = document.getElementById('boot-log');
+            const fill = document.getElementById('progress-fill');
             if (!el) return;
             let i = 0;
+            const total = bootMessages[currentLang].length;
             el.innerText = bootMessages[currentLang][0];
+            if (fill) fill.style.width = ((1 / total) * 100) + '%';
             clearInterval(bootInterval);
             bootInterval = setInterval(() => {
-                i = (i + 1) % bootMessages[currentLang].length;
+                i = (i + 1) % total;
                 el.innerText = bootMessages[currentLang][i];
+                if (fill) fill.style.width = (((i + 1) / total) * 100) + '%';
             }, 1700);
+            startMatrixRain();
         }
         function stopBootLog() {
             clearInterval(bootInterval);
             const el = document.getElementById('boot-log');
+            const fill = document.getElementById('progress-fill');
             if (el) el.innerText = '';
+            if (fill) fill.style.width = '0%';
+            stopMatrixRain();
         }
 
         // ==========================================

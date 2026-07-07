@@ -68,7 +68,9 @@
         .bg-orb { position: fixed; width: 480px; height: 480px; border-radius: 50%; filter: blur(130px); opacity: 0.32; pointer-events: none; animation: float-orb 14s ease-in-out infinite; }
         .orb-pink { background: var(--neon-pink); top: -160px; left: -120px; }
         .orb-cyan { background: var(--neon-cyan); bottom: -160px; right: -120px; animation-delay: -7s; }
+        .orb-violet { background: var(--neon-violet); width: 400px; height: 400px; top: 42%; left: 46%; opacity: 0.22; animation-name: float-orb-alt; animation-duration: 20s; animation-delay: -4s; }
         @keyframes float-orb { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(36px,-28px) scale(1.08); } }
+        @keyframes float-orb-alt { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-44px,32px) scale(0.92); } }
 
         .sys-status { position: fixed; bottom: 18px; left: 22px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; color: var(--text-dim); z-index: 10; display: flex; align-items: center; gap: 7px; text-transform: uppercase; }
         .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 8px var(--neon-lime); animation: pulse-dot 1.6s ease-in-out infinite; }
@@ -99,7 +101,11 @@
         @media (prefers-reduced-motion: reduce) {
             .bg-orb, .bg-orbs, .status-dot, .brand-tag::after, body::before,
             .glitch-text::before, .glitch-text::after, .brand-section, .auth-section,
-            .form-in, .brand-section::after, .circuit-line, .circuit-node, .toast, .ripple-burst { animation: none !important; transition: none !important; }
+            .form-in, .brand-section::after, .circuit-line, .circuit-node, .toast, .ripple-burst,
+            .scan-ring, .radar-sweep, .radar-ring-1, .radar-ring-2, .radar-blip, .id-node-panel::before,
+            .link-bar-fill, .node-panel-flicker, #cursor-glow, #boot-sequence, .boot-line, .boot-cursor,
+            .circuit-deco-tl .circuit-line, .circuit-deco-tl .circuit-node { animation: none !important; transition: none !important; }
+            #boot-sequence { display: none !important; }
         }
 
         .top-controls { position: absolute; top: 24px; right: 24px; display: flex; gap: 10px; z-index: 10; }
@@ -133,7 +139,7 @@
 
         /* ---- Signature HUD corner-bracket frame ---- */
         .hud-frame { position: relative; }
-        .hud-frame::before, .hud-frame::after { content: ''; position: absolute; width: 22px; height: 22px; pointer-events: none; }
+        .hud-frame::before, .hud-frame::after { content: ''; position: absolute; width: 22px; height: 22px; pointer-events: none; z-index: 5; }
         .hud-frame::before { top: -2px; left: -2px; border-top: 3px solid var(--neon-cyan); border-left: 3px solid var(--neon-cyan); filter: drop-shadow(0 0 6px rgba(5,230,245,0.7)); }
         .hud-frame::after { bottom: -2px; right: -2px; border-bottom: 3px solid var(--neon-pink); border-right: 3px solid var(--neon-pink); filter: drop-shadow(0 0 6px rgba(255,46,151,0.7)); }
 
@@ -141,7 +147,8 @@
             width: 430px; background: rgba(21,11,38,0.55); backdrop-filter: blur(18px);
             border: 1px solid var(--void-border); border-radius: 6px; padding: 30px 32px;
             box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 40px rgba(139,61,255,0.12);
-            animation: fade-in-up 0.7s ease 0.15s both;
+            animation: fade-in-up 0.7s ease 0.15s both, panel-flicker 7.5s ease-in-out infinite;
+            transition: transform 0.35s ease;
         }
 
         /* ---- Form switch transition (login / register / verify) ---- */
@@ -202,6 +209,7 @@
 
         /* ---- Circuit-trace corner decoration ---- */
         .circuit-deco { position: fixed; bottom: -10px; right: -10px; width: 180px; height: 180px; z-index: -1; opacity: 0.4; pointer-events: none; }
+        .circuit-deco-tl { bottom: auto; right: auto; top: -10px; left: -10px; }
         .circuit-line { fill: none; stroke: var(--neon-cyan); stroke-width: 1.2; stroke-dasharray: 7 6; animation: circuit-flow 4s linear infinite; }
         .circuit-node { fill: var(--neon-pink); filter: drop-shadow(0 0 4px var(--neon-pink)); animation: pulse-dot 2s ease-in-out infinite; }
         @keyframes circuit-flow { to { stroke-dashoffset: -130; } }
@@ -235,6 +243,113 @@
         @keyframes toast-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(40px); } }
 
+        /* ============================================
+           EXPANDED ATMOSPHERE — extra futurism pass
+        ============================================ */
+
+        /* ---- Boot sequence overlay ---- */
+        #boot-sequence {
+            position: fixed; inset: 0; z-index: 1000; background: var(--void);
+            display: flex; align-items: center; justify-content: center; padding: 40px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            animation: boot-failsafe-fade 0.6s ease 4s forwards; /* safety net if JS never runs */
+        }
+        #boot-sequence.boot-hide { opacity: 0; visibility: hidden; pointer-events: none; }
+        @keyframes boot-failsafe-fade { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+        .boot-lines {
+            font-family: var(--font-mono); font-size: 14px; line-height: 2; color: var(--neon-lime);
+            max-width: 520px; width: 100%; text-shadow: 0 0 8px rgba(212,255,63,0.45);
+        }
+        .boot-line { opacity: 0; white-space: pre-wrap; animation: boot-line-in 0.25s ease forwards; }
+        .boot-line .ok { color: var(--neon-cyan); font-weight: 600; }
+        @keyframes boot-line-in { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* ---- Radar HUD (top-left) ---- */
+        .radar-hud {
+            position: fixed; top: 22px; left: 24px; z-index: 10;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(21,11,38,0.55); backdrop-filter: blur(10px);
+            border: 1px solid var(--void-border); border-radius: 20px; padding: 6px 14px 6px 6px;
+        }
+        .radar-hud svg { width: 34px; height: 34px; overflow: visible; flex-shrink: 0; }
+        .radar-ring-1, .radar-ring-2 { fill: none; stroke: var(--neon-cyan); stroke-width: 1; opacity: 0.4; }
+        .radar-ring-2 { opacity: 0.25; }
+        .radar-sweep { transform-origin: 30px 30px; animation: radar-rotate 3.2s linear infinite; }
+        @keyframes radar-rotate { to { transform: rotate(360deg); } }
+        .radar-blip { fill: var(--neon-pink); filter: drop-shadow(0 0 3px var(--neon-pink)); animation: pulse-dot 2.4s ease-in-out infinite; }
+        .radar-blip-2 { animation-delay: -1.2s; fill: var(--neon-lime); filter: drop-shadow(0 0 3px var(--neon-lime)); }
+        .radar-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.5px; color: var(--text-dim); text-transform: uppercase; white-space: nowrap; }
+        @media (max-width: 900px) { .radar-hud { display: none; } }
+
+        /* ---- Cursor-follow neon glow ---- */
+        #cursor-glow {
+            position: fixed; top: 0; left: 0; width: 26px; height: 26px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,46,151,0.55) 0%, rgba(5,230,245,0.32) 45%, transparent 75%);
+            filter: blur(4px); pointer-events: none; z-index: 350; mix-blend-mode: screen;
+            transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.3s ease; will-change: transform;
+        }
+        #cursor-glow.active { opacity: 1; }
+        @media (max-width: 900px), (pointer: coarse) { #cursor-glow { display: none !important; } }
+
+        /* ---- Identity Node telemetry panel ---- */
+        .id-node-panel {
+            margin-top: 22px; max-width: 300px; background: rgba(10,6,18,0.55); backdrop-filter: blur(8px);
+            border: 1px solid var(--void-border); border-radius: 6px; padding: 12px 14px;
+            font-family: var(--font-mono); font-size: 11.5px; color: var(--text-secondary);
+            position: relative; overflow: hidden;
+        }
+        .id-node-panel::before {
+            content: ''; position: absolute; left: 0; right: 0; height: 45%; top: -45%;
+            background: linear-gradient(180deg, rgba(5,230,245,0.14), transparent);
+            animation: node-scanline 3.6s ease-in-out infinite;
+        }
+        @keyframes node-scanline { 0% { top: -45%; } 100% { top: 100%; } }
+        .node-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 3px 0; position: relative; z-index: 1; }
+        .node-title { color: var(--neon-cyan); letter-spacing: 1.5px; font-weight: 600; margin-bottom: 5px; justify-content: flex-start; }
+        .node-title i { margin-right: 7px; font-size: 11px; }
+        .node-live { margin-left: auto; color: var(--neon-lime); font-size: 9.5px; letter-spacing: 1px; animation: pulse-dot 1.6s ease-in-out infinite; }
+        .node-key { color: var(--text-dim); letter-spacing: 1px; }
+        .node-val { color: var(--text-primary); }
+        .node-crypt { color: var(--neon-violet); }
+        .link-bar { display: inline-block; width: 90px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; vertical-align: middle; }
+        .link-bar-fill { display: block; height: 100%; width: 96%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan)); animation: link-flux 2.8s ease-in-out infinite; }
+        @keyframes link-flux { 0%, 100% { width: 93%; } 50% { width: 100%; } }
+
+        /* ---- Perimeter energy-scan ring on the auth card ---- */
+        @property --scan-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+        .scan-ring {
+            position: absolute; inset: 0; border-radius: 6px; pointer-events: none; z-index: 0; padding: 1.5px;
+            background: conic-gradient(from var(--scan-angle), transparent 0%, var(--neon-cyan) 5%, transparent 12%, transparent 50%, var(--neon-pink) 55%, transparent 62%, transparent 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            animation: scan-ring-spin 6s linear infinite; opacity: 0.75;
+        }
+        @keyframes scan-ring-spin { to { --scan-angle: 360deg; } }
+
+        /* ---- Ambient panel power-flicker ---- */
+        @keyframes panel-flicker {
+            0%, 92%, 100% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 40px rgba(139,61,255,0.12); }
+            92.5% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 55px rgba(5,230,245,0.24); }
+            93.5% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 22px rgba(139,61,255,0.08); }
+            95% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 52px rgba(255,46,151,0.22); }
+            96%, 100% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 40px rgba(139,61,255,0.12); }
+        }
+
+        /* ---- Micro targeting-reticle on focused inputs ---- */
+        .form-group, .form-grid-3, .form-grid-phone { position: relative; }
+        .form-group:focus-within::before, .form-grid-3:focus-within::before, .form-grid-phone:focus-within::before,
+        .form-group:focus-within::after, .form-grid-3:focus-within::after, .form-grid-phone:focus-within::after {
+            content: ''; position: absolute; width: 9px; height: 9px; pointer-events: none; z-index: 2;
+        }
+        .form-group:focus-within::before, .form-grid-3:focus-within::before, .form-grid-phone:focus-within::before {
+            top: -4px; left: -4px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan);
+            filter: drop-shadow(0 0 4px rgba(5,230,245,0.7));
+        }
+        .form-group:focus-within::after, .form-grid-3:focus-within::after, .form-grid-phone:focus-within::after {
+            bottom: -4px; right: -4px; border-bottom: 2px solid var(--neon-pink); border-right: 2px solid var(--neon-pink);
+            filter: drop-shadow(0 0 4px rgba(255,46,151,0.7));
+        }
+
         @media (max-width: 768px) {
             .container { flex-direction: column; text-align: center; margin-top: 50px; }
             .brand-section { width: 100%; padding: 0; margin-bottom: 40px; display: flex; flex-direction: column; align-items: center; }
@@ -245,6 +360,10 @@
 </head>
 <body>
 
+<div id="boot-sequence" aria-hidden="true">
+    <div class="boot-lines" id="boot-lines"></div>
+</div>
+
 <canvas class="particle-canvas" id="particle-canvas"></canvas>
 
 <svg class="circuit-deco" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -254,9 +373,39 @@
     <circle class="circuit-node" cx="130" cy="70" r="3" />
 </svg>
 
+<svg class="circuit-deco circuit-deco-tl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path class="circuit-line" d="M190 10 L120 10 L120 55 L75 55 L75 105 L20 105 L20 190" />
+    <circle class="circuit-node" cx="190" cy="10" r="3" />
+    <circle class="circuit-node" cx="120" cy="55" r="3" />
+    <circle class="circuit-node" cx="75" cy="105" r="3" />
+</svg>
+
+<div class="radar-hud" id="radar-hud" aria-hidden="true">
+    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <circle class="radar-ring-1" cx="30" cy="30" r="26" />
+        <circle class="radar-ring-2" cx="30" cy="30" r="17" />
+        <circle cx="30" cy="30" r="1.6" fill="var(--neon-cyan)" />
+        <circle class="radar-blip" cx="41" cy="18" r="1.8" />
+        <circle class="radar-blip radar-blip-2" cx="16" cy="38" r="1.4" />
+        <g class="radar-sweep">
+            <path d="M30 30 L30 4 A26 26 0 0 1 51 15 Z" fill="url(#radarGrad)" />
+        </g>
+        <defs>
+            <linearGradient id="radarGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="var(--neon-cyan)" stop-opacity="0.55" />
+                <stop offset="100%" stop-color="var(--neon-cyan)" stop-opacity="0" />
+            </linearGradient>
+        </defs>
+    </svg>
+    <span class="radar-label">SCANNING SECTOR</span>
+</div>
+
+<div id="cursor-glow" aria-hidden="true"></div>
+
 <div class="bg-orbs" id="bg-orbs">
     <div class="bg-orb orb-pink"></div>
     <div class="bg-orb orb-cyan"></div>
+    <div class="bg-orb orb-violet"></div>
 </div>
 <div class="sys-status"><span class="status-dot"></span><span id="hud-clock">00:00:00</span><span class="sys-sep">//</span>System Online</div>
 
@@ -273,9 +422,18 @@
         <span class="brand-tag">// Serverless Identity Network</span>
         <h1 class="glitch-text" data-text="CloudResume">CloudResume</h1>
         <p data-i18n="subtitle">Create and manage your own Serverless portfolio on the AWS platform.</p>
+
+        <div class="id-node-panel" aria-hidden="true">
+            <div class="node-row node-title"><i class="fa-solid fa-satellite-dish"></i><span>IDENTITY NODE</span><span class="node-live">● LIVE</span></div>
+            <div class="node-row"><span class="node-key">NODE_ID</span><span class="node-val" id="node-id">7F3A::22B9</span></div>
+            <div class="node-row"><span class="node-key">UPLINK</span><span class="node-val"><span class="link-bar"><span class="link-bar-fill" id="link-bar-fill"></span></span></span></div>
+            <div class="node-row"><span class="node-key">PING</span><span class="node-val" id="node-ping">12ms</span></div>
+            <div class="node-row"><span class="node-key">CRYPT</span><span class="node-val node-crypt">AES-256-GCM</span></div>
+        </div>
     </div>
 
     <div class="auth-section hud-frame">
+        <div class="scan-ring" aria-hidden="true"></div>
         <div id="error-msg"></div>
 
         <div id="login-form" class="form-in">
@@ -461,6 +619,95 @@
             btn.addEventListener('click', (e) => spawnRipple(e.clientX, e.clientY));
         });
     }
+
+    // ==========================================
+    // MÀN HÌNH KHỞI ĐỘNG HỆ THỐNG (BOOT SEQUENCE)
+    // ==========================================
+    (function bootSequence() {
+        const overlay = document.getElementById('boot-sequence');
+        const linesBox = document.getElementById('boot-lines');
+        if (!overlay || !linesBox) return;
+        if (prefersReducedMotion || sessionStorage.getItem('cr_boot_seen')) {
+            overlay.remove();
+            return;
+        }
+        const lines = [
+            '&gt; INITIALIZING SECURE UPLINK...',
+            '&gt; HANDSHAKE: AWS COGNITO <span class="ok">[OK]</span>',
+            '&gt; DECRYPTING IDENTITY MODULE... <span class="ok">[OK]</span>',
+            '&gt; LOADING NEURAL INTERFACE... <span class="ok">[OK]</span>',
+            '&gt; WELCOME, OPERATOR_'
+        ];
+        let delay = 150;
+        lines.forEach((line) => {
+            setTimeout(() => {
+                const div = document.createElement('div');
+                div.className = 'boot-line';
+                div.innerHTML = line;
+                linesBox.appendChild(div);
+            }, delay);
+            delay += 260 + Math.random() * 180;
+        });
+        setTimeout(() => {
+            overlay.classList.add('boot-hide');
+            sessionStorage.setItem('cr_boot_seen', '1');
+            setTimeout(() => overlay.remove(), 550);
+        }, delay + 500);
+    })();
+
+    // ==========================================
+    // ĐỐM SÁNG NEON BÁM THEO CON TRỎ CHUỘT
+    // ==========================================
+    (function cursorGlow() {
+        const glow = document.getElementById('cursor-glow');
+        if (!glow || prefersReducedMotion || !window.matchMedia('(pointer: fine)').matches) return;
+        let mouseX = 0, mouseY = 0, curX = 0, curY = 0, active = false;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            if (!active) { active = true; curX = mouseX; curY = mouseY; glow.classList.add('active'); }
+        });
+        document.addEventListener('mouseleave', () => glow.classList.remove('active'));
+        (function raf() {
+            curX += (mouseX - curX) * 0.18;
+            curY += (mouseY - curY) * 0.18;
+            glow.style.transform = `translate(${curX}px, ${curY}px) translate(-50%, -50%)`;
+            requestAnimationFrame(raf);
+        })();
+    })();
+
+    // ==========================================
+    // NGHIÊNG 3D THEO CON TRỎ CHO KHUNG ĐĂNG NHẬP (HOLOGRAM TILT)
+    // ==========================================
+    (function cardTilt() {
+        const card = document.querySelector('.auth-section');
+        if (!card || prefersReducedMotion || !window.matchMedia('(pointer: fine)').matches) return;
+        const maxTilt = 4.5;
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const px = (e.clientX - rect.left) / rect.width;
+            const py = (e.clientY - rect.top) / rect.height;
+            const rotateY = (px - 0.5) * maxTilt * 2;
+            const rotateX = (0.5 - py) * maxTilt * 2;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        });
+    })();
+
+    // ==========================================
+    // TELEMETRY SỐNG CHO BẢNG IDENTITY NODE
+    // ==========================================
+    (function nodeTelemetry() {
+        const pingEl = document.getElementById('node-ping');
+        const nodeIdEl = document.getElementById('node-id');
+        if (!pingEl) return;
+        const hex = () => Math.floor(Math.random() * 65536).toString(16).toUpperCase().padStart(4, '0');
+        if (nodeIdEl) nodeIdEl.textContent = `${hex()}::${hex().slice(0, 4)}`;
+        function updatePing() { pingEl.textContent = (9 + Math.floor(Math.random() * 14)) + 'ms'; }
+        updatePing();
+        if (!prefersReducedMotion) setInterval(updatePing, 2600);
+    })();
 
     // ==========================================
     // THÔNG BÁO DẠNG TOAST (THAY THẾ alert() MẶC ĐỊNH)
