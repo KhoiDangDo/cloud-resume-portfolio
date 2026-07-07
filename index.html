@@ -22,7 +22,6 @@
             --neon-cyan: #05e6f5;
             --neon-violet: #8b3dff;
             --neon-lime: #d4ff3f;
-            --neon-amber: #ffb020;
             --danger: #ff3860;
             --text-primary: #f4eeff;
             --text-secondary: #a996c9;
@@ -69,14 +68,13 @@
         .bg-orb { position: fixed; width: 480px; height: 480px; border-radius: 50%; filter: blur(130px); opacity: 0.32; pointer-events: none; animation: float-orb 14s ease-in-out infinite; }
         .orb-pink { background: var(--neon-pink); top: -160px; left: -120px; }
         .orb-cyan { background: var(--neon-cyan); bottom: -160px; right: -120px; animation-delay: -7s; }
+        .orb-violet { background: var(--neon-violet); width: 400px; height: 400px; top: 42%; left: 46%; opacity: 0.22; animation-name: float-orb-alt; animation-duration: 20s; animation-delay: -4s; }
         @keyframes float-orb { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(36px,-28px) scale(1.08); } }
+        @keyframes float-orb-alt { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-44px,32px) scale(0.92); } }
 
         .sys-status { position: fixed; bottom: 18px; left: 22px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; color: var(--text-dim); z-index: 10; display: flex; align-items: center; gap: 7px; text-transform: uppercase; }
         .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 8px var(--neon-lime); animation: pulse-dot 1.6s ease-in-out infinite; }
         @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-        #hud-ping { color: var(--neon-cyan); }
-        .pwr-bar { display: inline-block; width: 34px; height: 7px; background: rgba(139,61,255,0.15); border: 1px solid var(--void-border); border-radius: 2px; overflow: hidden; vertical-align: middle; }
-        .pwr-fill { display: block; height: 100%; width: 70%; background: linear-gradient(90deg, var(--neon-amber), var(--neon-lime)); transition: width 0.5s ease; }
 
         /* ---- Glitch-flicker brand text ---- */
         .glitch-text { position: relative; display: inline-block; }
@@ -104,10 +102,10 @@
             .bg-orb, .bg-orbs, .status-dot, .brand-tag::after, body::before,
             .glitch-text::before, .glitch-text::after, .brand-section, .auth-section,
             .form-in, .brand-section::after, .circuit-line, .circuit-node, .toast, .ripple-burst,
-            .brand-section h1, .search-beam, .cursor-reticle,
-            .skyline-canvas, .matrix-rain, .sky-streak { animation: none !important; transition: none !important; }
-            .skyline-canvas, .search-beam, .sky-streak, .cursor-reticle, .matrix-rain { display: none !important; }
-            input:focus, select:focus { animation: none !important; }
+            .scan-ring, .radar-sweep, .radar-ring-1, .radar-ring-2, .radar-blip, .id-node-panel::before,
+            .link-bar-fill, .node-panel-flicker, #cursor-glow, #boot-sequence, .boot-line, .boot-cursor,
+            .circuit-deco-tl .circuit-line, .circuit-deco-tl .circuit-node { animation: none !important; transition: none !important; }
+            #boot-sequence { display: none !important; }
         }
 
         .top-controls { position: absolute; top: 24px; right: 24px; display: flex; gap: 10px; z-index: 10; }
@@ -136,22 +134,12 @@
             -webkit-background-clip: text; background-clip: text; color: transparent;
             filter: drop-shadow(0 0 20px rgba(255,46,151,0.3));
             margin-bottom: 16px; line-height: 1.05;
-            animation: neon-buzz 6s infinite;
-        }
-        @keyframes neon-buzz {
-            0%, 39%, 43%, 78%, 82%, 100% { opacity: 1; filter: drop-shadow(0 0 20px rgba(255,46,151,0.3)); }
-            40% { opacity: 0.4; filter: drop-shadow(0 0 4px rgba(255,46,151,0.1)); }
-            41% { opacity: 1; }
-            42% { opacity: 0.55; }
-            79% { opacity: 0.5; }
-            80% { opacity: 1; }
-            81% { opacity: 0.6; }
         }
         .brand-section p { font-size: 18px; color: var(--text-secondary); line-height: 1.55; max-width: 420px; border-left: 2px solid var(--neon-cyan); padding-left: 16px; }
 
         /* ---- Signature HUD corner-bracket frame ---- */
         .hud-frame { position: relative; }
-        .hud-frame::before, .hud-frame::after { content: ''; position: absolute; width: 22px; height: 22px; pointer-events: none; }
+        .hud-frame::before, .hud-frame::after { content: ''; position: absolute; width: 22px; height: 22px; pointer-events: none; z-index: 5; }
         .hud-frame::before { top: -2px; left: -2px; border-top: 3px solid var(--neon-cyan); border-left: 3px solid var(--neon-cyan); filter: drop-shadow(0 0 6px rgba(5,230,245,0.7)); }
         .hud-frame::after { bottom: -2px; right: -2px; border-bottom: 3px solid var(--neon-pink); border-right: 3px solid var(--neon-pink); filter: drop-shadow(0 0 6px rgba(255,46,151,0.7)); }
 
@@ -159,10 +147,9 @@
             width: 430px; background: rgba(21,11,38,0.55); backdrop-filter: blur(18px);
             border: 1px solid var(--void-border); border-radius: 6px; padding: 30px 32px;
             box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 40px rgba(139,61,255,0.12);
-            animation: fade-in-up 0.7s ease 0.15s both;
+            animation: fade-in-up 0.7s ease 0.15s both, panel-flicker 7.5s ease-in-out infinite;
+            transition: transform 0.35s ease;
         }
-        .auth-meta { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 18px; opacity: 0.85; }
-        .auth-meta .meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 6px var(--neon-lime); animation: pulse-dot 1.8s ease-in-out infinite; flex-shrink: 0; }
 
         /* ---- Form switch transition (login / register / verify) ---- */
         .form-in { animation: form-fade-in 0.4s ease; }
@@ -179,8 +166,7 @@
             color: var(--text-primary); border-radius: 4px; font-size: 15px; font-family: var(--font-body); outline: none; transition: all 0.25s ease;
         }
         input::placeholder { color: var(--text-dim); }
-        input:focus, select:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.22); background: rgba(10,6,18,0.85); animation: input-pulse 0.4s ease; }
-        @keyframes input-pulse { 0% { box-shadow: 0 0 0 0 rgba(5,230,245,0.55), 0 0 18px rgba(5,230,245,0.22); } 100% { box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.22); } }
+        input:focus, select:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.22); background: rgba(10,6,18,0.85); }
         select option { background: var(--void-panel); color: var(--text-primary); }
 
         .helper-text { font-size: 12px; color: var(--text-dim); display: block; margin-top: 5px; margin-bottom: 14px; line-height: 1.45; }
@@ -209,9 +195,6 @@
         .btn-register:hover { background: rgba(212,255,63,0.12); box-shadow: 0 0 22px rgba(212,255,63,0.4); color: #fff; border-color: #fff; }
 
         #register-form, #verify-form { display: none; }
-        #verify-form { position: relative; overflow: hidden; border-radius: 6px; }
-        #verify-form > *:not(.matrix-rain) { position: relative; z-index: 1; }
-        .matrix-rain { position: absolute; inset: 0; z-index: 0; opacity: 0.2; pointer-events: none; }
         #register-form h2, #verify-form h2 { font-family: var(--font-display); font-size: 21px; color: var(--text-primary); text-align: center; margin-bottom: 18px; letter-spacing: 1px; }
         #register-form h2::before, #verify-form h2::before { content: '// '; color: var(--neon-cyan); }
         #register-form h2::after, #verify-form h2::after { content: ' //'; color: var(--neon-pink); }
@@ -221,20 +204,12 @@
 
         #error-msg { background: rgba(255,56,96,0.12); color: #ff9db3; padding: 11px; border-radius: 4px; text-align: center; margin-bottom: 16px; font-size: 13px; display: none; font-weight: 600; border: 1px solid var(--danger); box-shadow: 0 0 16px rgba(255,56,96,0.25); }
 
-        /* ---- Living city skyline (canvas-rendered, flickering windows) ---- */
-        .skyline-canvas { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: 260px; z-index: -2; pointer-events: none; opacity: 0.6; }
-        .search-beam { position: fixed; bottom: 40px; left: 50%; width: 3px; height: 130px; background: linear-gradient(180deg, rgba(5,230,245,0.55), transparent); transform-origin: bottom center; z-index: -2; pointer-events: none; animation: beam-sweep 7s ease-in-out infinite; mix-blend-mode: screen; }
-        @keyframes beam-sweep { 0%, 100% { transform: rotate(-28deg); opacity: 0.7; } 50% { transform: rotate(28deg); opacity: 1; } }
-
-        /* ---- Sky traffic: distant light-transports streaking past ---- */
-        .sky-streak { position: fixed; left: -80px; width: 70px; height: 2px; background: linear-gradient(90deg, transparent, var(--trail-color, var(--neon-cyan)), transparent); z-index: -1; pointer-events: none; filter: drop-shadow(0 0 4px var(--trail-color, var(--neon-cyan))); animation: streak-fly linear forwards; }
-        @keyframes streak-fly { 0% { transform: translate(0,0); opacity: 0; } 8% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(calc(100vw + 160px), -70px); opacity: 0; } }
-
         /* ---- Ambient data-mote particle field ---- */
         .particle-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.6; }
 
         /* ---- Circuit-trace corner decoration ---- */
         .circuit-deco { position: fixed; bottom: -10px; right: -10px; width: 180px; height: 180px; z-index: -1; opacity: 0.4; pointer-events: none; }
+        .circuit-deco-tl { bottom: auto; right: auto; top: -10px; left: -10px; }
         .circuit-line { fill: none; stroke: var(--neon-cyan); stroke-width: 1.2; stroke-dasharray: 7 6; animation: circuit-flow 4s linear infinite; }
         .circuit-node { fill: var(--neon-pink); filter: drop-shadow(0 0 4px var(--neon-pink)); animation: pulse-dot 2s ease-in-out infinite; }
         @keyframes circuit-flow { to { stroke-dashoffset: -130; } }
@@ -242,12 +217,6 @@
         /* ---- Live HUD clock ---- */
         #hud-clock { color: var(--neon-lime); font-weight: 600; }
         .sys-sep { opacity: 0.4; margin: 0 1px; }
-
-        /* ---- HUD cursor reticle ---- */
-        .cursor-reticle { position: fixed; top: 0; left: 0; width: 26px; height: 26px; margin: -13px 0 0 -13px; border: 1px solid var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 10px rgba(5,230,245,0.5), inset 0 0 6px rgba(5,230,245,0.25); pointer-events: none; z-index: 999; opacity: 0; transition: transform 0.12s ease-out, opacity 0.3s ease; mix-blend-mode: screen; }
-        .cursor-reticle::before, .cursor-reticle::after { content: ''; position: absolute; background: var(--neon-cyan); }
-        .cursor-reticle::before { top: 50%; left: -7px; width: 6px; height: 1px; }
-        .cursor-reticle::after { top: -7px; left: 50%; width: 1px; height: 6px; }
 
         /* ---- Click ripple burst ---- */
         .ripple-burst { position: fixed; width: 120px; height: 120px; border-radius: 50%; pointer-events: none; z-index: 400; border: 2px solid var(--neon-cyan); transform: translate(-50%, -50%) scale(0); opacity: 0.85; animation: ripple-expand 0.6s ease-out forwards; }
@@ -274,19 +243,127 @@
         @keyframes toast-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(40px); } }
 
+        /* ============================================
+           EXPANDED ATMOSPHERE — extra futurism pass
+        ============================================ */
+
+        /* ---- Boot sequence overlay ---- */
+        #boot-sequence {
+            position: fixed; inset: 0; z-index: 1000; background: var(--void);
+            display: flex; align-items: center; justify-content: center; padding: 40px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            animation: boot-failsafe-fade 0.6s ease 4s forwards; /* safety net if JS never runs */
+        }
+        #boot-sequence.boot-hide { opacity: 0; visibility: hidden; pointer-events: none; }
+        @keyframes boot-failsafe-fade { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+        .boot-lines {
+            font-family: var(--font-mono); font-size: 14px; line-height: 2; color: var(--neon-lime);
+            max-width: 520px; width: 100%; text-shadow: 0 0 8px rgba(212,255,63,0.45);
+        }
+        .boot-line { opacity: 0; white-space: pre-wrap; animation: boot-line-in 0.25s ease forwards; }
+        .boot-line .ok { color: var(--neon-cyan); font-weight: 600; }
+        @keyframes boot-line-in { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* ---- Radar HUD (top-left) ---- */
+        .radar-hud {
+            position: fixed; top: 22px; left: 24px; z-index: 10;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(21,11,38,0.55); backdrop-filter: blur(10px);
+            border: 1px solid var(--void-border); border-radius: 20px; padding: 6px 14px 6px 6px;
+        }
+        .radar-hud svg { width: 34px; height: 34px; overflow: visible; flex-shrink: 0; }
+        .radar-ring-1, .radar-ring-2 { fill: none; stroke: var(--neon-cyan); stroke-width: 1; opacity: 0.4; }
+        .radar-ring-2 { opacity: 0.25; }
+        .radar-sweep { transform-origin: 30px 30px; animation: radar-rotate 3.2s linear infinite; }
+        @keyframes radar-rotate { to { transform: rotate(360deg); } }
+        .radar-blip { fill: var(--neon-pink); filter: drop-shadow(0 0 3px var(--neon-pink)); animation: pulse-dot 2.4s ease-in-out infinite; }
+        .radar-blip-2 { animation-delay: -1.2s; fill: var(--neon-lime); filter: drop-shadow(0 0 3px var(--neon-lime)); }
+        .radar-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 1.5px; color: var(--text-dim); text-transform: uppercase; white-space: nowrap; }
+        @media (max-width: 900px) { .radar-hud { display: none; } }
+
+        /* ---- Cursor-follow neon glow ---- */
+        #cursor-glow {
+            position: fixed; top: 0; left: 0; width: 26px; height: 26px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,46,151,0.55) 0%, rgba(5,230,245,0.32) 45%, transparent 75%);
+            filter: blur(4px); pointer-events: none; z-index: 350; mix-blend-mode: screen;
+            transform: translate(-50%, -50%); opacity: 0; transition: opacity 0.3s ease; will-change: transform;
+        }
+        #cursor-glow.active { opacity: 1; }
+        @media (max-width: 900px), (pointer: coarse) { #cursor-glow { display: none !important; } }
+
+        /* ---- Identity Node telemetry panel ---- */
+        .id-node-panel {
+            margin-top: 22px; max-width: 300px; background: rgba(10,6,18,0.55); backdrop-filter: blur(8px);
+            border: 1px solid var(--void-border); border-radius: 6px; padding: 12px 14px;
+            font-family: var(--font-mono); font-size: 11.5px; color: var(--text-secondary);
+            position: relative; overflow: hidden;
+        }
+        .id-node-panel::before {
+            content: ''; position: absolute; left: 0; right: 0; height: 45%; top: -45%;
+            background: linear-gradient(180deg, rgba(5,230,245,0.14), transparent);
+            animation: node-scanline 3.6s ease-in-out infinite;
+        }
+        @keyframes node-scanline { 0% { top: -45%; } 100% { top: 100%; } }
+        .node-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 3px 0; position: relative; z-index: 1; }
+        .node-title { color: var(--neon-cyan); letter-spacing: 1.5px; font-weight: 600; margin-bottom: 5px; justify-content: flex-start; }
+        .node-title i { margin-right: 7px; font-size: 11px; }
+        .node-live { margin-left: auto; color: var(--neon-lime); font-size: 9.5px; letter-spacing: 1px; animation: pulse-dot 1.6s ease-in-out infinite; }
+        .node-key { color: var(--text-dim); letter-spacing: 1px; }
+        .node-val { color: var(--text-primary); }
+        .node-crypt { color: var(--neon-violet); }
+        .link-bar { display: inline-block; width: 90px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; vertical-align: middle; }
+        .link-bar-fill { display: block; height: 100%; width: 96%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan)); animation: link-flux 2.8s ease-in-out infinite; }
+        @keyframes link-flux { 0%, 100% { width: 93%; } 50% { width: 100%; } }
+
+        /* ---- Perimeter energy-scan ring on the auth card ---- */
+        @property --scan-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+        .scan-ring {
+            position: absolute; inset: 0; border-radius: 6px; pointer-events: none; z-index: 0; padding: 1.5px;
+            background: conic-gradient(from var(--scan-angle), transparent 0%, var(--neon-cyan) 5%, transparent 12%, transparent 50%, var(--neon-pink) 55%, transparent 62%, transparent 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            animation: scan-ring-spin 6s linear infinite; opacity: 0.75;
+        }
+        @keyframes scan-ring-spin { to { --scan-angle: 360deg; } }
+
+        /* ---- Ambient panel power-flicker ---- */
+        @keyframes panel-flicker {
+            0%, 92%, 100% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 40px rgba(139,61,255,0.12); }
+            92.5% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 55px rgba(5,230,245,0.24); }
+            93.5% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 22px rgba(139,61,255,0.08); }
+            95% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 52px rgba(255,46,151,0.22); }
+            96%, 100% { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 40px rgba(139,61,255,0.12); }
+        }
+
+        /* ---- Micro targeting-reticle on focused inputs ---- */
+        .form-group, .form-grid-3, .form-grid-phone { position: relative; }
+        .form-group:focus-within::before, .form-grid-3:focus-within::before, .form-grid-phone:focus-within::before,
+        .form-group:focus-within::after, .form-grid-3:focus-within::after, .form-grid-phone:focus-within::after {
+            content: ''; position: absolute; width: 9px; height: 9px; pointer-events: none; z-index: 2;
+        }
+        .form-group:focus-within::before, .form-grid-3:focus-within::before, .form-grid-phone:focus-within::before {
+            top: -4px; left: -4px; border-top: 2px solid var(--neon-cyan); border-left: 2px solid var(--neon-cyan);
+            filter: drop-shadow(0 0 4px rgba(5,230,245,0.7));
+        }
+        .form-group:focus-within::after, .form-grid-3:focus-within::after, .form-grid-phone:focus-within::after {
+            bottom: -4px; right: -4px; border-bottom: 2px solid var(--neon-pink); border-right: 2px solid var(--neon-pink);
+            filter: drop-shadow(0 0 4px rgba(255,46,151,0.7));
+        }
+
         @media (max-width: 768px) {
             .container { flex-direction: column; text-align: center; margin-top: 50px; }
             .brand-section { width: 100%; padding: 0; margin-bottom: 40px; display: flex; flex-direction: column; align-items: center; }
             .brand-section p { text-align: left; }
             .auth-section { width: 100%; max-width: 420px; }
-            .hud-extra { display: none; }
         }
     </style>
 </head>
 <body>
 
-<canvas class="skyline-canvas" id="skyline-canvas" aria-hidden="true"></canvas>
-<div class="search-beam" id="search-beam" aria-hidden="true"></div>
+<div id="boot-sequence" aria-hidden="true">
+    <div class="boot-lines" id="boot-lines"></div>
+</div>
+
 <canvas class="particle-canvas" id="particle-canvas"></canvas>
 
 <svg class="circuit-deco" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -296,14 +373,43 @@
     <circle class="circuit-node" cx="130" cy="70" r="3" />
 </svg>
 
+<svg class="circuit-deco circuit-deco-tl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path class="circuit-line" d="M190 10 L120 10 L120 55 L75 55 L75 105 L20 105 L20 190" />
+    <circle class="circuit-node" cx="190" cy="10" r="3" />
+    <circle class="circuit-node" cx="120" cy="55" r="3" />
+    <circle class="circuit-node" cx="75" cy="105" r="3" />
+</svg>
+
+<div class="radar-hud" id="radar-hud" aria-hidden="true">
+    <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <circle class="radar-ring-1" cx="30" cy="30" r="26" />
+        <circle class="radar-ring-2" cx="30" cy="30" r="17" />
+        <circle cx="30" cy="30" r="1.6" fill="var(--neon-cyan)" />
+        <circle class="radar-blip" cx="41" cy="18" r="1.8" />
+        <circle class="radar-blip radar-blip-2" cx="16" cy="38" r="1.4" />
+        <g class="radar-sweep">
+            <path d="M30 30 L30 4 A26 26 0 0 1 51 15 Z" fill="url(#radarGrad)" />
+        </g>
+        <defs>
+            <linearGradient id="radarGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="var(--neon-cyan)" stop-opacity="0.55" />
+                <stop offset="100%" stop-color="var(--neon-cyan)" stop-opacity="0" />
+            </linearGradient>
+        </defs>
+    </svg>
+    <span class="radar-label">SCANNING SECTOR</span>
+</div>
+
+<div id="cursor-glow" aria-hidden="true"></div>
+
 <div class="bg-orbs" id="bg-orbs">
     <div class="bg-orb orb-pink"></div>
     <div class="bg-orb orb-cyan"></div>
+    <div class="bg-orb orb-violet"></div>
 </div>
-<div class="sys-status"><span class="status-dot"></span><span id="hud-clock">00:00:00</span><span class="sys-sep">//</span>System Online<span class="hud-extra"><span class="sys-sep">//</span>NET <span id="hud-ping">12ms</span><span class="sys-sep">//</span>PWR <span class="pwr-bar"><span class="pwr-fill" id="pwr-fill"></span></span></span></div>
+<div class="sys-status"><span class="status-dot"></span><span id="hud-clock">00:00:00</span><span class="sys-sep">//</span>System Online</div>
 
 <div class="toast-container" id="toast-container"></div>
-<div class="cursor-reticle" id="cursor-reticle" aria-hidden="true"></div>
 
 <div class="top-controls">
     <button id="lang-toggle" class="top-btn">
@@ -316,10 +422,18 @@
         <span class="brand-tag">// Serverless Identity Network</span>
         <h1 class="glitch-text" data-text="CloudResume">CloudResume</h1>
         <p data-i18n="subtitle">Create and manage your own Serverless portfolio on the AWS platform.</p>
+
+        <div class="id-node-panel" aria-hidden="true">
+            <div class="node-row node-title"><i class="fa-solid fa-satellite-dish"></i><span>IDENTITY NODE</span><span class="node-live">● LIVE</span></div>
+            <div class="node-row"><span class="node-key">NODE_ID</span><span class="node-val" id="node-id">7F3A::22B9</span></div>
+            <div class="node-row"><span class="node-key">UPLINK</span><span class="node-val"><span class="link-bar"><span class="link-bar-fill" id="link-bar-fill"></span></span></span></div>
+            <div class="node-row"><span class="node-key">PING</span><span class="node-val" id="node-ping">12ms</span></div>
+            <div class="node-row"><span class="node-key">CRYPT</span><span class="node-val node-crypt">AES-256-GCM</span></div>
+        </div>
     </div>
 
     <div class="auth-section hud-frame">
-        <div class="auth-meta"><span class="meta-dot"></span>SESSION::AWS-COGNITO<span class="sys-sep">//</span>NODE::AP-SOUTHEAST-2</div>
+        <div class="scan-ring" aria-hidden="true"></div>
         <div id="error-msg"></div>
 
         <div id="login-form" class="form-in">
@@ -383,7 +497,6 @@
         </div>
 
         <div id="verify-form">
-            <canvas class="matrix-rain" id="matrix-rain" aria-hidden="true"></canvas>
             <h2 data-i18n="verify_title">Email Verification</h2>
             <p style="font-size: 14px; text-align: center; margin-bottom: 15px; color: var(--text-secondary);" data-i18n="verify_desc">Please check your email and enter the 6-digit verification code.</p>
             <div class="form-group">
@@ -464,184 +577,6 @@
     })();
 
     // ==========================================
-    // ĐƯỜNG CHÂN TRỜI THÀNH PHỐ SỐNG (LIVING CITY SKYLINE)
-    // Vẽ các tòa nhà với cửa sổ nhấp nháy ngẫu nhiên bằng canvas
-    // ==========================================
-    (function initSkyline() {
-        const canvas = document.getElementById('skyline-canvas');
-        const beam = document.getElementById('search-beam');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const WINDOW_COLORS = ['255,46,151', '5,230,245', '255,176,32', '139,61,255'];
-        let buildings = [];
-
-        function buildLayout() {
-            buildings = [];
-            const w = canvas.width;
-            let x = -20;
-            while (x < w + 40) {
-                const bw = 46 + Math.random() * 60;
-                const bh = 70 + Math.random() * 150;
-                const cols = Math.max(2, Math.floor(bw / 16));
-                const rows = Math.max(3, Math.floor(bh / 18));
-                const windows = [];
-                for (let c = 0; c < cols; c++) {
-                    for (let r = 0; r < rows; r++) {
-                        if (Math.random() > 0.42) {
-                            windows.push({
-                                x: 6 + c * ((bw - 12) / cols),
-                                y: 10 + r * ((bh - 20) / rows),
-                                on: Math.random() > 0.5,
-                                color: WINDOW_COLORS[Math.floor(Math.random() * WINDOW_COLORS.length)],
-                                t: Math.random() * 6000,
-                                flip: 3000 + Math.random() * 7000
-                            });
-                        }
-                    }
-                }
-                buildings.push({ x, w: bw, h: bh, windows, tower: false });
-                x += bw + 6 + Math.random() * 14;
-            }
-            const tallest = buildings.reduce((a, b) => (b.h > a.h ? b : a), buildings[0]);
-            if (tallest) {
-                tallest.tower = true;
-                if (beam) {
-                    beam.style.left = (tallest.x + tallest.w / 2) + 'px';
-                    beam.style.bottom = (tallest.h + 20) + 'px';
-                }
-            }
-        }
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = 260;
-            buildLayout();
-        }
-        function draw(dt) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const baseY = canvas.height;
-            buildings.forEach(b => {
-                const top = baseY - b.h;
-                ctx.fillStyle = 'rgba(21, 11, 38, 0.92)';
-                ctx.fillRect(b.x, top, b.w, b.h);
-                ctx.strokeStyle = 'rgba(139, 61, 255, 0.22)';
-                ctx.strokeRect(b.x, top, b.w, b.h);
-                if (b.tower) {
-                    ctx.strokeStyle = 'rgba(139, 61, 255, 0.4)';
-                    ctx.beginPath();
-                    ctx.moveTo(b.x + b.w / 2, top);
-                    ctx.lineTo(b.x + b.w / 2, top - 20);
-                    ctx.stroke();
-                }
-                b.windows.forEach(win => {
-                    win.t += dt;
-                    if (win.t > win.flip) { win.on = !win.on; win.t = 0; win.flip = 3000 + Math.random() * 7000; }
-                    if (win.on) {
-                        ctx.fillStyle = `rgba(${win.color}, 0.65)`;
-                        ctx.fillRect(b.x + win.x, top + win.y, 4, 6);
-                    }
-                });
-            });
-        }
-        if (prefersReducedMotion) {
-            resize();
-            draw(0);
-            return;
-        }
-        let last = performance.now();
-        function tick(now) {
-            draw(now - last);
-            last = now;
-            requestAnimationFrame(tick);
-        }
-        resize();
-        requestAnimationFrame(tick);
-        window.addEventListener('resize', resize);
-    })();
-
-    // ==========================================
-    // GIAO THÔNG BẦU TRỜI: VỆT SÁNG BAY NGANG (SKY-TRAFFIC LIGHT STREAKS)
-    // ==========================================
-    if (!prefersReducedMotion) {
-        const streakColors = ['rgba(255,46,151,0.85)', 'rgba(5,230,245,0.85)', 'rgba(255,176,32,0.8)'];
-        function spawnSkyStreak() {
-            const el = document.createElement('div');
-            el.className = 'sky-streak';
-            el.style.top = (Math.random() * window.innerHeight * 0.45) + 'px';
-            el.style.setProperty('--trail-color', streakColors[Math.floor(Math.random() * streakColors.length)]);
-            el.style.animationDuration = (2.4 + Math.random() * 1.8) + 's';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 4600);
-        }
-        setInterval(() => { if (Math.random() > 0.4) spawnSkyStreak(); }, 4200);
-    }
-
-    // ==========================================
-    // KÍNH NGẮM HUD THEO CON TRỎ CHUỘT (CURSOR HUD RETICLE)
-    // ==========================================
-    (function initCursorReticle() {
-        const reticle = document.getElementById('cursor-reticle');
-        const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
-        if (!reticle || prefersReducedMotion || isCoarsePointer) return;
-        let shown = false;
-        document.addEventListener('mousemove', (e) => {
-            reticle.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-            if (!shown) { reticle.style.opacity = '0.85'; shown = true; }
-        });
-        document.addEventListener('mouseleave', () => { reticle.style.opacity = '0'; });
-    })();
-
-    // ==========================================
-    // CHỈ SỐ HỆ THỐNG GIẢ LẬP (NET PING & PWR) TRONG HUD
-    // ==========================================
-    (function tickHudStats() {
-        const ping = document.getElementById('hud-ping');
-        const pwr = document.getElementById('pwr-fill');
-        if (!ping && !pwr) return;
-        function update() {
-            if (ping) ping.textContent = (8 + Math.floor(Math.random() * 38)) + 'ms';
-            if (pwr) pwr.style.width = (58 + Math.floor(Math.random() * 38)) + '%';
-        }
-        update();
-        setInterval(update, 2600);
-    })();
-
-    // ==========================================
-    // MƯA MA TRẬN GIẢI MÃ (MATRIX DECRYPT RAIN) CHO BƯỚC XÁC THỰC OTP
-    // ==========================================
-    let matrixInterval = null;
-    function startMatrixRain() {
-        const canvas = document.getElementById('matrix-rain');
-        if (!canvas || prefersReducedMotion) return;
-        const ctx = canvas.getContext('2d');
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        const glyphs = '01アイウエオカキクケコ$#%&';
-        const fontSize = 12;
-        const columns = Math.max(1, Math.ceil(canvas.width / fontSize));
-        const drops = Array(columns).fill(1);
-        clearInterval(matrixInterval);
-        matrixInterval = setInterval(() => {
-            ctx.fillStyle = 'rgba(10,6,18,0.16)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.font = fontSize + 'px monospace';
-            drops.forEach((y, i) => {
-                ctx.fillStyle = Math.random() > 0.92 ? 'rgba(255,46,151,0.8)' : 'rgba(5,230,245,0.7)';
-                ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], i * fontSize, y * fontSize);
-                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }, 60);
-    }
-    function stopMatrixRain() {
-        clearInterval(matrixInterval);
-        const canvas = document.getElementById('matrix-rain');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-    }
-
-    // ==========================================
     // ĐỒNG HỒ HUD SỐNG (LIVE HUD CLOCK)
     // ==========================================
     function updateHudClock() {
@@ -684,6 +619,95 @@
             btn.addEventListener('click', (e) => spawnRipple(e.clientX, e.clientY));
         });
     }
+
+    // ==========================================
+    // MÀN HÌNH KHỞI ĐỘNG HỆ THỐNG (BOOT SEQUENCE)
+    // ==========================================
+    (function bootSequence() {
+        const overlay = document.getElementById('boot-sequence');
+        const linesBox = document.getElementById('boot-lines');
+        if (!overlay || !linesBox) return;
+        if (prefersReducedMotion || sessionStorage.getItem('cr_boot_seen')) {
+            overlay.remove();
+            return;
+        }
+        const lines = [
+            '&gt; INITIALIZING SECURE UPLINK...',
+            '&gt; HANDSHAKE: AWS COGNITO <span class="ok">[OK]</span>',
+            '&gt; DECRYPTING IDENTITY MODULE... <span class="ok">[OK]</span>',
+            '&gt; LOADING NEURAL INTERFACE... <span class="ok">[OK]</span>',
+            '&gt; WELCOME, OPERATOR_'
+        ];
+        let delay = 150;
+        lines.forEach((line) => {
+            setTimeout(() => {
+                const div = document.createElement('div');
+                div.className = 'boot-line';
+                div.innerHTML = line;
+                linesBox.appendChild(div);
+            }, delay);
+            delay += 260 + Math.random() * 180;
+        });
+        setTimeout(() => {
+            overlay.classList.add('boot-hide');
+            sessionStorage.setItem('cr_boot_seen', '1');
+            setTimeout(() => overlay.remove(), 550);
+        }, delay + 500);
+    })();
+
+    // ==========================================
+    // ĐỐM SÁNG NEON BÁM THEO CON TRỎ CHUỘT
+    // ==========================================
+    (function cursorGlow() {
+        const glow = document.getElementById('cursor-glow');
+        if (!glow || prefersReducedMotion || !window.matchMedia('(pointer: fine)').matches) return;
+        let mouseX = 0, mouseY = 0, curX = 0, curY = 0, active = false;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            if (!active) { active = true; curX = mouseX; curY = mouseY; glow.classList.add('active'); }
+        });
+        document.addEventListener('mouseleave', () => glow.classList.remove('active'));
+        (function raf() {
+            curX += (mouseX - curX) * 0.18;
+            curY += (mouseY - curY) * 0.18;
+            glow.style.transform = `translate(${curX}px, ${curY}px) translate(-50%, -50%)`;
+            requestAnimationFrame(raf);
+        })();
+    })();
+
+    // ==========================================
+    // NGHIÊNG 3D THEO CON TRỎ CHO KHUNG ĐĂNG NHẬP (HOLOGRAM TILT)
+    // ==========================================
+    (function cardTilt() {
+        const card = document.querySelector('.auth-section');
+        if (!card || prefersReducedMotion || !window.matchMedia('(pointer: fine)').matches) return;
+        const maxTilt = 4.5;
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const px = (e.clientX - rect.left) / rect.width;
+            const py = (e.clientY - rect.top) / rect.height;
+            const rotateY = (px - 0.5) * maxTilt * 2;
+            const rotateX = (0.5 - py) * maxTilt * 2;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        });
+    })();
+
+    // ==========================================
+    // TELEMETRY SỐNG CHO BẢNG IDENTITY NODE
+    // ==========================================
+    (function nodeTelemetry() {
+        const pingEl = document.getElementById('node-ping');
+        const nodeIdEl = document.getElementById('node-id');
+        if (!pingEl) return;
+        const hex = () => Math.floor(Math.random() * 65536).toString(16).toUpperCase().padStart(4, '0');
+        if (nodeIdEl) nodeIdEl.textContent = `${hex()}::${hex().slice(0, 4)}`;
+        function updatePing() { pingEl.textContent = (9 + Math.floor(Math.random() * 14)) + 'ms'; }
+        updatePing();
+        if (!prefersReducedMotion) setInterval(updatePing, 2600);
+    })();
 
     // ==========================================
     // THÔNG BÁO DẠNG TOAST (THAY THẾ alert() MẶC ĐỊNH)
@@ -854,8 +878,6 @@
         document.getElementById('login-form').style.display = formName === 'login' ? 'block' : 'none';
         document.getElementById('register-form').style.display = formName === 'register' ? 'block' : 'none';
         document.getElementById('verify-form').style.display = formName === 'verify' ? 'block' : 'none';
-
-        if (formName === 'verify') { startMatrixRain(); } else { stopMatrixRain(); }
 
         // Phát lại hiệu ứng chuyển động mờ dần khi đổi form
         const activeEl = document.getElementById(formName + '-form');
