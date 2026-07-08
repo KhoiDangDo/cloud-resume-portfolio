@@ -110,7 +110,7 @@
             .energy-field, .telemetry-tag { animation: none !important; transition: none !important; }
             .skyline-canvas, .search-beam, .sky-streak, .cursor-reticle, .matrix-rain, .rain-canvas,
             .brand-emblem, .energy-field, .telemetry-tag { display: none !important; }
-            input:focus, select:focus { animation: none !important; }
+            input:focus, select:focus, input, select { transition: border-color 0.01s, box-shadow 0.01s !important; background-position: 0% 0 !important; }
         }
 
         .top-controls { position: absolute; top: 24px; right: 24px; display: flex; gap: 10px; z-index: 10; }
@@ -213,12 +213,15 @@
         label { display: block; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
 
         input, select {
-            width: 100%; padding: 13px 14px; border: 1px solid var(--void-border); background: rgba(10,6,18,0.65);
-            color: var(--text-primary); border-radius: 4px; font-size: 15px; font-family: var(--font-body); outline: none; transition: all 0.25s ease;
+            width: 100%; padding: 13px 14px; border: 1px solid var(--void-border);
+            background-color: rgba(10,6,18,0.65);
+            background-image: linear-gradient(100deg, transparent 40%, rgba(5,230,245,0.55) 50%, transparent 60%);
+            background-repeat: no-repeat; background-size: 260% 100%; background-position: 0% 0;
+            color: var(--text-primary); border-radius: 4px; font-size: 15px; font-family: var(--font-body); outline: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, background-position 0.65s ease-out;
         }
         input::placeholder { color: var(--text-dim); }
-        input:focus, select:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.22); background: rgba(10,6,18,0.85); animation: input-pulse 0.4s ease; }
-        @keyframes input-pulse { 0% { box-shadow: 0 0 0 0 rgba(5,230,245,0.55), 0 0 18px rgba(5,230,245,0.22); } 100% { box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.22); } }
+        input:focus, select:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.22); background-color: rgba(10,6,18,0.85); background-position: 100% 0; }
         select option { background: var(--void-panel); color: var(--text-primary); }
 
         .helper-text { font-size: 12px; color: var(--text-dim); display: block; margin-top: 5px; margin-bottom: 14px; line-height: 1.45; }
@@ -717,12 +720,21 @@
         const reticle = document.getElementById('cursor-reticle');
         const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
         if (!reticle || prefersReducedMotion || isCoarsePointer) return;
-        let shown = false;
+        let hideTimer = null;
         document.addEventListener('mousemove', (e) => {
             reticle.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-            if (!shown) { reticle.style.opacity = '0.85'; shown = true; }
+            reticle.style.opacity = '0.85';
+            if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
         });
-        document.addEventListener('mouseleave', () => { reticle.style.opacity = '0'; });
+        // Trình duyệt có thể bắn 'mouseout' với relatedTarget=null một cách "giả" khi
+        // chuột chỉ đang lướt sát mép trên/dưới màn hình chứ chưa thực sự rời khỏi cửa sổ.
+        // Vì vậy, thay vì ẩn ngay lập tức, ta trì hoãn 150ms; nếu có 'mousemove' xảy ra
+        // trong lúc đó (tức chuột vẫn còn trong trang), ta huỷ việc ẩn đi.
+        document.addEventListener('mouseout', (e) => {
+            if (!e.relatedTarget) {
+                hideTimer = setTimeout(() => { reticle.style.opacity = '0'; hideTimer = null; }, 150);
+            }
+        });
     })();
 
     // ==========================================
