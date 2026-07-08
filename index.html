@@ -56,7 +56,7 @@
             background-size: 46px 46px;
             -webkit-mask-image: radial-gradient(ellipse 75% 55% at 50% 25%, black 30%, transparent 100%);
             mask-image: radial-gradient(ellipse 75% 55% at 50% 25%, black 30%, transparent 100%);
-            z-index: -3; pointer-events: none;
+            z-index: 0; pointer-events: none;
             animation: grid-drift 18s linear infinite;
         }
         @keyframes grid-drift { from { background-position: 0px 0px, 0px 0px; } to { background-position: 46px 46px, 46px 46px; } }
@@ -65,7 +65,7 @@
             background: repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px);
             z-index: 30; pointer-events: none; mix-blend-mode: overlay;
         }
-        .bg-orbs { position: fixed; inset: 0; z-index: -2; pointer-events: none; transform: translate(0, 0); transition: transform 0.7s ease-out; }
+        .bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; transform: translate(0, 0); transition: transform 0.7s ease-out; }
         .bg-orb { position: fixed; width: 480px; height: 480px; border-radius: 50%; filter: blur(130px); opacity: 0.32; pointer-events: none; animation: float-orb 14s ease-in-out infinite; }
         .orb-pink { background: var(--neon-pink); top: -160px; left: -120px; }
         .orb-cyan { background: var(--neon-cyan); bottom: -160px; right: -120px; animation-delay: -7s; }
@@ -106,12 +106,27 @@
             .form-in, .brand-section::after, .circuit-line, .circuit-node, .toast, .ripple-burst,
             .brand-section h1, .search-beam, .cursor-reticle,
             .skyline-canvas, .matrix-rain, .sky-streak, .rain-canvas,
-            .brand-emblem, .emblem-ring, .emblem-core, .emblem-scan, .boot-overlay { animation: none !important; transition: none !important; }
-            .skyline-canvas, .search-beam, .sky-streak, .cursor-reticle, .matrix-rain, .rain-canvas, .brand-emblem { display: none !important; }
+            .brand-emblem, .emblem-ring, .emblem-core, .emblem-scan, .boot-overlay,
+            .energy-field, .telemetry-tag { animation: none !important; transition: none !important; }
+            .skyline-canvas, .search-beam, .sky-streak, .cursor-reticle, .matrix-rain, .rain-canvas,
+            .brand-emblem, .energy-field, .telemetry-tag { display: none !important; }
             input:focus, select:focus { animation: none !important; }
         }
 
         .top-controls { position: absolute; top: 24px; right: 24px; display: flex; gap: 10px; z-index: 10; }
+
+        /* ---- Top-left system diagnostics panel (fills previously empty corner) ---- */
+        .hud-diag { position: fixed; top: 24px; left: 24px; z-index: 10; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; color: var(--text-dim); background: rgba(21,11,38,0.5); border: 1px solid var(--void-border); border-radius: 6px; padding: 12px 15px; backdrop-filter: blur(8px); min-width: 172px; text-transform: uppercase; }
+        .hud-diag-title { color: var(--neon-cyan); font-weight: 600; margin-bottom: 8px; opacity: 0.9; letter-spacing: 1.5px; }
+        .hud-diag-row { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; opacity: 0.85; }
+        .hud-diag-val { color: var(--neon-lime); }
+        .hud-diag-val::before { content: '● '; font-size: 7px; }
+        @media (max-width: 900px) { .hud-diag { display: none; } }
+
+        /* ---- Floating peripheral telemetry (ambient life in the empty margins) ---- */
+        .telemetry-tag { position: fixed; z-index: 1; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; color: var(--neon-cyan); opacity: 0; text-transform: uppercase; pointer-events: none; text-shadow: 0 0 6px rgba(5,230,245,0.5); transition: opacity 0.8s ease, transform 0.8s ease; transform: translateY(6px); }
+        .telemetry-tag::before { content: '· '; }
+        .telemetry-tag.show { opacity: 0.6; transform: translateY(0); }
         .top-btn {
             padding: 10px 16px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
             cursor: pointer; background: rgba(21,11,38,0.65); color: var(--text-primary);
@@ -125,21 +140,20 @@
 
         .brand-section { position: relative; width: 50%; padding-right: 40px; animation: fade-in-left 0.7s ease both; }
 
-        /* ---- Floating holographic access-emblem beside the brand logo ---- */
-        .brand-emblem { position: absolute; top: -18px; right: 60px; width: 76px; height: 76px; pointer-events: none; opacity: 0.9; }
+        /* ---- Floating holographic access-emblem, hovering above the logo (clear of the text) ---- */
+        .brand-emblem { position: absolute; top: -96px; left: 2px; width: 58px; height: 58px; pointer-events: none; opacity: 0.75; }
         .emblem-ring { position: absolute; inset: 0; border-radius: 50%; }
-        .emblem-ring.r1 { border: 1.5px solid rgba(5,230,245,0.55); animation: emblem-spin 5s linear infinite; }
-        .emblem-ring.r2 { inset: 11px; border: 1px dashed rgba(255,46,151,0.45); animation: emblem-spin 8s linear infinite reverse; }
-        .emblem-core { position: absolute; inset: 30px; border-radius: 50%; background: radial-gradient(circle, var(--neon-cyan), transparent 70%); filter: blur(1px); animation: pulse-dot 2.2s ease-in-out infinite; }
-        .emblem-scan { position: absolute; left: 4px; right: 4px; height: 2px; background: linear-gradient(90deg, transparent, rgba(5,230,245,0.9), transparent); animation: emblem-scan-move 2.8s ease-in-out infinite; }
+        .emblem-ring.r1 { border: 1.5px solid rgba(5,230,245,0.5); animation: emblem-spin 5s linear infinite; }
+        .emblem-ring.r2 { inset: 9px; border: 1px dashed rgba(255,46,151,0.4); animation: emblem-spin 8s linear infinite reverse; }
+        .emblem-core { position: absolute; inset: 23px; border-radius: 50%; background: radial-gradient(circle, var(--neon-cyan), transparent 70%); filter: blur(1px); animation: pulse-dot 2.2s ease-in-out infinite; }
+        .emblem-scan { position: absolute; left: 3px; right: 3px; height: 2px; background: linear-gradient(90deg, transparent, rgba(5,230,245,0.85), transparent); animation: emblem-scan-move 2.8s ease-in-out infinite; }
         @keyframes emblem-spin { to { transform: rotate(360deg); } }
         @keyframes emblem-scan-move { 0%, 100% { top: 4%; opacity: 0; } 12% { opacity: 1; } 50% { top: 92%; opacity: 1; } 62% { opacity: 0; } }
-        @media (max-width: 900px) { .brand-emblem { right: 10px; } }
         @media (max-width: 768px) { .brand-emblem { display: none; } }
         .brand-section::after { content: ''; display: block; margin-top: 30px; height: 2px; width: 140px; border-radius: 2px; background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan), var(--neon-pink)); background-size: 300% 100%; animation: sweep-line 6s linear infinite; }
         @keyframes sweep-line { from { background-position: 0% 0; } to { background-position: -300% 0; } }
         @keyframes fade-in-left { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes fade-in-up { from { opacity: 0; transform: perspective(1000px) translateY(24px); } to { opacity: 1; transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(0); } }
+        @keyframes fade-in-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         .brand-tag { display: block; font-family: var(--font-mono); font-size: 12px; letter-spacing: 3px; color: var(--neon-lime); text-transform: uppercase; margin-bottom: 16px; opacity: 0.9; }
         .brand-tag::after { content: '_'; animation: blink 1s steps(1) infinite; }
         @keyframes blink { 50% { opacity: 0; } }
@@ -169,7 +183,6 @@
         .hud-frame::after { bottom: -2px; right: -2px; border-bottom: 3px solid var(--neon-pink); border-right: 3px solid var(--neon-pink); filter: drop-shadow(0 0 6px rgba(255,46,151,0.7)); }
 
         .auth-section {
-            --rx: 0deg; --ry: 0deg;
             width: 430px; background: rgba(21,11,38,0.55); backdrop-filter: blur(18px);
             border: 1px solid var(--void-border); border-radius: 6px; padding: 30px 32px;
             box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 40px rgba(139,61,255,0.12);
@@ -177,6 +190,15 @@
             transition: box-shadow 0.35s ease, border-color 0.35s ease;
         }
         .auth-section:hover { box-shadow: 0 24px 60px rgba(0,0,0,0.55), 0 0 50px rgba(5,230,245,0.18); border-color: rgba(5,230,245,0.3); }
+        /* ---- Energy containment field: a slow rotating gradient ring traces the card's edge ---- */
+        .energy-field {
+            position: absolute; inset: -2px; border-radius: 8px; padding: 2px; pointer-events: none; opacity: 0.9;
+            background: conic-gradient(from 0deg, transparent 0%, rgba(5,230,245,0.9) 6%, transparent 17%, transparent 45%, rgba(255,46,151,0.85) 53%, transparent 65%, transparent 78%, rgba(255,176,32,0.7) 84%, transparent 94%, transparent 100%);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            animation: field-rotate 8s linear infinite;
+        }
+        @keyframes field-rotate { to { transform: rotate(360deg); } }
         .auth-meta { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 1px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 18px; opacity: 0.85; }
         .auth-meta .meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon-lime); box-shadow: 0 0 6px var(--neon-lime); animation: pulse-dot 1.8s ease-in-out infinite; flex-shrink: 0; }
 
@@ -238,22 +260,22 @@
         #error-msg { background: rgba(255,56,96,0.12); color: #ff9db3; padding: 11px; border-radius: 4px; text-align: center; margin-bottom: 16px; font-size: 13px; display: none; font-weight: 600; border: 1px solid var(--danger); box-shadow: 0 0 16px rgba(255,56,96,0.25); }
 
         /* ---- Living city skyline (canvas-rendered, flickering windows) ---- */
-        .skyline-canvas { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: 260px; z-index: -2; pointer-events: none; opacity: 0.6; }
-        .search-beam { position: fixed; bottom: 40px; left: 50%; width: 3px; height: 130px; background: linear-gradient(180deg, rgba(5,230,245,0.55), transparent); transform-origin: bottom center; z-index: -2; pointer-events: none; animation: beam-sweep 7s ease-in-out infinite; mix-blend-mode: screen; }
+        .skyline-canvas { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: 260px; z-index: 0; pointer-events: none; opacity: 0.6; }
+        .search-beam { position: fixed; bottom: 40px; left: 50%; width: 3px; height: 130px; background: linear-gradient(180deg, rgba(5,230,245,0.55), transparent); transform-origin: bottom center; z-index: 0; pointer-events: none; animation: beam-sweep 7s ease-in-out infinite; mix-blend-mode: screen; }
         @keyframes beam-sweep { 0%, 100% { transform: rotate(-28deg); opacity: 0.7; } 50% { transform: rotate(28deg); opacity: 1; } }
 
         /* ---- Sky traffic: distant light-transports streaking past ---- */
-        .sky-streak { position: fixed; left: -80px; width: 70px; height: 2px; background: linear-gradient(90deg, transparent, var(--trail-color, var(--neon-cyan)), transparent); z-index: -1; pointer-events: none; filter: drop-shadow(0 0 4px var(--trail-color, var(--neon-cyan))); animation: streak-fly linear forwards; }
+        .sky-streak { position: fixed; left: -80px; width: 70px; height: 2px; background: linear-gradient(90deg, transparent, var(--trail-color, var(--neon-cyan)), transparent); z-index: 0; pointer-events: none; filter: drop-shadow(0 0 4px var(--trail-color, var(--neon-cyan))); animation: streak-fly linear forwards; }
         @keyframes streak-fly { 0% { transform: translate(0,0); opacity: 0; } 8% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translate(calc(100vw + 160px), -70px); opacity: 0; } }
 
         /* ---- Ambient data-mote particle field ---- */
-        .particle-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.6; }
+        .particle-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
 
         /* ---- Cyberpunk rain (falls behind the glass auth panel) ---- */
-        .rain-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.55; }
+        .rain-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.55; }
 
         /* ---- Circuit-trace corner decoration ---- */
-        .circuit-deco { position: fixed; bottom: -10px; right: -10px; width: 180px; height: 180px; z-index: -1; opacity: 0.4; pointer-events: none; }
+        .circuit-deco { position: fixed; bottom: -10px; right: -10px; width: 180px; height: 180px; z-index: 0; opacity: 0.4; pointer-events: none; }
         .circuit-line { fill: none; stroke: var(--neon-cyan); stroke-width: 1.2; stroke-dasharray: 7 6; animation: circuit-flow 4s linear infinite; }
         .circuit-node { fill: var(--neon-pink); filter: drop-shadow(0 0 4px var(--neon-pink)); animation: pulse-dot 2s ease-in-out infinite; }
         @keyframes circuit-flow { to { stroke-dashoffset: -130; } }
@@ -343,6 +365,13 @@
     <circle class="circuit-node" cx="130" cy="70" r="3" />
 </svg>
 
+<div class="hud-diag" aria-hidden="true">
+    <div class="hud-diag-title">// System Diagnostics</div>
+    <div class="hud-diag-row"><span>Encryption</span><span class="hud-diag-val">AES-256</span></div>
+    <div class="hud-diag-row"><span>Uplink</span><span class="hud-diag-val" id="diag-uplink">Stable</span></div>
+    <div class="hud-diag-row"><span>Nodes Online</span><span class="hud-diag-val" id="diag-nodes">247</span></div>
+</div>
+
 <div class="bg-orbs" id="bg-orbs">
     <div class="bg-orb orb-pink"></div>
     <div class="bg-orb orb-cyan"></div>
@@ -372,6 +401,7 @@
     </div>
 
     <div class="auth-section hud-frame">
+        <div class="energy-field" aria-hidden="true"></div>
         <div class="auth-meta"><span class="meta-dot"></span>SESSION::AWS-COGNITO<span class="sys-sep">//</span>NODE::AP-SOUTHEAST-2</div>
         <div id="error-msg"></div>
 
@@ -681,25 +711,6 @@
     }
 
     // ==========================================
-    // BẢNG HOLOGRAM NGHIÊNG THEO CHUỘT (MOUSE-REACTIVE HOLOGRAPHIC TILT)
-    // ==========================================
-    (function initAuthTilt() {
-        const el = document.querySelector('.auth-section');
-        if (!el || prefersReducedMotion || window.matchMedia('(pointer: coarse)').matches) return;
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const px = (e.clientX - rect.left) / rect.width;
-            const py = (e.clientY - rect.top) / rect.height;
-            el.style.setProperty('--ry', ((px - 0.5) * 8).toFixed(2) + 'deg');
-            el.style.setProperty('--rx', ((0.5 - py) * 8).toFixed(2) + 'deg');
-        });
-        el.addEventListener('mouseleave', () => {
-            el.style.setProperty('--rx', '0deg');
-            el.style.setProperty('--ry', '0deg');
-        });
-    })();
-
-    // ==========================================
     // KÍNH NGẮM HUD THEO CON TRỎ CHUỘT (CURSOR HUD RETICLE)
     // ==========================================
     (function initCursorReticle() {
@@ -727,6 +738,56 @@
         }
         update();
         setInterval(update, 2600);
+    })();
+
+    // ==========================================
+    // BẢNG CHẨN ĐOÁN HỆ THỐNG (DIAGNOSTICS PANEL LIVE TICKER)
+    // ==========================================
+    (function tickDiagnostics() {
+        const uplink = document.getElementById('diag-uplink');
+        const nodes = document.getElementById('diag-nodes');
+        if (!uplink && !nodes) return;
+        const states = ['Stable', 'Stable', 'Stable', 'Syncing'];
+        function update() {
+            if (uplink) uplink.textContent = states[Math.floor(Math.random() * states.length)];
+            if (nodes) nodes.textContent = 240 + Math.floor(Math.random() * 14);
+        }
+        setInterval(update, 3400);
+    })();
+
+    // ==========================================
+    // TELEMETRY TRÔI NỔI TRONG KHOẢNG TRỐNG (FLOATING PERIPHERAL TELEMETRY)
+    // Tận dụng vùng không gian trống hai bên khung đăng nhập bằng các nhãn dữ liệu thoáng qua
+    // ==========================================
+    (function initTelemetryTags() {
+        if (prefersReducedMotion) return;
+        const container = document.querySelector('.container');
+        if (!container) return;
+        const messages = [
+            'SIGNAL 98.2%', 'UPLINK STABLE', 'NODE SYNC OK', 'LATENCY 14MS',
+            'PACKET LOSS 0.02%', 'ENCRYPTION ACTIVE', 'GRID ONLINE', 'CACHE WARM',
+            'HANDSHAKE OK', 'ROUTE OPTIMAL'
+        ];
+        function spawnTag() {
+            const rect = container.getBoundingClientRect();
+            const margin = 170;
+            const zones = [];
+            if (rect.left > margin) zones.push({ minX: 24, maxX: rect.left - 60 });
+            if (window.innerWidth - rect.right > margin) zones.push({ minX: rect.right + 40, maxX: window.innerWidth - 150 });
+            if (!zones.length) return;
+            const zone = zones[Math.floor(Math.random() * zones.length)];
+            const x = zone.minX + Math.random() * Math.max(10, zone.maxX - zone.minX);
+            const y = 100 + Math.random() * Math.max(10, window.innerHeight - 220);
+            const el = document.createElement('div');
+            el.className = 'telemetry-tag';
+            el.textContent = messages[Math.floor(Math.random() * messages.length)];
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            document.body.appendChild(el);
+            requestAnimationFrame(() => el.classList.add('show'));
+            setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 850); }, 3000);
+        }
+        setInterval(() => { if (Math.random() > 0.35) spawnTag(); }, 3600);
     })();
 
     // ==========================================
