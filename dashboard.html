@@ -100,8 +100,12 @@
             nav::after, .project-card, .radar-ring, nav, .workspace-header,
             .circuit-line, .circuit-node, .toast, .ripple-burst,
             .brand, .search-beam, .holo-ring, .card-led, .progress-fill,
-            .skyline-canvas, .matrix-rain, .sky-streak, .cursor-reticle { animation: none !important; transition: none !important; }
+            .skyline-canvas, .matrix-rain, .sky-streak, .cursor-reticle,
+            .net-dot, .net-line::after, .ticker-track, .ai-core-dot,
+            .network-strip { animation: none !important; transition: none !important; }
             .skyline-canvas, .search-beam, .sky-streak, .cursor-reticle, .matrix-rain { display: none !important; }
+            .ticker-track { animation: none !important; overflow-x: auto !important; }
+            input:focus, .form-control:focus { animation: none !important; }
         }
 
         /* ---- Signature HUD corner-bracket frame ---- */
@@ -130,7 +134,8 @@
         .search-bar { position: relative; }
         .search-bar input { padding: 10px 16px 10px 36px; border-radius: 20px; border: 1px solid var(--void-border); background: rgba(10,6,18,0.6); color: var(--text-primary); width: 240px; outline: none; transition: 0.25s; font-size: 14px; font-family: var(--font-body); }
         .search-bar input::placeholder { color: var(--text-dim); }
-        .search-bar input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 14px rgba(5,230,245,0.25); }
+        .search-bar input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.25); animation: input-pulse 0.4s ease; }
+        @keyframes input-pulse { 0% { box-shadow: 0 0 0 0 rgba(5,230,245,0.5), 0 0 18px rgba(5,230,245,0.25); } 100% { box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.25); } }
         .search-bar i { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-dim); transition: color 0.25s; }
         .search-bar:focus-within i { color: var(--neon-cyan); }
         .icon-btn { padding: 9px 16px; cursor: pointer; background: rgba(29,16,51,0.6); border: 1px solid var(--void-border); color: var(--text-primary); border-radius: 6px; font-weight: 600; font-size: 13px; transition: 0.25s; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.4px; font-family: var(--font-body); }
@@ -144,6 +149,19 @@
         .section-tag { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 3px; color: var(--neon-lime); text-transform: uppercase; margin-bottom: 8px; opacity: 0.9; }
         .workspace-header h1 { font-family: var(--font-display); font-size: 28px; font-weight: 800; color: var(--text-primary); letter-spacing: 0.5px; text-shadow: 0 0 18px rgba(139,61,255,0.35); }
         .user-line { color: var(--text-secondary); margin-top: 8px; font-size: 14px; }
+
+        /* ---- Deployment network strip: multi-region infra status ---- */
+        .network-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; background: rgba(21,11,38,0.4); border: 1px solid var(--void-border); border-radius: 8px; padding: 13px 20px; margin-bottom: 26px; animation: fade-in-up 0.6s ease 0.15s both; }
+        .network-strip-title { font-family: var(--font-mono); font-size: 11px; letter-spacing: 2px; color: var(--neon-lime); text-transform: uppercase; opacity: 0.85; white-space: nowrap; }
+        .network-nodes { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .net-node { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
+        .net-node.active { color: var(--text-secondary); }
+        .net-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
+        .net-node.active .net-dot { background: var(--neon-lime); box-shadow: 0 0 6px var(--neon-lime); animation: pulse-dot 1.8s ease-in-out infinite; }
+        .net-line { position: relative; width: 38px; height: 1px; background: var(--void-border); flex-shrink: 0; }
+        .net-line::after { content: ''; position: absolute; top: -1.5px; width: 4px; height: 4px; border-radius: 50%; background: var(--neon-cyan); box-shadow: 0 0 6px var(--neon-cyan); animation: packet-travel 2.6s linear infinite; }
+        @keyframes packet-travel { 0% { left: 0%; opacity: 0; } 10% { opacity: 1; } 88% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+        @media (max-width: 640px) { .network-strip { display: none; } }
         .btn-create { position: relative; overflow: hidden; background: linear-gradient(100deg, var(--neon-pink), var(--neon-violet) 50%, var(--neon-cyan)); background-size: 200% 100%; background-position: 0% 0%; color: #0a0612; padding: 13px 26px; border-radius: 6px; font-weight: 700; border: none; cursor: pointer; transition: 0.25s; font-size: 15px; text-transform: uppercase; letter-spacing: 0.5px; font-family: var(--font-body); box-shadow: 0 0 20px rgba(255,46,151,0.3), 0 0 20px rgba(5,230,245,0.2); }
         .btn-create:hover { background-position: 100% 0%; transform: translateY(-2px); box-shadow: 0 0 28px rgba(255,46,151,0.45), 0 0 28px rgba(5,230,245,0.35); }
         .btn-create::after { content: ''; position: absolute; top: 0; left: -75%; width: 45%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.55), transparent); transform: skewX(-20deg); transition: left 0.6s ease; }
@@ -186,6 +204,13 @@
         .btn-delete { position: absolute; top: 16px; right: 16px; background: transparent; border: none; color: var(--text-dim); cursor: pointer; transition: 0.25s; font-size: 15px; }
         .btn-delete:hover { color: var(--danger); filter: drop-shadow(0 0 6px rgba(255,56,96,0.6)); }
 
+        /* ---- System log ticker: continuous scrolling infra chatter ---- */
+        .system-ticker { margin-top: 30px; overflow: hidden; border: 1px solid var(--void-border); border-radius: 8px; background: rgba(21,11,38,0.35); padding: 11px 0; }
+        .ticker-track { display: flex; gap: 44px; white-space: nowrap; width: max-content; animation: ticker-scroll 26s linear infinite; }
+        .ticker-item { font-family: var(--font-mono); font-size: 11px; letter-spacing: 1.5px; color: var(--text-dim); text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+        .ticker-item::before { content: '●'; color: var(--neon-lime); font-size: 6px; }
+        @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
         /* ---- MODAL (POPUP) TẠO MỚI ---- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,2,10,0.8); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; visibility: hidden; transition: 0.3s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
@@ -201,7 +226,7 @@
         .form-group label { display: block; font-family: var(--font-mono); font-weight: 600; margin-bottom: 9px; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); }
         .form-control { width: 100%; padding: 13px; border: 1px solid var(--void-border); background: rgba(10,6,18,0.6); color: var(--text-primary); border-radius: 5px; outline: none; font-size: 15px; font-family: var(--font-body); transition: 0.25s; }
         .form-control::placeholder { color: var(--text-dim); }
-        .form-control:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.2); }
+        .form-control:focus { border-color: var(--neon-cyan); box-shadow: 0 0 0 3px rgba(5,230,245,0.15), 0 0 18px rgba(5,230,245,0.2); animation: input-pulse 0.4s ease; }
         textarea.form-control { resize: vertical; min-height: 100px; }
 
         /* Prompt Templates Chips */
@@ -220,6 +245,8 @@
         .matrix-rain { position: absolute; inset: 0; z-index: 0; opacity: 0.22; pointer-events: none; }
         .spinner { display: inline-block; width: 34px; height: 34px; border: 3px solid rgba(139,61,255,0.2); border-radius: 50%; border-top-color: var(--neon-cyan); border-right-color: var(--neon-pink); animation: spin 0.9s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .ai-core-badge { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; color: var(--neon-violet); text-transform: uppercase; margin-bottom: 16px; opacity: 0.95; }
+        .ai-core-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon-violet); box-shadow: 0 0 8px var(--neon-violet); animation: pulse-dot 1.4s ease-in-out infinite; }
         .progress-track { width: 100%; max-width: 280px; height: 6px; margin: 18px auto 0; background: rgba(139,61,255,0.12); border: 1px solid var(--void-border); border-radius: 3px; overflow: hidden; }
         .progress-fill { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-cyan)); background-size: 200% 100%; animation: progress-shimmer 2s linear infinite; transition: width 1.4s ease; }
         @keyframes progress-shimmer { to { background-position: -200% 0; } }
@@ -342,6 +369,17 @@
             <button class="btn-create" onclick="openModal()"><i class="fa-solid fa-plus"></i> <span data-i18n="btn_create">Create New</span></button>
         </div>
 
+        <div class="network-strip" aria-hidden="true">
+            <span class="network-strip-title">// Deployment Network</span>
+            <div class="network-nodes">
+                <div class="net-node active"><span class="net-dot"></span>AP-SOUTHEAST-2</div>
+                <div class="net-line"></div>
+                <div class="net-node"><span class="net-dot"></span>US-EAST-1 · STANDBY</div>
+                <div class="net-line"></div>
+                <div class="net-node"><span class="net-dot"></span>EU-WEST-1 · STANDBY</div>
+            </div>
+        </div>
+
         <div id="empty-state" class="empty-state hud-frame">
             <div class="holo-ring ring-3"></div>
             <div class="holo-ring ring-2"></div>
@@ -354,6 +392,23 @@
 
         <div id="project-grid" class="project-grid">
             </div>
+
+        <div class="system-ticker" aria-hidden="true">
+            <div class="ticker-track">
+                <span class="ticker-item">Build Pipeline: Idle</span>
+                <span class="ticker-item">SSL Certificate: Valid</span>
+                <span class="ticker-item">CDN Cache: Warmed</span>
+                <span class="ticker-item">Storage Bucket: Healthy</span>
+                <span class="ticker-item">Last Sync: OK</span>
+                <span class="ticker-item">Lambda Cold Start: 0.9s</span>
+                <span class="ticker-item">Build Pipeline: Idle</span>
+                <span class="ticker-item">SSL Certificate: Valid</span>
+                <span class="ticker-item">CDN Cache: Warmed</span>
+                <span class="ticker-item">Storage Bucket: Healthy</span>
+                <span class="ticker-item">Last Sync: OK</span>
+                <span class="ticker-item">Lambda Cold Start: 0.9s</span>
+            </div>
+        </div>
     </div>
 
     <div class="modal-overlay" id="create-modal">
@@ -398,6 +453,7 @@
 
             <div id="loading-state" class="status-area">
                 <canvas class="matrix-rain" id="matrix-rain" aria-hidden="true"></canvas>
+                <div class="ai-core-badge"><span class="ai-core-dot"></span>AI Core Active</div>
                 <div class="spinner"></div>
                 <h3 style="margin: 15px 0 5px; color: var(--neon-cyan); font-family: var(--font-display); font-size: 15px; letter-spacing: 1px;" data-i18n="msg_building">Building your website...</h3>
                 <p style="color: var(--text-secondary); font-size: 14px;" data-i18n="msg_wait">Please wait. Claude is analyzing your CV and generating UI.</p>
