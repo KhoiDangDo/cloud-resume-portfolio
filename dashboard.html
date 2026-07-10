@@ -1023,31 +1023,49 @@
         };
         let bootInterval = null;
         let matrixInterval = null;
+        let matrixResizeObserver = null;
+        let matrixDrops = [];
         function startMatrixRain() {
             const canvas = document.getElementById('matrix-rain');
             if (!canvas || prefersReducedMotion) return;
             const ctx = canvas.getContext('2d');
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-            const glyphs = '01アイウエオカキクケコ$#%&';
             const fontSize = 12;
-            const columns = Math.max(1, Math.ceil(canvas.width / fontSize));
-            const drops = Array(columns).fill(1);
+            const glyphs = '01アイウエオカキクケコ$#%&';
+
+            // Dùng ResizeObserver thay vì đo canvas.offsetWidth một lần duy nhất ngay khi
+            // vừa display:block — vì tại đúng thời điểm đó modal có thể chưa layout xong,
+            // khiến bộ đệm vẽ (canvas.width) bị đặt nhỏ hơn kích thước hiển thị thật,
+            // gây ra hiện tượng mưa chỉ lấp đầy một nửa khung hình.
+            function syncCanvasSize() {
+                const w = canvas.parentElement ? canvas.parentElement.clientWidth : canvas.offsetWidth;
+                const h = canvas.parentElement ? canvas.parentElement.clientHeight : canvas.offsetHeight;
+                if (!w || !h) return;
+                canvas.width = w;
+                canvas.height = h;
+                const columns = Math.max(1, Math.ceil(w / fontSize));
+                matrixDrops = Array(columns).fill(1);
+            }
+            if (matrixResizeObserver) matrixResizeObserver.disconnect();
+            matrixResizeObserver = new ResizeObserver(syncCanvasSize);
+            matrixResizeObserver.observe(canvas.parentElement || canvas);
+            syncCanvasSize();
+
             clearInterval(matrixInterval);
             matrixInterval = setInterval(() => {
                 ctx.fillStyle = 'rgba(10,6,18,0.16)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.font = fontSize + 'px monospace';
-                drops.forEach((y, i) => {
+                matrixDrops.forEach((y, i) => {
                     ctx.fillStyle = Math.random() > 0.92 ? 'rgba(255,46,151,0.8)' : 'rgba(5,230,245,0.7)';
                     ctx.fillText(glyphs[Math.floor(Math.random() * glyphs.length)], i * fontSize, y * fontSize);
-                    if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                    drops[i]++;
+                    if (y * fontSize > canvas.height && Math.random() > 0.975) matrixDrops[i] = 0;
+                    matrixDrops[i]++;
                 });
             }, 60);
         }
         function stopMatrixRain() {
             clearInterval(matrixInterval);
+            if (matrixResizeObserver) { matrixResizeObserver.disconnect(); matrixResizeObserver = null; }
             const canvas = document.getElementById('matrix-rain');
             if (canvas) {
                 const ctx = canvas.getContext('2d');
